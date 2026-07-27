@@ -25,7 +25,7 @@
 
 
 </head><body>
-<header><h1>Demographically weighted distribution of IPA symbols</h1><p class="sub">The dataset includes PHOIBLE languages that can be verifiably linked to a demographic estimate. L counts source-attested languages. P includes only green verified/curated mappings and amber alternative realizations; blue unresolved source attestations are excluded. For click symbols, L aggregates complete PHOIBLE click segments by their anterior click component, while P still follows the green-and-amber rule. When a language is selected, the chart distinguishes verified or curated phoneme–grapheme mappings, alternative realizations, source-attested unresolved symbols, and unattested sounds.</p></header>
+<header><h1>Demographically weighted distribution of IPA symbols</h1><p class="sub">The dataset covers every PHOIBLE source-attested language. <strong>L</strong> counts source-attested languages, deduplicated by ISO 639-3 (by Glottocode for uncoded languages). <strong>P</strong> is demographically weighted and is computed <em>only</em> over the demographic-certain subset — languages that can be linked to a verified population estimate. Languages without a certain estimate are still shown and counted in L, but carry no population and never enter P; they are not counted as zero. P includes only green verified/curated mappings and amber alternative realizations; blue unresolved source attestations are excluded. For click symbols, L aggregates complete PHOIBLE click segments by their anterior click component, while P still follows the green-and-amber rule. When a language is selected, the chart distinguishes verified or curated phoneme–grapheme mappings, alternative realizations, source-attested unresolved symbols, and unattested sounds.</p></header>
 <main>
 <div class="controls priority-controls">
   <div class="language-picker primary-language-picker">
@@ -62,7 +62,7 @@
   </div>
   <span class="badge" id="languageBaseBadge">demographic set</span>
   <span class="badge" id="speakerBaseBadge">speaker base</span>
-  <span class="badge">unmatched languages excluded</span>
+  <span class="badge">L: every attested language · P: demographic subset</span>
   <span class="badge">P: green + amber only</span>
   <div aria-label="Technical tools" class="technical-toolbar">
     <div class="technical-group">
@@ -143,10 +143,11 @@
   <form method="dialog">
     <div class="dialog-head"><div><h2 id="provenanceTitle">Data provenance</h2><p>Versions, scope, licences and reproducibility information for this build.</p></div><button aria-label="Close data provenance" value="close">Close</button></div>
     <div class="provenance-grid">
-      <section><h3>Build</h3><dl><dt>Visualization build</dt><dd>27 July 2026</dd><dt>Embedded languages</dt><dd id="provLanguageCount">—</dd><dt>IPA chart symbols</dt><dd id="provSymbolCount">—</dd><dt>Reviewed writing-system profiles</dt><dd id="provProfileCount">—</dd><dt>Embedded-data SHA-256</dt><dd><code id="provChecksum">Calculating…</code></dd></dl></section>
+      <section><h3>Build</h3><dl><dt>Visualization build</dt><dd>27 July 2026</dd><dt>Embedded languages (L)</dt><dd id="provLanguageCount">—</dd><dt>of which demographic-certain (in P)</dt><dd id="provDemographicCount">—</dd><dt>IPA chart symbols</dt><dd id="provSymbolCount">—</dd><dt>Reviewed writing-system profiles</dt><dd id="provProfileCount">—</dd><dt>Embedded-data SHA-256</dt><dd><code id="provChecksum">Calculating…</code></dd></dl></section>
       <section><h3>Normative chart</h3><dl><dt>Source</dt><dd>International Phonetic Association interactive chart</dd><dt>Edition used</dt><dd>2026 reissue, labelled revised to 2015/2005</dd><dt>Role</dt><dd>Symbol inventory, classification and chart structure</dd><dt>Licence</dt><dd>Chart artwork/subcharts: CC BY-SA 4.0; interactive webpage and official audio: CC BY-NC-ND 4.0</dd></dl></section>
       <section><h3>Language data</h3><dl><dt>Inventories</dt><dd>PHOIBLE 2.0</dd><dt>Click-family runtime source</dt><dd>PHOIBLE 2.0.1 CLDF ValueTable</dd><dt>Language identifiers</dt><dd>PHOIBLE-linked Glottocodes; Glottolog 5.3 checked independently</dd><dt>Demographic estimates</dt><dd>Unicode CLDR-derived; latest release checked for this build: 48.2.1, 8 July 2026</dd></dl></section>
-      <section><h3>Weighting and evidence</h3><dl><dt>L</dt><dd>Source-attested languages, deduplicated by ISO 639-3</dd><dt>P</dt><dd>Green verified/curated mappings plus amber verified realizations</dd><dt>Excluded from P</dt><dd>Blue unresolved source attestations</dd><dt>Population caveat</dt><dd>May combine L1 and L2 estimates; multilingual speakers can occur in multiple language totals</dd></dl></section>
+      <section><h3>Weighting and evidence</h3><dl><dt>L</dt><dd>Every source-attested language, deduplicated by ISO 639-3 (by Glottocode for uncoded/<code>mis</code> languages)</dd><dt>P</dt><dd>Demographically weighted over the demographic-certain subset only; green verified/curated mappings plus amber verified realizations</dd><dt>Attested-only languages</dt><dd>Counted in L; carry no population estimate and are excluded from the P universe (never counted as zero)</dd><dt>Excluded from P</dt><dd>Blue unresolved source attestations</dd><dt>Population caveat</dt><dd>May combine L1 and L2 estimates; multilingual speakers can occur in multiple language totals</dd></dl></section>
+      <section><h3>Runtime dependencies</h3><dl><dt>Click-family data (PHOIBLE 2.0.1 ValueTable)</dt><dd id="provClickStatus">—</dd><dt>Audio playback</dt><dd>Streamed on demand from external hosts (InternationalPhoneticAlphabet.org and the IPA official chart); not bundled or redistributed</dd></dl><p class="provenance-note" id="provDegradedNote" hidden></p></section>
     </div>
     <p class="provenance-note">The checksum covers the principal embedded data objects, not remote audio or the runtime PHOIBLE click-family response. External sources retain their own licences.</p>
   </form>

@@ -60,7 +60,7 @@ function renderSingleLanguageHighlight(lang){
   const total=document.querySelectorAll('.sym').length;
   selectedLanguageLabel.textContent=lang.name;
   const vp=profileForLanguage(lang);
-  selectedLanguageStats.textContent=`${mappedCount} mapped · ${variantCount} alternative · ${attestedCount} unresolved · ${total-mappedCount-variantCount-attestedCount} absent · filter: ${evidenceModeLabel()} · ${formatPeople(lang.speakers)} estimated speakers · ${vp?verificationLabel(vp.status):'no independently verified orthography profile'}`;
+  selectedLanguageStats.textContent=`${mappedCount} mapped · ${variantCount} alternative · ${attestedCount} unresolved · ${total-mappedCount-variantCount-attestedCount} absent · filter: ${evidenceModeLabel()} · ${isDemographic(lang)?formatPeople(populationForLanguage(lang))+' estimated speakers (demographic-certain, in P)':'attested only — no population estimate, excluded from P'} · ${vp?verificationLabel(vp.status):'no independently verified orthography profile'}`;
   singleLanguageLegend.hidden=false;comparisonLanguageLegend.hidden=true;languageMode.hidden=false;renderOrthographyCoverage(lang);
 }
 
