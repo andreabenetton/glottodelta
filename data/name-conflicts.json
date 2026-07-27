@@ -1,0 +1,2196 @@
+{
+ "i:mtb": {
+  "iso": "mtb",
+  "glottocode": "anyi1244",
+  "candidates": [
+   "Agni Morofo",
+   "Agni Sanvi"
+  ],
+  "chosen": "Agni Morofo"
+ },
+ "i:thm": {
+  "iso": "thm",
+  "glottocode": "aheu1239",
+  "candidates": [
+   "Aheu; Thavung",
+   "So"
+  ],
+  "chosen": "Aheu; Thavung"
+ },
+ "i:tba": {
+  "iso": "tba",
+  "glottocode": "aika1237",
+  "candidates": [
+   "Aikanã",
+   "HUARI"
+  ],
+  "chosen": "Aikanã"
+ },
+ "i:bss": {
+  "iso": "bss",
+  "glottocode": "akoo1248",
+  "candidates": [
+   "Akoose",
+   "Akɔɔse"
+  ],
+  "chosen": "Akoose"
+ },
+ "i:alc": {
+  "iso": "alc",
+  "glottocode": "qawa1238",
+  "candidates": [
+   "Alacalufe",
+   "Kawesqar",
+   "QAWASQAR"
+  ],
+  "chosen": "Alacalufe"
+ },
+ "i:aly": {
+  "iso": "aly",
+  "glottocode": "alya1239",
+  "candidates": [
+   "Alyawarr",
+   "Alyawarra"
+  ],
+  "chosen": "Alyawarra"
+ },
+ "i:ant": {
+  "iso": "ant",
+  "glottocode": "anta1253",
+  "candidates": [
+   "Antakirinya",
+   "WESTERN DESERT",
+   "Western Desert"
+  ],
+  "chosen": "Western Desert"
+ },
+ "i:any": {
+  "iso": "any",
+  "glottocode": "anyi1245",
+  "candidates": [
+   "Agni Djuablin",
+   "Anyi",
+   "Anyi Sanvi"
+  ],
+  "chosen": "Agni Djuablin"
+ },
+ "i:apn": {
+  "iso": "apn",
+  "glottocode": "apin1244",
+  "candidates": [
+   "APINAYE",
+   "Apinaye",
+   "Apinayé"
+  ],
+  "chosen": "Apinaye"
+ },
+ "i:cni": {
+  "iso": "cni",
+  "glottocode": "asha1243",
+  "candidates": [
+   "Asháninka",
+   "Campa"
+  ],
+  "chosen": "Asháninka"
+ },
+ "i:kwi": {
+  "iso": "kwi",
+  "glottocode": "awac1239",
+  "candidates": [
+   "Awa Pit",
+   "Awa-Cuaiquer"
+  ],
+  "chosen": "Awa-Cuaiquer"
+ },
+ "i:awn": {
+  "iso": "awn",
+  "glottocode": "awng1244",
+  "candidates": [
+   "AWIYA",
+   "Awiya",
+   "Awngi"
+  ],
+  "chosen": "Awiya"
+ },
+ "i:azj": {
+  "iso": "azj",
+  "glottocode": "nort2697",
+  "candidates": [
+   "AZERBAIJANI",
+   "Azerbaijani",
+   "North Azerbaijani"
+  ],
+  "chosen": "North Azerbaijani"
+ },
+ "i:ksf": {
+  "iso": "ksf",
+  "glottocode": "bafi1243",
+  "candidates": [
+   "Bafia",
+   "kpaʔ"
+  ],
+  "chosen": "Bafia"
+ },
+ "i:bkq": {
+  "iso": "bkq",
+  "glottocode": "baka1277",
+  "candidates": [
+   "BAKAIRI",
+   "Bakairí"
+  ],
+  "chosen": "Bakairí"
+ },
+ "i:bqz": {
+  "iso": "bqz",
+  "glottocode": "baka1273",
+  "candidates": [
+   "Bakaka (Babong)",
+   "Bakaka (Mkaa')",
+   "Bakaka (Mwaneka)"
+  ],
+  "chosen": "Bakaka (Mwaneka)"
+ },
+ "i:bam": {
+  "iso": "bam",
+  "glottocode": "bamb1269",
+  "candidates": [
+   "BAMBARA",
+   "Bamana",
+   "Bambara"
+  ],
+  "chosen": "Bambara"
+ },
+ "i:drl": {
+  "iso": "drl",
+  "glottocode": "band1337",
+  "candidates": [
+   "Bandjigali",
+   "Southern Paakintyi"
+  ],
+  "chosen": "Southern Paakintyi"
+ },
+ "i:bwi": {
+  "iso": "bwi",
+  "glottocode": "bani1255",
+  "candidates": [
+   "Baniwa",
+   "Kurripako; Baniwa; Baniwa (Icana)"
+  ],
+  "chosen": "Kurripako; Baniwa; Baniwa (Icana)"
+ },
+ "i:gbw": {
+  "iso": "gbw",
+  "glottocode": "kabi1260",
+  "candidates": [
+   "Barunggam",
+   "Gabi-Gabi"
+  ],
+  "chosen": "Barunggam"
+ },
+ "i:eus": {
+  "iso": "eus",
+  "glottocode": "basq1248",
+  "candidates": [
+   "BASQUE",
+   "Basque",
+   "Zuberoan Basque"
+  ],
+  "chosen": "Zuberoan Basque"
+ },
+ "i:bci": {
+  "iso": "bci",
+  "glottocode": "baou1238",
+  "candidates": [
+   "Baoulé",
+   "Baule"
+  ],
+  "chosen": "Baoulé"
+ },
+ "i:bom": {
+  "iso": "bom",
+  "glottocode": "bero1242",
+  "candidates": [
+   "BIROM",
+   "Berom"
+  ],
+  "chosen": "Berom"
+ },
+ "i:udm": {
+  "iso": "udm",
+  "glottocode": "bese1243",
+  "candidates": [
+   "Beserman",
+   "Udmurt"
+  ],
+  "chosen": "Beserman"
+ },
+ "i:nbj": {
+  "iso": "nbj",
+  "glottocode": "bili1250",
+  "candidates": [
+   "Bilinara",
+   "Bilinarra",
+   "Ngarinyman"
+  ],
+  "chosen": "Ngarinyman"
+ },
+ "i:wmb": {
+  "iso": "wmb",
+  "glottocode": "binb1242",
+  "candidates": [
+   "Binbinka",
+   "Gudanji",
+   "Wambaya"
+  ],
+  "chosen": "Binbinka"
+ },
+ "i:bbo": {
+  "iso": "bbo",
+  "glottocode": "nort2819",
+  "candidates": [
+   "BOBO-FING",
+   "Bobo",
+   "Bobo, North"
+  ],
+  "chosen": "Bobo, North"
+ },
+ "i:boa": {
+  "iso": "boa",
+  "glottocode": "bora1263",
+  "candidates": [
+   "Bora",
+   "Miraña"
+  ],
+  "chosen": "Miraña"
+ },
+ "i:kvn": {
+  "iso": "kvn",
+  "glottocode": "bord1248",
+  "candidates": [
+   "Border Kuna",
+   "CUNA"
+  ],
+  "chosen": "Border Kuna"
+ },
+ "i:bor": {
+  "iso": "bor",
+  "glottocode": "boro1282",
+  "candidates": [
+   "BORORO",
+   "Borôro"
+  ],
+  "chosen": "Borôro"
+ },
+ "i:xjb": {
+  "iso": "xjb",
+  "glottocode": "yugu1249",
+  "candidates": [
+   "BANDJALANG",
+   "Bundjalung",
+   "Minjungbal"
+  ],
+  "chosen": "Bundjalung"
+ },
+ "i:kbh": {
+  "iso": "kbh",
+  "glottocode": "cams1241",
+  "candidates": [
+   "CAMSA",
+   "Camsá"
+  ],
+  "chosen": "Camsá"
+ },
+ "i:jya": {
+  "iso": "jya",
+  "glottocode": "jiar1240",
+  "candidates": [
+   "Caodeng rGyalrong",
+   "Japhug",
+   "Jiarong"
+  ],
+  "chosen": "Caodeng rGyalrong"
+ },
+ "i:cav": {
+  "iso": "cav",
+  "glottocode": "cavi1250",
+  "candidates": [
+   "Cavinena",
+   "Cavineña"
+  ],
+  "chosen": "Cavinena"
+ },
+ "i:cyb": {
+  "iso": "cyb",
+  "glottocode": "cayu1262",
+  "candidates": [
+   "CAYUVAVA",
+   "Cayubaba"
+  ],
+  "chosen": "Cayubaba"
+ },
+ "i:aer": {
+  "iso": "aer",
+  "glottocode": "mpar1238",
+  "candidates": [
+   "Arrernte, Central",
+   "Central Arrernte",
+   "Eastern Arrernte"
+  ],
+  "chosen": "Central Arrernte"
+ },
+ "i:khm": {
+  "iso": "khm",
+  "glottocode": "cent1989",
+  "candidates": [
+   "Cambodian",
+   "Central Khmer",
+   "KHMER"
+  ],
+  "chosen": "Central Khmer"
+ },
+ "i:cbi": {
+  "iso": "cbi",
+  "glottocode": "chac1249",
+  "candidates": [
+   "CAYAPA",
+   "Cayapa",
+   "Cha'palaa"
+  ],
+  "chosen": "Cha'palaa"
+ },
+ "i:sgw": {
+  "iso": "sgw",
+  "glottocode": "chah1248",
+  "candidates": [
+   "Chaha",
+   "Ezha",
+   "Gumer",
+   "Gyeto",
+   "Muher"
+  ],
+  "chosen": "Chaha"
+ },
+ "i:wuu": {
+  "iso": "wuu",
+  "glottocode": "wuch1236",
+  "candidates": [
+   "CHANGZHOU",
+   "Wu"
+  ],
+  "chosen": "Wu"
+ },
+ "i:cag": {
+  "iso": "cag",
+  "glottocode": "niva1238",
+  "candidates": [
+   "ASHUSLAY",
+   "Chulupí"
+  ],
+  "chosen": "Chulupí"
+ },
+ "i:cao": {
+  "iso": "cao",
+  "glottocode": "chac1251",
+  "candidates": [
+   "Chacobo",
+   "Chácobo"
+  ],
+  "chosen": "Chacobo"
+ },
+ "i:con": {
+  "iso": "con",
+  "glottocode": "cofa1242",
+  "candidates": [
+   "COFAN",
+   "Cofán"
+  ],
+  "chosen": "Cofán"
+ },
+ "i:khk": {
+  "iso": "khk",
+  "glottocode": "dark1243",
+  "candidates": [
+   "Darkhat",
+   "KHALKHA",
+   "Khalkha"
+  ],
+  "chosen": "Darkhat"
+ },
+ "i:drd": {
+  "iso": "drd",
+  "glottocode": "darm1243",
+  "candidates": [
+   "Darma",
+   "Darmiya"
+  ],
+  "chosen": "Darmiya"
+ },
+ "i:dta": {
+  "iso": "dta",
+  "glottocode": "daur1238",
+  "candidates": [
+   "DAGUR",
+   "Daur"
+  ],
+  "chosen": "Daur"
+ },
+ "i:kru": {
+  "iso": "kru",
+  "glottocode": "nepa1253",
+  "candidates": [
+   "Dhangar",
+   "KURUKH",
+   "Kurukh",
+   "Kurux"
+  ],
+  "chosen": "Dhangar"
+ },
+ "i:luo": {
+  "iso": "luo",
+  "glottocode": "luok1236",
+  "candidates": [
+   "Dholuo",
+   "LUO"
+  ],
+  "chosen": "Dholuo"
+ },
+ "i:oss": {
+  "iso": "oss",
+  "glottocode": "digo1242",
+  "candidates": [
+   "Digor Ossetic",
+   "Iron Ossetic",
+   "Ossetian"
+  ],
+  "chosen": "Digor Ossetic"
+ },
+ "i:duj": {
+  "iso": "duj",
+  "glottocode": "djap1238",
+  "candidates": [
+   "Djapu",
+   "YOLNGU"
+  ],
+  "chosen": "Djapu"
+ },
+ "i:duo": {
+  "iso": "duo",
+  "glottocode": "dupa1235",
+  "candidates": [
+   "Dupaningan Agta",
+   "Dupaningan Agta; Eastern Cagayan Agta; Dupaninan Agta"
+  ],
+  "chosen": "Dupaningan Agta; Eastern Cagayan Agta; Dupaninan Agta"
+ },
+ "i:wkw": {
+  "iso": "wkw",
+  "glottocode": "duun1241",
+  "candidates": [
+   "Duungidjawu",
+   "Waka Waka"
+  ],
+  "chosen": "Duungidjawu"
+ },
+ "i:amx": {
+  "iso": "amx",
+  "glottocode": "east2380",
+  "candidates": [
+   "Eastern Anmatyerre",
+   "Western Anmatyerre"
+  ],
+  "chosen": "Eastern Anmatyerre"
+ },
+ "i:ydd": {
+  "iso": "ydd",
+  "glottocode": "east2295",
+  "candidates": [
+   "Eastern Yiddish",
+   "Standard Yiddish"
+  ],
+  "chosen": "Standard Yiddish"
+ },
+ "i:arz": {
+  "iso": "arz",
+  "glottocode": "egyp1253",
+  "candidates": [
+   "ARABIC",
+   "Egyptian Arabic"
+  ],
+  "chosen": "Egyptian Arabic"
+ },
+ "i:etu": {
+  "iso": "etu",
+  "glottocode": "ejag1239",
+  "candidates": [
+   "EJAGHAM",
+   "Ejagham",
+   "Ejagham de l'ouest"
+  ],
+  "chosen": "Ejagham de l'ouest"
+ },
+ "i:eng": {
+  "iso": "eng",
+  "glottocode": "stan1293",
+  "candidates": [
+   "American English",
+   "English",
+   "English (Australian)",
+   "English (New Zealand)"
+  ],
+  "chosen": "English (Australian)"
+ },
+ "i:ers": {
+  "iso": "ers",
+  "glottocode": "ersu1241",
+  "candidates": [
+   "Ersu",
+   "Lizu"
+  ],
+  "chosen": "Ersu"
+ },
+ "i:yuc": {
+  "iso": "yuc",
+  "glottocode": "yuch1247",
+  "candidates": [
+   "Euchee; Yuchi",
+   "YUCHI",
+   "Yuchi"
+  ],
+  "chosen": "Euchee; Yuchi"
+ },
+ "i:ewe": {
+  "iso": "ewe",
+  "glottocode": "ewee1241",
+  "candidates": [
+   "EWE",
+   "Ewe",
+   "Eʋe"
+  ],
+  "chosen": "Ewe"
+ },
+ "i:fmp": {
+  "iso": "fmp",
+  "glottocode": "fefe1239",
+  "candidates": [
+   "FE?FE?",
+   "Fe'efe'fe"
+  ],
+  "chosen": "Fe'efe'fe"
+ },
+ "i:fuv": {
+  "iso": "fuv",
+  "glottocode": "nige1253",
+  "candidates": [
+   "Fula (Nigeria)",
+   "fulfulde (NGA)"
+  ],
+  "chosen": "Fula (Nigeria)"
+ },
+ "i:fub": {
+  "iso": "fub",
+  "glottocode": "adam1253",
+  "candidates": [
+   "Adamawa Fulfulde; Adamawa Fulani",
+   "Fulfulde",
+   "Fulfulde (Cameroon)",
+   "fulfulde (fuunaangere)"
+  ],
+  "chosen": "Adamawa Fulfulde; Adamawa Fulani"
+ },
+ "i:tbi": {
+  "iso": "tbi",
+  "glottocode": "gaam1241",
+  "candidates": [
+   "Gaahmg",
+   "TABI"
+  ],
+  "chosen": "Gaahmg"
+ },
+ "i:gdb": {
+  "iso": "gdb",
+  "glottocode": "pott1240",
+  "candidates": [
+   "Gadaba",
+   "Ollari"
+  ],
+  "chosen": "Gadaba"
+ },
+ "i:kld": {
+  "iso": "kld",
+  "glottocode": "gami1243",
+  "candidates": [
+   "Gamilaraay",
+   "Wiriyaraay",
+   "Yuwaalaraay",
+   "Yuwaliyaay"
+  ],
+  "chosen": "Yuwaalaraay"
+ },
+ "i:ilg": {
+  "iso": "ilg",
+  "glottocode": "gari1254",
+  "candidates": [
+   "Garig",
+   "Ilgar"
+  ],
+  "chosen": "Garig"
+ },
+ "i:gbp": {
+  "iso": "gbp",
+  "glottocode": "gbay1287",
+  "candidates": [
+   "GBEYA",
+   "Gbaya"
+  ],
+  "chosen": "Gbaya"
+ },
+ "i:gju": {
+  "iso": "gju",
+  "glottocode": "guja1253",
+  "candidates": [
+   "Gojri",
+   "Gojri; Gujari; Gujar"
+  ],
+  "chosen": "Gojri; Gujari; Gujar"
+ },
+ "i:ell": {
+  "iso": "ell",
+  "glottocode": "mode1248",
+  "candidates": [
+   "GREEK",
+   "Greek",
+   "Modern Greek"
+  ],
+  "chosen": "Modern Greek"
+ },
+ "i:gaq": {
+  "iso": "gaq",
+  "glottocode": "gata1239",
+  "candidates": [
+   "Didayi",
+   "Gtaʔ"
+  ],
+  "chosen": "Didayi"
+ },
+ "i:gde": {
+  "iso": "gde",
+  "glottocode": "gude1246",
+  "candidates": [
+   "Gu'de",
+   "Guɗe"
+  ],
+  "chosen": "Guɗe"
+ },
+ "i:gub": {
+  "iso": "gub",
+  "glottocode": "guaj1255",
+  "candidates": [
+   "Guajajara",
+   "Guajajára"
+  ],
+  "chosen": "Guajajara"
+ },
+ "i:gue": {
+  "iso": "gue",
+  "glottocode": "guri1247",
+  "candidates": [
+   "Gurindji",
+   "Malngin",
+   "Wanyjirra"
+  ],
+  "chosen": "Wanyjirra"
+ },
+ "i:gwn": {
+  "iso": "gwn",
+  "glottocode": "gwan1268",
+  "candidates": [
+   "Gwandara (Koro)",
+   "Gwandara (Nimbia)",
+   "Gwandara (Toni)"
+  ],
+  "chosen": "Gwandara (Nimbia)"
+ },
+ "i:hak": {
+  "iso": "hak",
+  "glottocode": "hakk1236",
+  "candidates": [
+   "HAKKA",
+   "Hakka",
+   "Hakka Chinese"
+  ],
+  "chosen": "Hakka Chinese"
+ },
+ "i:hin": {
+  "iso": "hin",
+  "glottocode": "hind1269",
+  "candidates": [
+   "HINDI-URDU",
+   "Hindi"
+  ],
+  "chosen": "Hindi"
+ },
+ "i:hix": {
+  "iso": "hix",
+  "glottocode": "hixk1239",
+  "candidates": [
+   "HIXKARYANA",
+   "Hixkaryána"
+  ],
+  "chosen": "Hixkaryána"
+ },
+ "i:hus": {
+  "iso": "hus",
+  "glottocode": "huas1242",
+  "candidates": [
+   "HUASTECO",
+   "Huastec"
+  ],
+  "chosen": "Huastec"
+ },
+ "i:huv": {
+  "iso": "huv",
+  "glottocode": "sanm1287",
+  "candidates": [
+   "HUAVE",
+   "Huave, San Mateo del Mar"
+  ],
+  "chosen": "Huave, San Mateo del Mar"
+ },
+ "i:ign": {
+  "iso": "ign",
+  "glottocode": "igna1246",
+  "candidates": [
+   "Ignaciano",
+   "MOXO"
+  ],
+  "chosen": "Ignaciano"
+ },
+ "i:ilo": {
+  "iso": "ilo",
+  "glottocode": "ilok1237",
+  "candidates": [
+   "Ilocano",
+   "Iloko/Ilocano"
+  ],
+  "chosen": "Iloko/Ilocano"
+ },
+ "i:ake": {
+  "iso": "ake",
+  "glottocode": "akaw1239",
+  "candidates": [
+   "AKAWAIO",
+   "Ingarikó"
+  ],
+  "chosen": "Ingarikó"
+ },
+ "i:heb": {
+  "iso": "heb",
+  "glottocode": "hebr1245",
+  "candidates": [
+   "Hebrew",
+   "Israeli Hebrew",
+   "Modern Hebrew"
+  ],
+  "chosen": "Israeli Hebrew"
+ },
+ "i:izr": {
+  "iso": "izr",
+  "glottocode": "izer1241",
+  "candidates": [
+   "Hill Jarawa",
+   "Izere"
+  ],
+  "chosen": "Hill Jarawa"
+ },
+ "i:djd": {
+  "iso": "djd",
+  "glottocode": "djam1255",
+  "candidates": [
+   "Jaminjung",
+   "Ngaliwurru"
+  ],
+  "chosen": "Ngaliwurru"
+ },
+ "i:qxw": {
+  "iso": "qxw",
+  "glottocode": "jauj1238",
+  "candidates": [
+   "Huanca",
+   "Jauja-Huanca Quechua"
+  ],
+  "chosen": "Jauja-Huanca Quechua"
+ },
+ "i:dyo": {
+  "iso": "dyo",
+  "glottocode": "jola1263",
+  "candidates": [
+   "DIOLA",
+   "Joola"
+  ],
+  "chosen": "Joola"
+ },
+ "i:lad": {
+  "iso": "lad",
+  "glottocode": "ladi1251",
+  "candidates": [
+   "Judaeo-Spanish",
+   "Judeo-Spanish"
+  ],
+  "chosen": "Judaeo-Spanish"
+ },
+ "i:kbp": {
+  "iso": "kbp",
+  "glottocode": "kabi1261",
+  "candidates": [
+   "Kabiye",
+   "Kabiyɛ"
+  ],
+  "chosen": "Kabiye"
+ },
+ "i:kbc": {
+  "iso": "kbc",
+  "glottocode": "kadi1248",
+  "candidates": [
+   "Kadiweu",
+   "Kadiwéu"
+  ],
+  "chosen": "Kadiweu"
+ },
+ "i:xtc": {
+  "iso": "xtc",
+  "glottocode": "katc1249",
+  "candidates": [
+   "KADUGLI",
+   "Kadugli (Katcha)",
+   "Kadugli (Miri)",
+   "Katcha"
+  ],
+  "chosen": "Kadugli (Katcha)"
+ },
+ "i:kkj": {
+  "iso": "kkj",
+  "glottocode": "kako1242",
+  "candidates": [
+   "Kako",
+   "Kakɔ"
+  ],
+  "chosen": "Kako"
+ },
+ "i:cbv": {
+  "iso": "cbv",
+  "glottocode": "cacu1241",
+  "candidates": [
+   "CACUA",
+   "Kakua"
+  ],
+  "chosen": "Kakua"
+ },
+ "i:mwp": {
+  "iso": "mwp",
+  "glottocode": "kala1377",
+  "candidates": [
+   "KALA LAGAW YA",
+   "Kala Kawaw Ya",
+   "Kala Lagaw Ya"
+  ],
+  "chosen": "Kala Kawaw Ya"
+ },
+ "i:nyf": {
+  "iso": "nyf",
+  "glottocode": "kamb1298",
+  "candidates": [
+   "Kambe",
+   "Kauma",
+   "Reβe"
+  ],
+  "chosen": "Kambe"
+ },
+ "i:kcp": {
+  "iso": "kcp",
+  "glottocode": "kang1288",
+  "candidates": [
+   "Kanga (Kanga)",
+   "Kanga (Kufa)"
+  ],
+  "chosen": "Kanga (Kanga)"
+ },
+ "i:nys": {
+  "iso": "nys",
+  "glottocode": "kani1276",
+  "candidates": [
+   "Kaniyang",
+   "Yuwat"
+  ],
+  "chosen": "Kaniyang"
+ },
+ "i:kxo": {
+  "iso": "kxo",
+  "glottocode": "kano1245",
+  "candidates": [
+   "Kanoe",
+   "Kanoé"
+  ],
+  "chosen": "Kanoe"
+ },
+ "i:gbd": {
+  "iso": "gbd",
+  "glottocode": "kara1476",
+  "candidates": [
+   "Garadjari",
+   "Karajarri"
+  ],
+  "chosen": "Garadjari"
+ },
+ "i:nmv": {
+  "iso": "nmv",
+  "glottocode": "kara1508",
+  "candidates": [
+   "Karangura",
+   "Ngamini"
+  ],
+  "chosen": "Karangura"
+ },
+ "i:mpj": {
+  "iso": "mpj",
+  "glottocode": "kart1247",
+  "candidates": [
+   "Kartujarra",
+   "Manjiljarra",
+   "Putijarra",
+   "Wangkajunga"
+  ],
+  "chosen": "Manjiljarra"
+ },
+ "i:iru": {
+  "iso": "iru",
+  "glottocode": "irul1243",
+  "candidates": [
+   "Irula",
+   "Kasaba"
+  ],
+  "chosen": "Kasaba"
+ },
+ "i:kas": {
+  "iso": "kas",
+  "glottocode": "kash1277",
+  "candidates": [
+   "KASHMIRI",
+   "Kashimiri",
+   "Kashmiri"
+  ],
+  "chosen": "Kashimiri"
+ },
+ "i:khg": {
+  "iso": "khg",
+  "glottocode": "kham1282",
+  "candidates": [
+   "Brag-g.yab Tibetan",
+   "Dongwang Tibetan",
+   "Kami Tibetan",
+   "Kham Tibetan",
+   "Nangchenpa Tibetan",
+   "Rgyalthang Tibetan",
+   "Sangdam Tibetan",
+   "Soghpo Tibetan"
+  ],
+  "chosen": "Nangchenpa Tibetan"
+ },
+ "i:nab": {
+  "iso": "nab",
+  "glottocode": "khit1238",
+  "candidates": [
+   "Kithaulhu",
+   "SOUTHERN NAMBIQUARA"
+  ],
+  "chosen": "Kithaulhu"
+ },
+ "i:yux": {
+  "iso": "yux",
+  "glottocode": "sout2750",
+  "candidates": [
+   "Kolyma Yukaghir",
+   "Yukaghir (Kolyma)"
+  ],
+  "chosen": "Kolyma Yukaghir"
+ },
+ "i:kpv": {
+  "iso": "kpv",
+  "glottocode": "komi1268",
+  "candidates": [
+   "KOMI",
+   "Komi",
+   "Komi-Zyrian"
+  ],
+  "chosen": "Komi-Zyrian"
+ },
+ "i:xom": {
+  "iso": "xom",
+  "glottocode": "komo1258",
+  "candidates": [
+   "KOMA",
+   "Komo"
+  ],
+  "chosen": "Komo"
+ },
+ "i:gkp": {
+  "iso": "gkp",
+  "glottocode": "guin1254",
+  "candidates": [
+   "Kpelle, North",
+   "Kpɛlɛwoo"
+  ],
+  "chosen": "Kpelle, North"
+ },
+ "i:cub": {
+  "iso": "cub",
+  "glottocode": "cube1242",
+  "candidates": [
+   "CUBEO",
+   "Kubeo"
+  ],
+  "chosen": "Kubeo"
+ },
+ "i:wrk": {
+  "iso": "wrk",
+  "glottocode": "gara1269",
+  "candidates": [
+   "GARAWA",
+   "Kunindirri"
+  ],
+  "chosen": "Kunindirri"
+ },
+ "i:kjn": {
+  "iso": "kjn",
+  "glottocode": "kunj1245",
+  "candidates": [
+   "Kunjen",
+   "Olkol",
+   "Oykangand"
+  ],
+  "chosen": "Oykangand"
+ },
+ "i:kmr": {
+  "iso": "kmr",
+  "glottocode": "nort2641",
+  "candidates": [
+   "KURDISH",
+   "Northern Kurdish"
+  ],
+  "chosen": "Northern Kurdish"
+ },
+ "i:kir": {
+  "iso": "kir",
+  "glottocode": "kirg1245",
+  "candidates": [
+   "KIRGHIZ",
+   "Kirghiz",
+   "Kyrgyz"
+  ],
+  "chosen": "Kirghiz"
+ },
+ "i:lmn": {
+  "iso": "lmn",
+  "glottocode": "lamb1269",
+  "candidates": [
+   "Banjara",
+   "Lamani"
+  ],
+  "chosen": "Banjara"
+ },
+ "i:lee": {
+  "iso": "lee",
+  "glottocode": "lyel1241",
+  "candidates": [
+   "Lele (Lyélé)",
+   "Lyélé"
+  ],
+  "chosen": "Lele (Lyélé)"
+ },
+ "i:lmp": {
+  "iso": "lmp",
+  "glottocode": "limb1268",
+  "candidates": [
+   "Limbum",
+   "limbum (central)",
+   "limbum (northern)",
+   "limbum (southern)"
+  ],
+  "chosen": "limbum (northern)"
+ },
+ "i:slh": {
+  "iso": "slh",
+  "glottocode": "sout2965",
+  "candidates": [
+   "LUSHOOTSEED",
+   "Salish"
+  ],
+  "chosen": "Salish"
+ },
+ "i:nie": {
+  "iso": "nie",
+  "glottocode": "niel1243",
+  "candidates": [
+   "LUA",
+   "Lwaa"
+  ],
+  "chosen": "Lwaa"
+ },
+ "i:lom": {
+  "iso": "lom",
+  "glottocode": "loma1260",
+  "candidates": [
+   "Looma",
+   "Lɔgɔmagooi"
+  ],
+  "chosen": "Lɔgɔmagooi"
+ },
+ "i:mhi": {
+  "iso": "mhi",
+  "glottocode": "madi1260",
+  "candidates": [
+   "Ma'di",
+   "Pandikeri"
+  ],
+  "chosen": "Pandikeri"
+ },
+ "i:mky": {
+  "iso": "mky",
+  "glottocode": "east2440",
+  "candidates": [
+   "Makian, East (Taba)",
+   "Taba"
+  ],
+  "chosen": "Makian, East (Taba)"
+ },
+ "i:mjg": {
+  "iso": "mjg",
+  "glottocode": "tuuu1240",
+  "candidates": [
+   "MONGUOR",
+   "Mangghuer"
+  ],
+  "chosen": "Mangghuer"
+ },
+ "i:arn": {
+  "iso": "arn",
+  "glottocode": "mapu1245",
+  "candidates": [
+   "ARAUCANIAN",
+   "Araucanian",
+   "Mapudungun"
+  ],
+  "chosen": "Araucanian"
+ },
+ "i:mec": {
+  "iso": "mec",
+  "glottocode": "mara1385",
+  "candidates": [
+   "Mara",
+   "Marra"
+  ],
+  "chosen": "Marra"
+ },
+ "i:mph": {
+  "iso": "mph",
+  "glottocode": "maun1240",
+  "candidates": [
+   "MAUNG",
+   "Maung",
+   "Mawng"
+  ],
+  "chosen": "Maung"
+ },
+ "i:maq": {
+  "iso": "maq",
+  "glottocode": "chiq1250",
+  "candidates": [
+   "MAZATEC",
+   "Mazateco"
+  ],
+  "chosen": "Mazateco"
+ },
+ "i:mbo": {
+  "iso": "mbo",
+  "glottocode": "mboc1235",
+  "candidates": [
+   "Mbo (Ekanang)",
+   "Mbo (Ngwatta)",
+   "Mboó"
+  ],
+  "chosen": "Mbo (Ekanang)"
+ },
+ "i:mhr": {
+  "iso": "mhr",
+  "glottocode": "east2328",
+  "candidates": [
+   "Cheremis",
+   "Eastern Mari",
+   "MARI",
+   "Meadow Mari"
+  ],
+  "chosen": "Eastern Mari"
+ },
+ "i:mgo": {
+  "iso": "mgo",
+  "glottocode": "meta1238",
+  "candidates": [
+   "Metta",
+   "Moghamo"
+  ],
+  "chosen": "Moghamo"
+ },
+ "i:ium": {
+  "iso": "ium",
+  "glottocode": "iumi1238",
+  "candidates": [
+   "MIEN",
+   "Yao"
+  ],
+  "chosen": "Yao"
+ },
+ "i:cdo": {
+  "iso": "cdo",
+  "glottocode": "mind1253",
+  "candidates": [
+   "FUZHOU",
+   "Min Dong Chinese"
+  ],
+  "chosen": "Min Dong Chinese"
+ },
+ "i:moc": {
+  "iso": "moc",
+  "glottocode": "moco1246",
+  "candidates": [
+   "Mocovi",
+   "Mocoví"
+  ],
+  "chosen": "Mocovi"
+ },
+ "i:mif": {
+  "iso": "mif",
+  "glottocode": "mofu1248",
+  "candidates": [
+   "Mofu, South",
+   "Mofu-gudur"
+  ],
+  "chosen": "Mofu-gudur"
+ },
+ "i:unr": {
+  "iso": "unr",
+  "glottocode": "mund1320",
+  "candidates": [
+   "Bhumij",
+   "MUNDARI",
+   "Mundari"
+  ],
+  "chosen": "Mundari"
+ },
+ "i:myu": {
+  "iso": "myu",
+  "glottocode": "mund1330",
+  "candidates": [
+   "Mundurukú",
+   "Mundurukú"
+  ],
+  "chosen": "Mundurukú"
+ },
+ "i:mwf": {
+  "iso": "mwf",
+  "glottocode": "murr1258",
+  "candidates": [
+   "MURINHPATHA",
+   "Murrinh-patha"
+  ],
+  "chosen": "Murrinh-patha"
+ },
+ "i:irn": {
+  "iso": "irn",
+  "glottocode": "iran1263",
+  "candidates": [
+   "IRANXE",
+   "Mỹky"
+  ],
+  "chosen": "Mỹky"
+ },
+ "i:bud": {
+  "iso": "bud",
+  "glottocode": "ntch1242",
+  "candidates": [
+   "Basari",
+   "Bassar",
+   "N'cam"
+  ],
+  "chosen": "Basari"
+ },
+ "i:nav": {
+  "iso": "nav",
+  "glottocode": "nava1243",
+  "candidates": [
+   "NAVAJO",
+   "Navaho"
+  ],
+  "chosen": "Navaho"
+ },
+ "i:ndo": {
+  "iso": "ndo",
+  "glottocode": "ndon1254",
+  "candidates": [
+   "Ndonga (Eunda)",
+   "Ndonga (Kolonkadhi)",
+   "ndonga"
+  ],
+  "chosen": "Ndonga (Kolonkadhi)"
+ },
+ "i:nig": {
+  "iso": "nig",
+  "glottocode": "ngal1293",
+  "candidates": [
+   "Ngalakan",
+   "Ngalakgan"
+  ],
+  "chosen": "Ngalakgan"
+ },
+ "i:nam": {
+  "iso": "nam",
+  "glottocode": "nang1259",
+  "candidates": [
+   "Ngan'gityemerri",
+   "Nganikurungkurr"
+  ],
+  "chosen": "Nganikurungkurr"
+ },
+ "i:wbp": {
+  "iso": "wbp",
+  "glottocode": "west2437",
+  "candidates": [
+   "Ngardily",
+   "Warlpiri"
+  ],
+  "chosen": "Ngardily"
+ },
+ "i:ung": {
+  "iso": "ung",
+  "glottocode": "ngar1284",
+  "candidates": [
+   "NGARINJIN",
+   "Ngarinyin"
+  ],
+  "chosen": "Ngarinyin"
+ },
+ "i:wyb": {
+  "iso": "wyb",
+  "glottocode": "wang1291",
+  "candidates": [
+   "NGIYAMBAA",
+   "Ngiyambaa",
+   "Wayilwan"
+  ],
+  "chosen": "Ngiyambaa"
+ },
+ "i:niv": {
+  "iso": "niv",
+  "glottocode": "gily1242",
+  "candidates": [
+   "Gilyak",
+   "NIVKH",
+   "Nivkh"
+  ],
+  "chosen": "Gilyak"
+ },
+ "i:nuk": {
+  "iso": "nuk",
+  "glottocode": "nuuc1236",
+  "candidates": [
+   "Nootka",
+   "TSESHAHT"
+  ],
+  "chosen": "Nootka"
+ },
+ "i:kca": {
+  "iso": "kca",
+  "glottocode": "khan1273",
+  "candidates": [
+   "Eastern Khanty",
+   "KHANTY",
+   "Northern Khanty"
+  ],
+  "chosen": "Northern Khanty"
+ },
+ "i:nna": {
+  "iso": "nna",
+  "glottocode": "nyan1301",
+  "candidates": [
+   "Nyangumarta",
+   "Nyangumata"
+  ],
+  "chosen": "Nyangumarta"
+ },
+ "i:pan": {
+  "iso": "pan",
+  "glottocode": "panj1256",
+  "candidates": [
+   "Panjabi",
+   "Punjabi"
+  ],
+  "chosen": "Panjabi"
+ },
+ "i:ood": {
+  "iso": "ood",
+  "glottocode": "toho1245",
+  "candidates": [
+   "PAPAGO",
+   "Pima"
+  ],
+  "chosen": "Pima"
+ },
+ "i:gug": {
+  "iso": "gug",
+  "glottocode": "para1311",
+  "candidates": [
+   "GUARANI",
+   "Guarani",
+   "Paraguayan Guaraní"
+  ],
+  "chosen": "Paraguayan Guaraní"
+ },
+ "i:pst": {
+  "iso": "pst",
+  "glottocode": "cent1973",
+  "candidates": [
+   "PASHTO",
+   "Pashto",
+   "Wazirwola"
+  ],
+  "chosen": "Wazirwola"
+ },
+ "i:cjm": {
+  "iso": "cjm",
+  "glottocode": "east2563",
+  "candidates": [
+   "CHAM",
+   "Cham",
+   "Phan Rang Cham (Eastern Cham)"
+  ],
+  "chosen": "Phan Rang Cham (Eastern Cham)"
+ },
+ "i:twf": {
+  "iso": "twf",
+  "glottocode": "picu1248",
+  "candidates": [
+   "PICURIS",
+   "Tiwa"
+  ],
+  "chosen": "Tiwa"
+ },
+ "i:plg": {
+  "iso": "plg",
+  "glottocode": "pila1245",
+  "candidates": [
+   "Pilaga; Pilagá",
+   "Pilagá"
+  ],
+  "chosen": "Pilaga; Pilagá"
+ },
+ "i:por": {
+  "iso": "por",
+  "glottocode": "port1283",
+  "candidates": [
+   "Portuguese",
+   "Portuguese (Brazilian)",
+   "Portuguese (European)"
+  ],
+  "chosen": "Portuguese (Brazilian)"
+ },
+ "i:pww": {
+  "iso": "pww",
+  "glottocode": "pwon1235",
+  "candidates": [
+   "PHLONG",
+   "Pwo Karen"
+  ],
+  "chosen": "Pwo Karen"
+ },
+ "i:pbb": {
+  "iso": "pbb",
+  "glottocode": "paez1247",
+  "candidates": [
+   "PAEZ",
+   "Páez"
+  ],
+  "chosen": "Páez"
+ },
+ "i:rgr": {
+  "iso": "rgr",
+  "glottocode": "resi1247",
+  "candidates": [
+   "RESIGARO",
+   "Resígaro"
+  ],
+  "chosen": "Resígaro"
+ },
+ "i:ron": {
+  "iso": "ron",
+  "glottocode": "roma1327",
+  "candidates": [
+   "ROMANIAN",
+   "Romanian",
+   "Rumanian"
+  ],
+  "chosen": "Romanian"
+ },
+ "i:sae": {
+  "iso": "sae",
+  "glottocode": "saba1268",
+  "candidates": [
+   "Sabane",
+   "Sabanê"
+  ],
+  "chosen": "Sabane"
+ },
+ "i:sah": {
+  "iso": "sah",
+  "glottocode": "yaku1245",
+  "candidates": [
+   "Sakha",
+   "YAKUT",
+   "Yakut"
+  ],
+  "chosen": "Sakha"
+ },
+ "i:skf": {
+  "iso": "skf",
+  "glottocode": "saki1248",
+  "candidates": [
+   "Sakirabiá",
+   "Sakirabiá; Mekens"
+  ],
+  "chosen": "Sakirabiá; Mekens"
+ },
+ "i:qxl": {
+  "iso": "qxl",
+  "glottocode": "sala1272",
+  "candidates": [
+   "Salasaca Quichua",
+   "Salasca Quechua"
+  ],
+  "chosen": "Salasaca Quichua"
+ },
+ "i:sef": {
+  "iso": "sef",
+  "glottocode": "ceba1235",
+  "candidates": [
+   "SENADI",
+   "Senoufo, Cebaara"
+  ],
+  "chosen": "Senoufo, Cebaara"
+ },
+ "i:mcd": {
+  "iso": "mcd",
+  "glottocode": "shar1245",
+  "candidates": [
+   "Arara do Acre",
+   "Sharanawa"
+  ],
+  "chosen": "Arara do Acre"
+ },
+ "i:bod": {
+  "iso": "bod",
+  "glottocode": "tibe1272",
+  "candidates": [
+   "Dingri Tibetan",
+   "Drokpa Tibetan",
+   "Lhasa Tibetan",
+   "Shigatse Tibetan"
+  ],
+  "chosen": "Shigatse Tibetan"
+ },
+ "i:jeb": {
+  "iso": "jeb",
+  "glottocode": "jebe1250",
+  "candidates": [
+   "JEBERO",
+   "Shiwilu"
+  ],
+  "chosen": "Shiwilu"
+ },
+ "i:sxg": {
+  "iso": "sxg",
+  "glottocode": "shix1238",
+  "candidates": [
+   "Shixing",
+   "Xumi"
+  ],
+  "chosen": "Shixing"
+ },
+ "i:jiv": {
+  "iso": "jiv",
+  "glottocode": "shua1257",
+  "candidates": [
+   "JIVARO",
+   "Jivaro",
+   "Shuar"
+  ],
+  "chosen": "Jivaro"
+ },
+ "i:evn": {
+  "iso": "evn",
+  "glottocode": "even1259",
+  "candidates": [
+   "Evenki",
+   "Solon"
+  ],
+  "chosen": "Evenki"
+ },
+ "i:ses": {
+  "iso": "ses",
+  "glottocode": "koyr1242",
+  "candidates": [
+   "Songhai",
+   "Songhay, Koyraboro Senni"
+  ],
+  "chosen": "Songhay, Koyraboro Senni"
+ },
+ "i:snk": {
+  "iso": "snk",
+  "glottocode": "soni1259",
+  "candidates": [
+   "Soninke",
+   "Sooninke",
+   "soninke (kaedi (MRT))"
+  ],
+  "chosen": "soninke (kaedi (MRT))"
+ },
+ "i:srb": {
+  "iso": "srb",
+  "glottocode": "sora1254",
+  "candidates": [
+   "Savara",
+   "Sora",
+   "Soːra"
+  ],
+  "chosen": "Savara"
+ },
+ "i:loy": {
+  "iso": "loy",
+  "glottocode": "lowa1242",
+  "candidates": [
+   "South Mustang Tibetan",
+   "gLo Tibetan"
+  ],
+  "chosen": "South Mustang Tibetan"
+ },
+ "i:cmn": {
+  "iso": "cmn",
+  "glottocode": "mand1415",
+  "candidates": [
+   "MANDARIN",
+   "Mandarin Chinese",
+   "Standard Chinese",
+   "Standard Chinese; Mandarin"
+  ],
+  "chosen": "Standard Chinese; Mandarin"
+ },
+ "i:zsm": {
+  "iso": "zsm",
+  "glottocode": "stan1306",
+  "candidates": [
+   "Malay",
+   "Standard Malay"
+  ],
+  "chosen": "Standard Malay"
+ },
+ "i:nsm": {
+  "iso": "nsm",
+  "glottocode": "sumi1235",
+  "candidates": [
+   "Sema",
+   "Sumi"
+  ],
+  "chosen": "Sema"
+ },
+ "i:suy": {
+  "iso": "suy",
+  "glottocode": "suya1243",
+  "candidates": [
+   "Suyá",
+   "Tapayuna"
+  ],
+  "chosen": "Tapayuna"
+ },
+ "i:slc": {
+  "iso": "slc",
+  "glottocode": "sali1298",
+  "candidates": [
+   "SALIBA",
+   "Sáliba"
+  ],
+  "chosen": "Sáliba"
+ },
+ "i:tgk": {
+  "iso": "tgk",
+  "glottocode": "taji1245",
+  "candidates": [
+   "Bukharan Tajik",
+   "Tajik"
+  ],
+  "chosen": "Bukharan Tajik"
+ },
+ "i:ikr": {
+  "iso": "ikr",
+  "glottocode": "ikar1243",
+  "candidates": [
+   "Ikarranggal",
+   "Takalak"
+  ],
+  "chosen": "Ikarranggal"
+ },
+ "i:tsg": {
+  "iso": "tsg",
+  "glottocode": "taus1251",
+  "candidates": [
+   "Tausug",
+   "Tausug (Suluk)"
+  ],
+  "chosen": "Tausug (Suluk)"
+ },
+ "i:sel": {
+  "iso": "sel",
+  "glottocode": "selk1253",
+  "candidates": [
+   "SELKUP",
+   "Taz Selkup"
+  ],
+  "chosen": "Taz Selkup"
+ },
+ "i:tem": {
+  "iso": "tem",
+  "glottocode": "timn1235",
+  "candidates": [
+   "TEMNE",
+   "Temne",
+   "Themne"
+  ],
+  "chosen": "Themne"
+ },
+ "i:adx": {
+  "iso": "adx",
+  "glottocode": "amdo1237",
+  "candidates": [
+   "Themchen Tibetan",
+   "gSerpa"
+  ],
+  "chosen": "Themchen Tibetan"
+ },
+ "i:dif": {
+  "iso": "dif",
+  "glottocode": "dira1238",
+  "candidates": [
+   "DIYARI",
+   "Diyari",
+   "Thirarri",
+   "Yarluyandi"
+  ],
+  "chosen": "Yarluyandi"
+ },
+ "i:tob": {
+  "iso": "tob",
+  "glottocode": "toba1269",
+  "candidates": [
+   "Toba",
+   "Toba (Argentina)"
+  ],
+  "chosen": "Toba (Argentina)"
+ },
+ "i:bbc": {
+  "iso": "bbc",
+  "glottocode": "bata1289",
+  "candidates": [
+   "BATAK",
+   "Toba-Batak"
+  ],
+  "chosen": "Toba-Batak"
+ },
+ "i:tol": {
+  "iso": "tol",
+  "glottocode": "tolo1259",
+  "candidates": [
+   "Chasta Costa",
+   "Tolowa; Tolowa-Chetco"
+  ],
+  "chosen": "Tolowa; Tolowa-Chetco"
+ },
+ "i:als": {
+  "iso": "als",
+  "glottocode": "tosk1239",
+  "candidates": [
+   "ALBANIAN",
+   "Tosk Albanian"
+  ],
+  "chosen": "Tosk Albanian"
+ },
+ "i:cas": {
+  "iso": "cas",
+  "glottocode": "mose1249",
+  "candidates": [
+   "Moseten",
+   "Tsimané"
+  ],
+  "chosen": "Moseten"
+ },
+ "i:cof": {
+  "iso": "cof",
+  "glottocode": "colo1256",
+  "candidates": [
+   "Colorado; Tsafiki",
+   "Tsáfiki"
+  ],
+  "chosen": "Colorado; Tsafiki"
+ },
+ "i:yrk": {
+  "iso": "yrk",
+  "glottocode": "nene1249",
+  "candidates": [
+   "NENETS",
+   "Tundra Nenets"
+  ],
+  "chosen": "Tundra Nenets"
+ },
+ "i:ykg": {
+  "iso": "ykg",
+  "glottocode": "nort2745",
+  "candidates": [
+   "Tundra Yukaghir",
+   "YUKAGHIR",
+   "Yukaghir"
+  ],
+  "chosen": "Tundra Yukaghir"
+ },
+ "i:tyv": {
+  "iso": "tyv",
+  "glottocode": "tuvi1240",
+  "candidates": [
+   "TUVA",
+   "Tuva; Tuvan",
+   "Tuvan"
+  ],
+  "chosen": "Tuva; Tuvan"
+ },
+ "i:rmy": {
+  "iso": "rmy",
+  "glottocode": "vlax1238",
+  "candidates": [
+   "Vlax Romani",
+   "greek Thrace Xoraxane Romane"
+  ],
+  "chosen": "greek Thrace Xoraxane Romane"
+ },
+ "i:gvn": {
+  "iso": "gvn",
+  "glottocode": "kuku1273",
+  "candidates": [
+   "GUGU-YALANDYI",
+   "Wagaman"
+  ],
+  "chosen": "Wagaman"
+ },
+ "i:bao": {
+  "iso": "bao",
+  "glottocode": "waim1255",
+  "candidates": [
+   "BARASANO",
+   "Barasano",
+   "Waimaha"
+  ],
+  "chosen": "Barasano"
+ },
+ "i:wap": {
+  "iso": "wap",
+  "glottocode": "wapi1253",
+  "candidates": [
+   "WAPISHANA",
+   "Wapichana"
+  ],
+  "chosen": "Wapichana"
+ },
+ "i:wrz": {
+  "iso": "wrz",
+  "glottocode": "wara1290",
+  "candidates": [
+   "WARAY",
+   "Warray"
+  ],
+  "chosen": "Warray"
+ },
+ "i:guc": {
+  "iso": "guc",
+  "glottocode": "wayu1243",
+  "candidates": [
+   "GUAJIRO",
+   "Goajiro",
+   "Wayúu"
+  ],
+  "chosen": "Goajiro"
+ },
+ "i:are": {
+  "iso": "are",
+  "glottocode": "west2441",
+  "candidates": [
+   "Arrarnte",
+   "Western Arrernte"
+  ],
+  "chosen": "Western Arrernte"
+ },
+ "i:wim": {
+  "iso": "wim",
+  "glottocode": "wikm1247",
+  "candidates": [
+   "WIK-MUNKAN",
+   "Wik Mungkan"
+  ],
+  "chosen": "Wik Mungkan"
+ },
+ "i:nuy": {
+  "iso": "nuy",
+  "glottocode": "nung1290",
+  "candidates": [
+   "NUNGGUBUYU",
+   "Nunggubuyu",
+   "Wubuy"
+  ],
+  "chosen": "Nunggubuyu"
+ },
+ "i:xir": {
+  "iso": "xir",
+  "glottocode": "xiri1243",
+  "candidates": [
+   "SHIRIANA",
+   "Xiriâna"
+  ],
+  "chosen": "Xiriâna"
+ },
+ "i:fun": {
+  "iso": "fun",
+  "glottocode": "fuln1247",
+  "candidates": [
+   "IATE",
+   "Yaathe"
+  ],
+  "chosen": "Yaathe"
+ },
+ "i:yaa": {
+  "iso": "yaa",
+  "glottocode": "yami1256",
+  "candidates": [
+   "Saynawa",
+   "Yaminawa"
+  ],
+  "chosen": "Yaminawa"
+ },
+ "i:wca": {
+  "iso": "wca",
+  "glottocode": "yano1262",
+  "candidates": [
+   "Yanomae of Demini/Tototopi",
+   "Yanomámi"
+  ],
+  "chosen": "Yanomae of Demini/Tototopi"
+ },
+ "i:qvn": {
+  "iso": "qvn",
+  "glottocode": "nort2980",
+  "candidates": [
+   "North Junín Quechua",
+   "Yaru Quechua"
+  ],
+  "chosen": "North Junín Quechua"
+ },
+ "i:ywn": {
+  "iso": "ywn",
+  "glottocode": "yawa1260",
+  "candidates": [
+   "Shanenawa",
+   "Yawanawa"
+  ],
+  "chosen": "Shanenawa"
+ },
+ "i:gnl": {
+  "iso": "gnl",
+  "glottocode": "gang1268",
+  "candidates": [
+   "Gangulu",
+   "Yetimarala"
+  ],
+  "chosen": "Yetimarala"
+ },
+ "i:bym": {
+  "iso": "bym",
+  "glottocode": "bidy1243",
+  "candidates": [
+   "Yandjibara",
+   "Yiningay"
+  ],
+  "chosen": "Yandjibara"
+ },
+ "i:yor": {
+  "iso": "yor",
+  "glottocode": "yoru1245",
+  "candidates": [
+   "YORUBA",
+   "Yorouba"
+  ],
+  "chosen": "Yorouba"
+ },
+ "i:yue": {
+  "iso": "yue",
+  "glottocode": "yuec1235",
+  "candidates": [
+   "Chinese",
+   "TAISHAN",
+   "Yue Chinese"
+  ],
+  "chosen": "Yue Chinese"
+ },
+ "i:ame": {
+  "iso": "ame",
+  "glottocode": "yane1238",
+  "candidates": [
+   "AMUESHA",
+   "Yánesha"
+  ],
+  "chosen": "Yánesha"
+ },
+ "i:zne": {
+  "iso": "zne",
+  "glottocode": "zand1248",
+  "candidates": [
+   "AZANDE",
+   "Zande"
+  ],
+  "chosen": "Zande"
+ },
+ "i:gsw": {
+  "iso": "gsw",
+  "glottocode": "swis1247",
+  "candidates": [
+   "Swiss German",
+   "Zurich German"
+  ],
+  "chosen": "Zurich German"
+ },
+ "i:ior": {
+  "iso": "ior",
+  "glottocode": "inor1238",
+  "candidates": [
+   "Ener",
+   "Ennemor"
+  ],
+  "chosen": "Ennemor"
+ },
+ "i:pes": {
+  "iso": "pes",
+  "glottocode": "west2369",
+  "candidates": [
+   "FARSI",
+   "Farsi",
+   "Persian"
+  ],
+  "chosen": "Persian"
+ },
+ "i:gru": {
+  "iso": "gru",
+  "glottocode": "kist1241",
+  "candidates": [
+   "Goggot",
+   "Soddo"
+  ],
+  "chosen": "Goggot"
+ },
+ "i:gup": {
+  "iso": "gup",
+  "glottocode": "gunw1252",
+  "candidates": [
+   "Gun-Djeihmi",
+   "Gunwinggu",
+   "Kune",
+   "Kuninjku",
+   "Kunwinjku",
+   "Mayali"
+  ],
+  "chosen": "Gunwinggu"
+ },
+ "i:jaa": {
+  "iso": "jaa",
+  "glottocode": "jama1261",
+  "candidates": [
+   "Jamamadí",
+   "Jarawara"
+  ],
+  "chosen": "Jamamadí"
+ },
+ "i:kpt": {
+  "iso": "kpt",
+  "glottocode": "kara1474",
+  "candidates": [
+   "Karata",
+   "Tukita"
+  ],
+  "chosen": "Karata"
+ },
+ "i:kwk": {
+  "iso": "kwk",
+  "glottocode": "kwak1269",
+  "candidates": [
+   "KWAKW'ALA",
+   "Kwakiutl"
+  ],
+  "chosen": "Kwakiutl"
+ },
+ "i:nrb": {
+  "iso": "nrb",
+  "glottocode": "nara1262",
+  "candidates": [
+   "NERA",
+   "Nara"
+  ],
+  "chosen": "Nara"
+ },
+ "i:pbu": {
+  "iso": "pbu",
+  "glottocode": "nort2647",
+  "candidates": [
+   "Northwestern Pashto",
+   "Yousafzai Pashto"
+  ],
+  "chosen": "Northwestern Pashto"
+ },
+ "i:fia": {
+  "iso": "fia",
+  "glottocode": "nobi1240",
+  "candidates": [
+   "Mahas-Fiyadikka",
+   "NUBIAN"
+  ],
+  "chosen": "Mahas-Fiyadikka"
+ },
+ "i:shi": {
+  "iso": "shi",
+  "glottocode": "tach1250",
+  "candidates": [
+   "SHILHA",
+   "Shilha",
+   "Tachelhit",
+   "Tashlhiyt Berber"
+  ],
+  "chosen": "Tashlhiyt Berber"
+ },
+ "i:gle": {
+  "iso": "gle",
+  "glottocode": "iris1253",
+  "candidates": [
+   "IRISH",
+   "Irish",
+   "Irish Gaelic"
+  ],
+  "chosen": "Irish Gaelic"
+ }
+}
