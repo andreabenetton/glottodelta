@@ -15,7 +15,7 @@ let evidenceMode='all';
 let differencesOnlyMode=false;
 let currentAuditFilter='all';
 
-comparisonSelector.innerHTML='<option value="">Select comparison language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.iso}">${escapeHTML(lang.name)} (${lang.iso.toUpperCase()})</option>`).join('');
+comparisonSelector.innerHTML='<option value="">Select comparison language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${escapeHTML(lang.name)} (${languageCodeLabel(lang)})</option>`).join('');
 
 function evidenceModeLabel(){
   return {all:'green, amber and blue',population:'green and amber',mapped:'green only',variant:'amber only',attested:'blue only'}[evidenceMode]||'all evidence';
@@ -66,8 +66,8 @@ function renderSingleLanguageHighlight(lang){
 
 function renderComparisonHighlight(){
   if(!selectedLanguage||!comparisonLanguage){if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);return;}
-  const primaryCode=selectedLanguage.iso.toUpperCase();
-  const comparisonCode=comparisonLanguage.iso.toUpperCase();
+  const primaryCode=languageCodeLabel(selectedLanguage);
+  const comparisonCode=languageCodeLabel(comparisonLanguage);
   const inventoryA=LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set();
   const inventoryB=LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set();
   let shared=0,onlyA=0,onlyB=0,neither=0;
@@ -98,7 +98,7 @@ function renderComparisonHighlight(){
 }
 
 applyLanguageHighlight=function(lang){
-  selectedLanguage=lang;selector.value=lang.iso;languageSearchInput.value=lang.name;enableComparisonControls(true);
+  selectedLanguage=lang;selector.value=langKey(lang);languageSearchInput.value=lang.name;enableComparisonControls(true);
   if(comparisonLanguage&&langKey(comparisonLanguage)===langKey(lang))clearComparisonLanguage();
   if(comparisonLanguage)renderComparisonHighlight();else renderSingleLanguageHighlight(lang);
 };
@@ -123,7 +123,7 @@ function resolveComparisonLanguage(value,allowPrefix=false){
   if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>x.name.toLowerCase().startsWith(query)||x.aliases.some(a=>a.toLowerCase().startsWith(query)));if(matches.length===1)lang=matches[0];}
   if(lang){
     if(selectedLanguage&&langKey(lang)===langKey(selectedLanguage)){comparisonSearchInput.setCustomValidity('Choose a different language for comparison.');comparisonSearchInput.reportValidity();return null;}
-    comparisonSearchInput.setCustomValidity('');comparisonLanguage=lang;comparisonSelector.value=lang.iso;comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();
+    comparisonSearchInput.setCustomValidity('');comparisonLanguage=lang;comparisonSelector.value=langKey(lang);comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();
   }else if(comparisonLanguage)clearComparisonLanguage(true);
   return lang;
 }

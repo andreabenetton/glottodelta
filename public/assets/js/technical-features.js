@@ -66,8 +66,8 @@
 
   function currentParams(){
     const params=new URLSearchParams();
-    if(selectedLanguage)params.set('lang',selectedLanguage.iso);
-    if(comparisonLanguage)params.set('compare',comparisonLanguage.iso);
+    if(selectedLanguage)params.set('lang',langKey(selectedLanguage));
+    if(comparisonLanguage)params.set('compare',langKey(comparisonLanguage));
     if(evidenceMode&&evidenceMode!=='all')params.set('evidence',evidenceMode);
     if(differencesOnlyMode)params.set('differences','1');
     if(currentSymbol&&drawer.classList.contains('open'))params.set('phoneme',currentSymbol);
@@ -120,7 +120,7 @@
     highContrastToggle.checked=params.get('contrast')==='1';largeSymbolsToggle.checked=params.get('large')==='1';nonColorCuesToggle.checked=params.get('cues')!=='0';applyAccessibility();
     const evidence=params.get('evidence');if(evidence&&[...evidenceFilterControl.options].some(option=>option.value===evidence)){evidenceFilterControl.value=evidence;evidenceMode=evidence;}
     const lang=params.get('lang');if(lang){const item=LANGUAGE_LOOKUP.get(lang.toLowerCase());if(item)applyLanguageHighlight(item);}
-    const compare=params.get('compare');if(compare&&selectedLanguage){const item=LANGUAGE_LOOKUP.get(compare.toLowerCase());if(item&&item.iso!==selectedLanguage.iso){comparisonLanguage=item;comparisonSelector.value=item.iso;comparisonSearchInput.value=item.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();}}
+    const compare=params.get('compare');if(compare&&selectedLanguage){const item=LANGUAGE_LOOKUP.get(compare.toLowerCase());if(item&&langKey(item)!==langKey(selectedLanguage)){comparisonLanguage=item;comparisonSelector.value=item.iso;comparisonSearchInput.value=item.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();}}
     if(params.get('differences')==='1'&&comparisonLanguage){differencesOnlyControl.checked=true;differencesOnlyMode=true;renderComparisonHighlight();}
     const q=params.get('q');if(q){searchInput.value=q;renderUnifiedSearch();}
     const phoneme=params.get('phoneme');if(phoneme&&document.querySelector(`.sym[data-symbol="${CSS.escape(phoneme)}"]`))openSymbol(phoneme);
