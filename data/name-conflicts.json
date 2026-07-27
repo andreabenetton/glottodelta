@@ -15,7 +15,7 @@
    "Aheu; Thavung",
    "So"
   ],
-  "chosen": "Aheu; Thavung"
+  "chosen": "Aheu"
  },
  "i:tba": {
   "iso": "tba",
@@ -43,7 +43,7 @@
    "Kawesqar",
    "QAWASQAR"
   ],
-  "chosen": "Alacalufe"
+  "chosen": "Kawésqar"
  },
  "i:aly": {
   "iso": "aly",
@@ -52,7 +52,7 @@
    "Alyawarr",
    "Alyawarra"
   ],
-  "chosen": "Alyawarra"
+  "chosen": "Alyawarr"
  },
  "i:ant": {
   "iso": "ant",
@@ -62,7 +62,7 @@
    "WESTERN DESERT",
    "Western Desert"
   ],
-  "chosen": "Western Desert"
+  "chosen": "Antakirinya"
  },
  "i:any": {
   "iso": "any",
@@ -72,7 +72,7 @@
    "Anyi",
    "Anyi Sanvi"
   ],
-  "chosen": "Agni Djuablin"
+  "chosen": "Anyi"
  },
  "i:apn": {
   "iso": "apn",
@@ -82,7 +82,7 @@
    "Apinaye",
    "Apinayé"
   ],
-  "chosen": "Apinaye"
+  "chosen": "Apinayé"
  },
  "i:cni": {
   "iso": "cni",
@@ -110,7 +110,7 @@
    "Awiya",
    "Awngi"
   ],
-  "chosen": "Awiya"
+  "chosen": "Awngi"
  },
  "i:azj": {
   "iso": "azj",
@@ -176,7 +176,7 @@
    "Baniwa",
    "Kurripako; Baniwa; Baniwa (Icana)"
   ],
-  "chosen": "Kurripako; Baniwa; Baniwa (Icana)"
+  "chosen": "Baniwa"
  },
  "i:gbw": {
   "iso": "gbw",
@@ -185,7 +185,7 @@
    "Barunggam",
    "Gabi-Gabi"
   ],
-  "chosen": "Barunggam"
+  "chosen": "Gabi-Gabi"
  },
  "i:eus": {
   "iso": "eus",
@@ -195,7 +195,7 @@
    "Basque",
    "Zuberoan Basque"
   ],
-  "chosen": "Zuberoan Basque"
+  "chosen": "Basque"
  },
  "i:bci": {
   "iso": "bci",
@@ -222,7 +222,7 @@
    "Beserman",
    "Udmurt"
   ],
-  "chosen": "Beserman"
+  "chosen": "Udmurt"
  },
  "i:nbj": {
   "iso": "nbj",
@@ -242,7 +242,7 @@
    "Gudanji",
    "Wambaya"
   ],
-  "chosen": "Binbinka"
+  "chosen": "Wambaya"
  },
  "i:bbo": {
   "iso": "bbo",
@@ -261,7 +261,7 @@
    "Bora",
    "Miraña"
   ],
-  "chosen": "Miraña"
+  "chosen": "Bora"
  },
  "i:kvn": {
   "iso": "kvn",
@@ -308,7 +308,7 @@
    "Japhug",
    "Jiarong"
   ],
-  "chosen": "Caodeng rGyalrong"
+  "chosen": "Jiarong"
  },
  "i:cav": {
   "iso": "cav",
@@ -317,7 +317,7 @@
    "Cavinena",
    "Cavineña"
   ],
-  "chosen": "Cavinena"
+  "chosen": "Cavineña"
  },
  "i:cyb": {
   "iso": "cyb",
@@ -395,7 +395,7 @@
    "Chacobo",
    "Chácobo"
   ],
-  "chosen": "Chacobo"
+  "chosen": "Chácobo"
  },
  "i:con": {
   "iso": "con",
@@ -414,7 +414,7 @@
    "KHALKHA",
    "Khalkha"
   ],
-  "chosen": "Darkhat"
+  "chosen": "Khalkha"
  },
  "i:drd": {
   "iso": "drd",
@@ -443,7 +443,7 @@
    "Kurukh",
    "Kurux"
   ],
-  "chosen": "Dhangar"
+  "chosen": "Kurukh"
  },
  "i:luo": {
   "iso": "luo",
@@ -462,7 +462,7 @@
    "Iron Ossetic",
    "Ossetian"
   ],
-  "chosen": "Digor Ossetic"
+  "chosen": "Ossetian"
  },
  "i:duj": {
   "iso": "duj",
@@ -480,7 +480,7 @@
    "Dupaningan Agta",
    "Dupaningan Agta; Eastern Cagayan Agta; Dupaninan Agta"
   ],
-  "chosen": "Dupaningan Agta; Eastern Cagayan Agta; Dupaninan Agta"
+  "chosen": "Dupaningan Agta"
  },
  "i:wkw": {
   "iso": "wkw",
@@ -507,7 +507,7 @@
    "Eastern Yiddish",
    "Standard Yiddish"
   ],
-  "chosen": "Standard Yiddish"
+  "chosen": "Eastern Yiddish"
  },
  "i:arz": {
   "iso": "arz",
@@ -526,7 +526,7 @@
    "Ejagham",
    "Ejagham de l'ouest"
   ],
-  "chosen": "Ejagham de l'ouest"
+  "chosen": "Ejagham"
  },
  "i:eng": {
   "iso": "eng",
@@ -537,7 +537,7 @@
    "English (Australian)",
    "English (New Zealand)"
   ],
-  "chosen": "English (Australian)"
+  "chosen": "English"
  },
  "i:ers": {
   "iso": "ers",
@@ -556,7 +556,7 @@
    "YUCHI",
    "Yuchi"
   ],
-  "chosen": "Euchee; Yuchi"
+  "chosen": "Yuchi"
  },
  "i:ewe": {
   "iso": "ewe",
@@ -595,7 +595,7 @@
    "Fulfulde (Cameroon)",
    "fulfulde (fuunaangere)"
   ],
-  "chosen": "Adamawa Fulfulde; Adamawa Fulani"
+  "chosen": "Adamawa Fulfulde"
  },
  "i:tbi": {
   "iso": "tbi",
@@ -624,7 +624,7 @@
    "Yuwaalaraay",
    "Yuwaliyaay"
   ],
-  "chosen": "Yuwaalaraay"
+  "chosen": "Gamilaraay"
  },
  "i:ilg": {
   "iso": "ilg",
@@ -651,7 +651,7 @@
    "Gojri",
    "Gojri; Gujari; Gujar"
   ],
-  "chosen": "Gojri; Gujari; Gujar"
+  "chosen": "Gojri"
  },
  "i:ell": {
   "iso": "ell",
@@ -688,7 +688,7 @@
    "Guajajara",
    "Guajajára"
   ],
-  "chosen": "Guajajara"
+  "chosen": "Guajajára"
  },
  "i:gue": {
   "iso": "gue",
@@ -698,7 +698,7 @@
    "Malngin",
    "Wanyjirra"
   ],
-  "chosen": "Wanyjirra"
+  "chosen": "Gurindji"
  },
  "i:gwn": {
   "iso": "gwn",
@@ -772,7 +772,7 @@
    "Ilocano",
    "Iloko/Ilocano"
   ],
-  "chosen": "Iloko/Ilocano"
+  "chosen": "Ilocano"
  },
  "i:ake": {
   "iso": "ake",
@@ -781,7 +781,7 @@
    "AKAWAIO",
    "Ingarikó"
   ],
-  "chosen": "Ingarikó"
+  "chosen": "Akawaio"
  },
  "i:heb": {
   "iso": "heb",
@@ -791,7 +791,7 @@
    "Israeli Hebrew",
    "Modern Hebrew"
   ],
-  "chosen": "Israeli Hebrew"
+  "chosen": "Hebrew"
  },
  "i:izr": {
   "iso": "izr",
@@ -800,7 +800,7 @@
    "Hill Jarawa",
    "Izere"
   ],
-  "chosen": "Hill Jarawa"
+  "chosen": "Izere"
  },
  "i:djd": {
   "iso": "djd",
@@ -809,7 +809,7 @@
    "Jaminjung",
    "Ngaliwurru"
   ],
-  "chosen": "Ngaliwurru"
+  "chosen": "Jaminjung"
  },
  "i:qxw": {
   "iso": "qxw",
@@ -854,7 +854,7 @@
    "Kadiweu",
    "Kadiwéu"
   ],
-  "chosen": "Kadiweu"
+  "chosen": "Kadiwéu"
  },
  "i:xtc": {
   "iso": "xtc",
@@ -893,7 +893,7 @@
    "Kala Kawaw Ya",
    "Kala Lagaw Ya"
   ],
-  "chosen": "Kala Kawaw Ya"
+  "chosen": "Kala Lagaw Ya"
  },
  "i:nyf": {
   "iso": "nyf",
@@ -930,7 +930,7 @@
    "Kanoe",
    "Kanoé"
   ],
-  "chosen": "Kanoe"
+  "chosen": "Kanoé"
  },
  "i:gbd": {
   "iso": "gbd",
@@ -939,7 +939,7 @@
    "Garadjari",
    "Karajarri"
   ],
-  "chosen": "Garadjari"
+  "chosen": "Karajarri"
  },
  "i:nmv": {
   "iso": "nmv",
@@ -948,7 +948,7 @@
    "Karangura",
    "Ngamini"
   ],
-  "chosen": "Karangura"
+  "chosen": "Ngamini"
  },
  "i:mpj": {
   "iso": "mpj",
@@ -968,7 +968,7 @@
    "Irula",
    "Kasaba"
   ],
-  "chosen": "Kasaba"
+  "chosen": "Irula"
  },
  "i:kas": {
   "iso": "kas",
@@ -978,7 +978,7 @@
    "Kashimiri",
    "Kashmiri"
   ],
-  "chosen": "Kashimiri"
+  "chosen": "Kashmiri"
  },
  "i:khg": {
   "iso": "khg",
@@ -993,7 +993,7 @@
    "Sangdam Tibetan",
    "Soghpo Tibetan"
   ],
-  "chosen": "Nangchenpa Tibetan"
+  "chosen": "Kham Tibetan"
  },
  "i:nab": {
   "iso": "nab",
@@ -1002,7 +1002,7 @@
    "Kithaulhu",
    "SOUTHERN NAMBIQUARA"
   ],
-  "chosen": "Kithaulhu"
+  "chosen": "Southern Nambiquara"
  },
  "i:yux": {
   "iso": "yux",
@@ -1057,7 +1057,7 @@
    "GARAWA",
    "Kunindirri"
   ],
-  "chosen": "Kunindirri"
+  "chosen": "Garawa"
  },
  "i:kjn": {
   "iso": "kjn",
@@ -1067,7 +1067,7 @@
    "Olkol",
    "Oykangand"
   ],
-  "chosen": "Oykangand"
+  "chosen": "Kunjen"
  },
  "i:kmr": {
   "iso": "kmr",
@@ -1104,7 +1104,7 @@
    "Lele (Lyélé)",
    "Lyélé"
   ],
-  "chosen": "Lele (Lyélé)"
+  "chosen": "Lyélé"
  },
  "i:lmp": {
   "iso": "lmp",
@@ -1115,7 +1115,7 @@
    "limbum (northern)",
    "limbum (southern)"
   ],
-  "chosen": "limbum (northern)"
+  "chosen": "Limbum"
  },
  "i:slh": {
   "iso": "slh",
@@ -1124,7 +1124,7 @@
    "LUSHOOTSEED",
    "Salish"
   ],
-  "chosen": "Salish"
+  "chosen": "Lushootseed"
  },
  "i:nie": {
   "iso": "nie",
@@ -1142,7 +1142,7 @@
    "Looma",
    "Lɔgɔmagooi"
   ],
-  "chosen": "Lɔgɔmagooi"
+  "chosen": "Looma"
  },
  "i:mhi": {
   "iso": "mhi",
@@ -1151,7 +1151,7 @@
    "Ma'di",
    "Pandikeri"
   ],
-  "chosen": "Pandikeri"
+  "chosen": "Ma'di"
  },
  "i:mky": {
   "iso": "mky",
@@ -1160,7 +1160,7 @@
    "Makian, East (Taba)",
    "Taba"
   ],
-  "chosen": "Makian, East (Taba)"
+  "chosen": "Taba"
  },
  "i:mjg": {
   "iso": "mjg",
@@ -1179,7 +1179,7 @@
    "Araucanian",
    "Mapudungun"
   ],
-  "chosen": "Araucanian"
+  "chosen": "Mapudungun"
  },
  "i:mec": {
   "iso": "mec",
@@ -1207,7 +1207,7 @@
    "MAZATEC",
    "Mazateco"
   ],
-  "chosen": "Mazateco"
+  "chosen": "Mazatec"
  },
  "i:mbo": {
   "iso": "mbo",
@@ -1237,7 +1237,7 @@
    "Metta",
    "Moghamo"
   ],
-  "chosen": "Moghamo"
+  "chosen": "Metta"
  },
  "i:ium": {
   "iso": "ium",
@@ -1246,7 +1246,7 @@
    "MIEN",
    "Yao"
   ],
-  "chosen": "Yao"
+  "chosen": "Mien"
  },
  "i:cdo": {
   "iso": "cdo",
@@ -1264,7 +1264,7 @@
    "Mocovi",
    "Mocoví"
   ],
-  "chosen": "Mocovi"
+  "chosen": "Mocoví"
  },
  "i:mif": {
   "iso": "mif",
@@ -1329,7 +1329,7 @@
    "NAVAJO",
    "Navaho"
   ],
-  "chosen": "Navaho"
+  "chosen": "Navajo"
  },
  "i:ndo": {
   "iso": "ndo",
@@ -1339,7 +1339,7 @@
    "Ndonga (Kolonkadhi)",
    "ndonga"
   ],
-  "chosen": "Ndonga (Kolonkadhi)"
+  "chosen": "Ndonga"
  },
  "i:nig": {
   "iso": "nig",
@@ -1357,7 +1357,7 @@
    "Ngan'gityemerri",
    "Nganikurungkurr"
   ],
-  "chosen": "Nganikurungkurr"
+  "chosen": "Ngan'gityemerri"
  },
  "i:wbp": {
   "iso": "wbp",
@@ -1366,7 +1366,7 @@
    "Ngardily",
    "Warlpiri"
   ],
-  "chosen": "Ngardily"
+  "chosen": "Warlpiri"
  },
  "i:ung": {
   "iso": "ung",
@@ -1395,7 +1395,7 @@
    "NIVKH",
    "Nivkh"
   ],
-  "chosen": "Gilyak"
+  "chosen": "Nivkh"
  },
  "i:nuk": {
   "iso": "nuk",
@@ -1414,7 +1414,7 @@
    "KHANTY",
    "Northern Khanty"
   ],
-  "chosen": "Northern Khanty"
+  "chosen": "Khanty"
  },
  "i:nna": {
   "iso": "nna",
@@ -1461,7 +1461,7 @@
    "Pashto",
    "Wazirwola"
   ],
-  "chosen": "Wazirwola"
+  "chosen": "Pashto"
  },
  "i:cjm": {
   "iso": "cjm",
@@ -1480,7 +1480,7 @@
    "PICURIS",
    "Tiwa"
   ],
-  "chosen": "Tiwa"
+  "chosen": "Picuris"
  },
  "i:plg": {
   "iso": "plg",
@@ -1489,7 +1489,7 @@
    "Pilaga; Pilagá",
    "Pilagá"
   ],
-  "chosen": "Pilaga; Pilagá"
+  "chosen": "Pilagá"
  },
  "i:por": {
   "iso": "por",
@@ -1499,7 +1499,7 @@
    "Portuguese (Brazilian)",
    "Portuguese (European)"
   ],
-  "chosen": "Portuguese (Brazilian)"
+  "chosen": "Portuguese"
  },
  "i:pww": {
   "iso": "pww",
@@ -1545,7 +1545,7 @@
    "Sabane",
    "Sabanê"
   ],
-  "chosen": "Sabane"
+  "chosen": "Sabanê"
  },
  "i:sah": {
   "iso": "sah",
@@ -1564,7 +1564,7 @@
    "Sakirabiá",
    "Sakirabiá; Mekens"
   ],
-  "chosen": "Sakirabiá; Mekens"
+  "chosen": "Sakirabiá"
  },
  "i:qxl": {
   "iso": "qxl",
@@ -1591,7 +1591,7 @@
    "Arara do Acre",
    "Sharanawa"
   ],
-  "chosen": "Arara do Acre"
+  "chosen": "Sharanawa"
  },
  "i:bod": {
   "iso": "bod",
@@ -1602,7 +1602,7 @@
    "Lhasa Tibetan",
    "Shigatse Tibetan"
   ],
-  "chosen": "Shigatse Tibetan"
+  "chosen": "Lhasa Tibetan"
  },
  "i:jeb": {
   "iso": "jeb",
@@ -1630,7 +1630,7 @@
    "Jivaro",
    "Shuar"
   ],
-  "chosen": "Jivaro"
+  "chosen": "Shuar"
  },
  "i:evn": {
   "iso": "evn",
@@ -1658,7 +1658,7 @@
    "Sooninke",
    "soninke (kaedi (MRT))"
   ],
-  "chosen": "soninke (kaedi (MRT))"
+  "chosen": "Soninke"
  },
  "i:srb": {
   "iso": "srb",
@@ -1668,7 +1668,7 @@
    "Sora",
    "Soːra"
   ],
-  "chosen": "Savara"
+  "chosen": "Sora"
  },
  "i:loy": {
   "iso": "loy",
@@ -1688,7 +1688,7 @@
    "Standard Chinese",
    "Standard Chinese; Mandarin"
   ],
-  "chosen": "Standard Chinese; Mandarin"
+  "chosen": "Mandarin Chinese"
  },
  "i:zsm": {
   "iso": "zsm",
@@ -1706,7 +1706,7 @@
    "Sema",
    "Sumi"
   ],
-  "chosen": "Sema"
+  "chosen": "Sumi"
  },
  "i:suy": {
   "iso": "suy",
@@ -1715,7 +1715,7 @@
    "Suyá",
    "Tapayuna"
   ],
-  "chosen": "Tapayuna"
+  "chosen": "Suyá"
  },
  "i:slc": {
   "iso": "slc",
@@ -1733,7 +1733,7 @@
    "Bukharan Tajik",
    "Tajik"
   ],
-  "chosen": "Bukharan Tajik"
+  "chosen": "Tajik"
  },
  "i:ikr": {
   "iso": "ikr",
@@ -1751,7 +1751,7 @@
    "Tausug",
    "Tausug (Suluk)"
   ],
-  "chosen": "Tausug (Suluk)"
+  "chosen": "Tausug"
  },
  "i:sel": {
   "iso": "sel",
@@ -1760,7 +1760,7 @@
    "SELKUP",
    "Taz Selkup"
   ],
-  "chosen": "Taz Selkup"
+  "chosen": "Selkup"
  },
  "i:tem": {
   "iso": "tem",
@@ -1790,7 +1790,7 @@
    "Thirarri",
    "Yarluyandi"
   ],
-  "chosen": "Yarluyandi"
+  "chosen": "Diyari"
  },
  "i:tob": {
   "iso": "tob",
@@ -1799,7 +1799,7 @@
    "Toba",
    "Toba (Argentina)"
   ],
-  "chosen": "Toba (Argentina)"
+  "chosen": "Toba"
  },
  "i:bbc": {
   "iso": "bbc",
@@ -1817,7 +1817,7 @@
    "Chasta Costa",
    "Tolowa; Tolowa-Chetco"
   ],
-  "chosen": "Tolowa; Tolowa-Chetco"
+  "chosen": "Tolowa"
  },
  "i:als": {
   "iso": "als",
@@ -1844,7 +1844,7 @@
    "Colorado; Tsafiki",
    "Tsáfiki"
   ],
-  "chosen": "Colorado; Tsafiki"
+  "chosen": "Tsáfiki"
  },
  "i:yrk": {
   "iso": "yrk",
@@ -1873,7 +1873,7 @@
    "Tuva; Tuvan",
    "Tuvan"
   ],
-  "chosen": "Tuva; Tuvan"
+  "chosen": "Tuvan"
  },
  "i:rmy": {
   "iso": "rmy",
@@ -1882,7 +1882,7 @@
    "Vlax Romani",
    "greek Thrace Xoraxane Romane"
   ],
-  "chosen": "greek Thrace Xoraxane Romane"
+  "chosen": "Vlax Romani"
  },
  "i:gvn": {
   "iso": "gvn",
@@ -1891,7 +1891,7 @@
    "GUGU-YALANDYI",
    "Wagaman"
   ],
-  "chosen": "Wagaman"
+  "chosen": "Kuku-Yalanji"
  },
  "i:bao": {
   "iso": "bao",
@@ -1901,7 +1901,7 @@
    "Barasano",
    "Waimaha"
   ],
-  "chosen": "Barasano"
+  "chosen": "Waimaha"
  },
  "i:wap": {
   "iso": "wap",
@@ -1929,7 +1929,7 @@
    "Goajiro",
    "Wayúu"
   ],
-  "chosen": "Goajiro"
+  "chosen": "Wayúu"
  },
  "i:are": {
   "iso": "are",
@@ -1993,7 +1993,7 @@
    "Yanomae of Demini/Tototopi",
    "Yanomámi"
   ],
-  "chosen": "Yanomae of Demini/Tototopi"
+  "chosen": "Yanomámi"
  },
  "i:qvn": {
   "iso": "qvn",
@@ -2011,7 +2011,7 @@
    "Shanenawa",
    "Yawanawa"
   ],
-  "chosen": "Shanenawa"
+  "chosen": "Yawanawa"
  },
  "i:gnl": {
   "iso": "gnl",
@@ -2020,7 +2020,7 @@
    "Gangulu",
    "Yetimarala"
   ],
-  "chosen": "Yetimarala"
+  "chosen": "Gangulu"
  },
  "i:bym": {
   "iso": "bym",
@@ -2038,7 +2038,7 @@
    "YORUBA",
    "Yorouba"
   ],
-  "chosen": "Yorouba"
+  "chosen": "Yoruba"
  },
  "i:yue": {
   "iso": "yue",
@@ -2075,7 +2075,7 @@
    "Swiss German",
    "Zurich German"
   ],
-  "chosen": "Zurich German"
+  "chosen": "Swiss German"
  },
  "i:ior": {
   "iso": "ior",
@@ -2103,7 +2103,7 @@
    "Goggot",
    "Soddo"
   ],
-  "chosen": "Goggot"
+  "chosen": "Soddo"
  },
  "i:gup": {
   "iso": "gup",
@@ -2143,7 +2143,7 @@
    "KWAKW'ALA",
    "Kwakiutl"
   ],
-  "chosen": "Kwakiutl"
+  "chosen": "Kwak'wala"
  },
  "i:nrb": {
   "iso": "nrb",
@@ -2191,6 +2191,6 @@
    "Irish",
    "Irish Gaelic"
   ],
-  "chosen": "Irish Gaelic"
+  "chosen": "Irish"
  }
 }

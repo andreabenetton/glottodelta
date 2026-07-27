@@ -1,28 +1,46 @@
 
 
+// Composite language identity: the ISO 639-3 code, except when it is a
+// non-distinguishing placeholder ('mis' uncoded / 'und') in which case the
+// Glottocode is used. This keeps the 28 'mis'-coded languages distinct instead
+// of collapsing them under one ISO. For every ISO-coded language langKey===iso,
+// so demographic (population) logic is unaffected.
+function langKey(l){const i=l&&l.iso;if(i&&i!=='mis'&&i!=='und')return i;const g=l&&l.glottocode;return g?'g:'+g:'n:'+((l&&l.name)||'');}
+function isDemographic(l){return !!(l&&l.iso&&SPEAKER_ESTIMATES[l.iso]);}
+// Short code shown next to a language: the ISO 639-3 code, or the Glottocode for
+// uncoded ('mis'/'und') languages so they stay distinguishable.
+function languageCodeLabel(l){const i=l&&l.iso;return (i&&i!=='mis'&&i!=='und')?i.toUpperCase():(l&&l.glottocode?l.glottocode:'—');}
+
 const DEMOGRAPHIC_ISO=new Set();
+const ATTESTED_KEYS=new Set();
 for(const d of Object.values(DATA)){
   for(const x of d.languages){
+    ATTESTED_KEYS.add(langKey(x));
     if(x.iso&&SPEAKER_ESTIMATES[x.iso]) DEMOGRAPHIC_ISO.add(x.iso);
   }
 }
 const DEMOGRAPHIC_LANGUAGE_COUNT=DEMOGRAPHIC_ISO.size;
+const ATTESTED_LANGUAGE_COUNT=ATTESTED_KEYS.size;
 const SPEAKER_BASE=[...DEMOGRAPHIC_ISO].reduce((sum,iso)=>sum+SPEAKER_ESTIMATES[iso],0);
-function coveredLanguages(d,symbol=''){
-  const byIso=new Map();
+// All source-attested languages for a symbol, deduplicated by composite key.
+// Drives L, the picker and the drawer list. NO demographic filter.
+function attestedLanguages(d,symbol=''){
+  const byKey=new Map();
   for(const x of d.languages){
-    const iso=x.iso;
-    if(!iso||!DEMOGRAPHIC_ISO.has(iso)) continue;
-    const previous=byIso.get(iso);
-    if(!previous){byIso.set(iso,{...x,clickSegments:x.clickSegments?[...x.clickSegments]:undefined});continue;}
+    const k=langKey(x);
+    const previous=byKey.get(k);
+    if(!previous){byKey.set(k,{...x,clickSegments:x.clickSegments?[...x.clickSegments]:undefined});continue;}
     if(x.clickSegments){previous.clickSegments=[...new Set([...(previous.clickSegments||[]),...x.clickSegments])].sort();}
-    if(symbol&&typeof graphemeFor==='function'&&!graphemeFor(previous,symbol)&&graphemeFor(x,symbol)){const merged={...x};if(previous.clickSegments)merged.clickSegments=[...previous.clickSegments];byIso.set(iso,merged);}
+    if(symbol&&typeof graphemeFor==='function'&&!graphemeFor(previous,symbol)&&graphemeFor(x,symbol)){const merged={...x};if(previous.clickSegments)merged.clickSegments=[...previous.clickSegments];byKey.set(k,merged);}
   }
-  return [...byIso.values()].sort((a,b)=>(SPEAKER_ESTIMATES[b.iso]||0)-(SPEAKER_ESTIMATES[a.iso]||0)||a.name.localeCompare(b.name));
+  return [...byKey.values()].sort((a,b)=>(SPEAKER_ESTIMATES[b.iso]||0)-(SPEAKER_ESTIMATES[a.iso]||0)||a.name.localeCompare(b.name));
 }
+// Demographic-certain subset only — the P (population) universe. Attested-only
+// languages carry no speaker estimate and are absent here (not counted as zero).
+function coveredLanguages(d,symbol=''){return attestedLanguages(d,symbol).filter(isDemographic);}
 function mappingStateForPopulation(lang,symbol){
   if(!symbol||typeof languageSymbolState!=='function')return {state:'attested'};
-  const inventory=LANGUAGE_SYMBOLS.get(lang.iso)||new Set();
+  const inventory=LANGUAGE_SYMBOLS.get(langKey(lang))||new Set();
   return languageSymbolState(lang,symbol,inventory);
 }
 function populationEligible(lang,symbol){
@@ -31,11 +49,12 @@ function populationEligible(lang,symbol){
 }
 function speakerStats(d,symbol=''){
   d=d||{languages:[]};
-  const languages=coveredLanguages(d,symbol);
-  const populationLanguages=symbol?languages.filter(x=>populationEligible(x,symbol)):languages;
+  const languages=attestedLanguages(d,symbol);
+  const demographic=languages.filter(isDemographic);
+  const populationLanguages=symbol?demographic.filter(x=>populationEligible(x,symbol)):demographic;
   const total=populationLanguages.reduce((sum,x)=>sum+SPEAKER_ESTIMATES[x.iso],0);
-  const doculectCount=d.languages.filter(x=>x.iso&&DEMOGRAPHIC_ISO.has(x.iso)).length;
-  return {total,languageCount:languages.length,populationLanguageCount:populationLanguages.length,doculectCount,languages,populationLanguages,pct:SPEAKER_BASE?total/SPEAKER_BASE*100:0,languagePct:DEMOGRAPHIC_LANGUAGE_COUNT?languages.length/DEMOGRAPHIC_LANGUAGE_COUNT*100:0};
+  const doculectCount=d.languages.length;
+  return {total,languageCount:languages.length,demographicCount:demographic.length,populationLanguageCount:populationLanguages.length,doculectCount,languages,populationLanguages,pct:SPEAKER_BASE?total/SPEAKER_BASE*100:0,languagePct:ATTESTED_LANGUAGE_COUNT?languages.length/ATTESTED_LANGUAGE_COUNT*100:0};
 }
 function formatPeople(n){
   if(!n)return '0';
@@ -270,9 +289,9 @@ async function loadClickFamilyData(){
       const segments=[...new Set(languages.flatMap(x=>x.clickSegments))].sort();
       CLICK_FAMILY_DATA[symbol]={languages,segments,family:true};
       for(const lang of languages){
-        if(!lang.iso||!DEMOGRAPHIC_ISO.has(lang.iso))continue;
-        if(!LANGUAGE_SYMBOLS.has(lang.iso))LANGUAGE_SYMBOLS.set(lang.iso,new Set());
-        LANGUAGE_SYMBOLS.get(lang.iso).add(symbol);
+        const k=langKey(lang);
+        if(!LANGUAGE_SYMBOLS.has(k))LANGUAGE_SYMBOLS.set(k,new Set());
+        LANGUAGE_SYMBOLS.get(k).add(symbol);
       }
     }
     clickFamilyStatus='ready';clickFamilyError='';refreshClickButtons('ready');
@@ -289,28 +308,29 @@ const LANGUAGE_SYMBOLS=new Map();
 const LANGUAGE_RECORDS=new Map();
 for(const [symbol,d] of Object.entries(DATA)){
   for(const lang of d.languages){
-    if(!lang.iso||!DEMOGRAPHIC_ISO.has(lang.iso)) continue;
-    if(!LANGUAGE_SYMBOLS.has(lang.iso)) LANGUAGE_SYMBOLS.set(lang.iso,new Set());
-    LANGUAGE_SYMBOLS.get(lang.iso).add(symbol);
-    if(!LANGUAGE_RECORDS.has(lang.iso)) LANGUAGE_RECORDS.set(lang.iso,{iso:lang.iso,names:new Set(),glottocodes:new Set()});
-    const rec=LANGUAGE_RECORDS.get(lang.iso);rec.names.add(lang.name);if(lang.glottocode)rec.glottocodes.add(lang.glottocode);
+    const k=langKey(lang);
+    if(!LANGUAGE_SYMBOLS.has(k)) LANGUAGE_SYMBOLS.set(k,new Set());
+    LANGUAGE_SYMBOLS.get(k).add(symbol);
+    if(!LANGUAGE_RECORDS.has(k)) LANGUAGE_RECORDS.set(k,{key:k,iso:lang.iso,glottocode:lang.glottocode,names:new Set(),glottocodes:new Set()});
+    const rec=LANGUAGE_RECORDS.get(k);rec.names.add(lang.name);if(lang.glottocode)rec.glottocodes.add(lang.glottocode);
   }
 }
 let englishLanguageNames=null;
 try{englishLanguageNames=new Intl.DisplayNames(['en'],{type:'language'});}catch(e){}
 function preferredLanguageName(iso,names){
   let canonical='';
-  if(englishLanguageNames){try{canonical=englishLanguageNames.of(iso)||'';}catch(e){}}
+  if(englishLanguageNames&&iso&&iso!=='mis'&&iso!=='und'){try{canonical=englishLanguageNames.of(iso)||'';}catch(e){}}
   if(canonical&&canonical.toLowerCase()!==iso.toLowerCase()) return canonical;
   const candidates=[...names].sort((a,b)=>{const au=a===a.toUpperCase()?1:0,bu=b===b.toUpperCase()?1:0;return au-bu+(a.includes(';')?1:0)-(b.includes(';')?1:0)||a.length-b.length||a.localeCompare(b);});
   return candidates[0]||iso;
 }
-const LANGUAGE_DIRECTORY=[...LANGUAGE_RECORDS.values()].map(rec=>({iso:rec.iso,name:preferredLanguageName(rec.iso,rec.names),aliases:[...rec.names],glottocodes:[...rec.glottocodes],speakers:SPEAKER_ESTIMATES[rec.iso]||0})).sort((a,b)=>a.name.localeCompare(b.name,'en'));
+const LANGUAGE_DIRECTORY=[...LANGUAGE_RECORDS.values()].map(rec=>({key:rec.key,iso:rec.iso,glottocode:rec.glottocode,name:preferredLanguageName(rec.iso,rec.names),aliases:[...rec.names],glottocodes:[...rec.glottocodes],speakers:SPEAKER_ESTIMATES[rec.iso]||0,demographic:!!(rec.iso&&SPEAKER_ESTIMATES[rec.iso])})).sort((a,b)=>a.name.localeCompare(b.name,'en'));
 const LANGUAGE_LOOKUP=new Map();
 for(const lang of LANGUAGE_DIRECTORY){
+  LANGUAGE_LOOKUP.set(lang.key.toLowerCase(),lang);
   LANGUAGE_LOOKUP.set(lang.name.toLowerCase(),lang);
-  LANGUAGE_LOOKUP.set(lang.iso.toLowerCase(),lang);
-  for(const alias of lang.aliases) LANGUAGE_LOOKUP.set(alias.toLowerCase(),lang);
+  if(lang.iso&&lang.iso!=='mis'&&lang.iso!=='und') LANGUAGE_LOOKUP.set(lang.iso.toLowerCase(),lang);
+  for(const alias of lang.aliases){const a=alias.toLowerCase();if(!LANGUAGE_LOOKUP.has(a))LANGUAGE_LOOKUP.set(a,lang);}
 }
 const selector=document.getElementById('languageSelector');
 const languageSearchInput=document.getElementById('languageSearchInput');
@@ -318,14 +338,14 @@ const languageOptions=document.getElementById('languageOptions');
 const languageMode=document.getElementById('languageMode');
 const selectedLanguageLabel=document.getElementById('selectedLanguageLabel');
 const selectedLanguageStats=document.getElementById('selectedLanguageStats');
-languageOptions.innerHTML=LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${lang.iso.toUpperCase()}</option>`).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.iso}">${lang.name} (${lang.iso.toUpperCase()})</option>`).join('');
+languageOptions.innerHTML=LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${languageCodeLabel(lang)}</option>`).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${lang.name} (${languageCodeLabel(lang)})</option>`).join('');
 let selectedLanguage=null;
 function clearLanguageHighlight(preserveInput=false){
   selectedLanguage=null;if(!preserveInput){selector.value='';languageSearchInput.value='';}languageMode.hidden=true;hideOrthographyCoverage();
   document.querySelectorAll('.sym').forEach(button=>{button.classList.remove('lang-present','lang-variant','lang-attested','lang-absent');const old=button.querySelector('.selected-grapheme');if(old)old.remove();});
 }
 function applyLanguageHighlight(lang){
-  selectedLanguage=lang;selector.value=lang.iso;languageSearchInput.value=lang.name;const inventory=LANGUAGE_SYMBOLS.get(lang.iso)||new Set();let mappedCount=0,variantCount=0,attestedCount=0;
+  selectedLanguage=lang;selector.value=langKey(lang);languageSearchInput.value=lang.name;const inventory=LANGUAGE_SYMBOLS.get(langKey(lang))||new Set();let mappedCount=0,variantCount=0,attestedCount=0;
   document.querySelectorAll('.sym').forEach(button=>{
     const symbol=button.dataset.symbol;const result=languageSymbolState(lang,symbol,inventory);
     if(result.state==='mapped')mappedCount++;else if(result.state==='variant')variantCount++;else if(result.state==='attested')attestedCount++;

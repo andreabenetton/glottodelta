@@ -22,7 +22,7 @@
   function buildUnifiedDirectory(){
     const bySymbol=new Map();
     document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;if(!bySymbol.has(symbol))bySymbol.set(symbol,{kind:'phoneme',key:`phoneme:${symbol}`,symbol,label:`/${symbol}/`,detail:audioDescription(symbol)||'IPA chart symbol',terms:[symbol,audioDescription(symbol)]});});
-    const languages=LANGUAGE_DIRECTORY.map(lang=>({kind:'language',key:`language:${lang.iso}`,iso:lang.iso,label:lang.name,detail:`${lang.iso.toUpperCase()} · ${formatPeople(lang.speakers)} estimated speakers`,terms:[lang.name,lang.iso,...lang.aliases]}));
+    const languages=LANGUAGE_DIRECTORY.map(lang=>({kind:'language',key:`language:${lang.key}`,iso:lang.iso,lkey:lang.key,label:lang.name,detail:`${languageCodeLabel(lang)} · ${lang.demographic?formatPeople(lang.speakers)+' estimated speakers':'attested · no population estimate'}`,terms:[lang.name,lang.iso,lang.glottocode,...lang.aliases].filter(Boolean)}));
     const graphemes=[];const seen=new Set();
     for(const [iso,profile] of Object.entries(VERIFIED_LANGUAGE_PROFILES)){
       const lang=LANGUAGE_DIRECTORY.find(item=>item.iso===iso);if(!lang)continue;
@@ -55,8 +55,8 @@
   function activateSearchResult(item){
     searchResults.hidden=true;searchInput.setAttribute('aria-expanded','false');
     if(item.kind==='phoneme'){searchInput.value=item.symbol;const first=highlightSymbols([item.symbol]);openSymbol(item.symbol);if(first)first.focus({preventScroll:true});setStatus(`Opened audit for /${item.symbol}/.`);}
-    else if(item.kind==='language'){const lang=LANGUAGE_LOOKUP.get(item.iso);if(lang){applyLanguageHighlight(lang);searchInput.value=lang.name;setStatus(`Selected ${lang.name} (${lang.iso.toUpperCase()}).`);}}
-    else if(item.kind==='grapheme'){const lang=LANGUAGE_LOOKUP.get(item.iso);if(lang)applyLanguageHighlight(lang);searchInput.value=item.grapheme;const first=highlightSymbols(item.phonemes);if(first){openSymbol(first.dataset.symbol);first.focus({preventScroll:true});setStatus(`${item.grapheme} in ${item.iso.toUpperCase()} maps to /${item.phonemes.join(', ')}/.`);}else setStatus(`${item.grapheme} maps to /${item.phonemes.join(', ')}/, which has no separate cell in this chart.`);}
+    else if(item.kind==='language'){const lang=LANGUAGE_LOOKUP.get(item.lkey);if(lang){applyLanguageHighlight(lang);searchInput.value=lang.name;setStatus(`Selected ${lang.name} (${lang.iso.toUpperCase()}).`);}}
+    else if(item.kind==='grapheme'){const lang=LANGUAGE_LOOKUP.get(item.lkey);if(lang)applyLanguageHighlight(lang);searchInput.value=item.grapheme;const first=highlightSymbols(item.phonemes);if(first){openSymbol(first.dataset.symbol);first.focus({preventScroll:true});setStatus(`${item.grapheme} in ${item.iso.toUpperCase()} maps to /${item.phonemes.join(', ')}/.`);}else setStatus(`${item.grapheme} maps to /${item.phonemes.join(', ')}/, which has no separate cell in this chart.`);}
     updateURLState();
   }
   searchInput.addEventListener('input',renderUnifiedSearch);
@@ -85,8 +85,8 @@
   function exportRows(){
     const seen=new Set();const rows=[];
     document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;if(seen.has(symbol)||!isExportedSymbol(button))return;seen.add(symbol);const stats=speakerStats(symbolDataset(symbol),symbol);const row={symbol,source_attested_languages_L:stats.languageCount,verified_variant_population_P:stats.total,language_percent:stats.languagePct,population_percent:stats.pct,phoible_doculects:stats.doculectCount};
-      if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(selectedLanguage.iso)||new Set());row[`${selectedLanguage.iso}_evidence`]=relationName(rel.state);row[`${selectedLanguage.iso}_graphemes`]=(rel.graphemes||[]).join(' ');}
-      if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(comparisonLanguage.iso)||new Set());row[`${comparisonLanguage.iso}_evidence`]=relationName(rel.state);row[`${comparisonLanguage.iso}_graphemes`]=(rel.graphemes||[]).join(' ');}
+      if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());row[`${selectedLanguage.iso}_evidence`]=relationName(rel.state);row[`${selectedLanguage.iso}_graphemes`]=(rel.graphemes||[]).join(' ');}
+      if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set());row[`${comparisonLanguage.iso}_evidence`]=relationName(rel.state);row[`${comparisonLanguage.iso}_graphemes`]=(rel.graphemes||[]).join(' ');}
       rows.push(row);
     });return rows;
   }
@@ -105,7 +105,7 @@
   async function updateProvenance(){document.getElementById('provLanguageCount').textContent=LANGUAGE_DIRECTORY.length.toLocaleString('en-US');document.getElementById('provSymbolCount').textContent=new Set([...document.querySelectorAll('.sym[data-symbol]')].map(node=>node.dataset.symbol)).size.toLocaleString('en-US');document.getElementById('provProfileCount').textContent=Object.keys(VERIFIED_LANGUAGE_PROFILES).length.toLocaleString('en-US');try{const payload=JSON.stringify({DATA,SPEAKER_ESTIMATES,LANGUAGE_PHONEME_MODELS,VERIFIED_LANGUAGE_PROFILES});const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(payload));document.getElementById('provChecksum').textContent=[...new Uint8Array(hash)].map(byte=>byte.toString(16).padStart(2,'0')).join('');}catch{document.getElementById('provChecksum').textContent='Unavailable in this browser context';}}
   document.getElementById('openProvenance').addEventListener('click',()=>{updateProvenance();if(typeof provenanceDialog.showModal==='function')provenanceDialog.showModal();else provenanceDialog.setAttribute('open','');});
 
-  function refreshSymbolAria(){document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;const stats=speakerStats(symbolDataset(symbol),symbol);let description=`IPA ${symbol}. L ${stats.languageCount} source-attested languages. P ${formatPeople(stats.total)} verified or variant speakers.`;if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(selectedLanguage.iso)||new Set());description+=` ${selectedLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(comparisonLanguage.iso)||new Set());description+=` ${comparisonLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}button.setAttribute('aria-label',description);});}
+  function refreshSymbolAria(){document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;const stats=speakerStats(symbolDataset(symbol),symbol);let description=`IPA ${symbol}. L ${stats.languageCount} source-attested languages. P ${formatPeople(stats.total)} verified or variant speakers.`;if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());description+=` ${selectedLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set());description+=` ${comparisonLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}button.setAttribute('aria-label',description);});}
 
   const coreApplyLanguageHighlight=applyLanguageHighlight;applyLanguageHighlight=function(lang){const result=coreApplyLanguageHighlight(lang);refreshSymbolAria();updateURLState();return result;};
   const coreClearLanguageHighlight=clearLanguageHighlight;clearLanguageHighlight=function(preserveInput=false){const result=coreClearLanguageHighlight(preserveInput);refreshSymbolAria();updateURLState();return result;};

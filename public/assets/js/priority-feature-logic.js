@@ -40,7 +40,7 @@ function enableComparisonControls(enabled){
 function resetAllSymbolModes(){document.querySelectorAll('.sym').forEach(clearSymbolModeClasses);}
 
 function renderSingleLanguageHighlight(lang){
-  const inventory=LANGUAGE_SYMBOLS.get(lang.iso)||new Set();let mappedCount=0,variantCount=0,attestedCount=0;
+  const inventory=LANGUAGE_SYMBOLS.get(langKey(lang))||new Set();let mappedCount=0,variantCount=0,attestedCount=0;
   document.querySelectorAll('.sym').forEach(button=>{
     clearSymbolModeClasses(button);
     const symbol=button.dataset.symbol;const result=languageSymbolState(lang,symbol,inventory);
@@ -68,8 +68,8 @@ function renderComparisonHighlight(){
   if(!selectedLanguage||!comparisonLanguage){if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);return;}
   const primaryCode=selectedLanguage.iso.toUpperCase();
   const comparisonCode=comparisonLanguage.iso.toUpperCase();
-  const inventoryA=LANGUAGE_SYMBOLS.get(selectedLanguage.iso)||new Set();
-  const inventoryB=LANGUAGE_SYMBOLS.get(comparisonLanguage.iso)||new Set();
+  const inventoryA=LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set();
+  const inventoryB=LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set();
   let shared=0,onlyA=0,onlyB=0,neither=0;
   document.querySelectorAll('.sym').forEach(button=>{
     clearSymbolModeClasses(button);
@@ -99,7 +99,7 @@ function renderComparisonHighlight(){
 
 applyLanguageHighlight=function(lang){
   selectedLanguage=lang;selector.value=lang.iso;languageSearchInput.value=lang.name;enableComparisonControls(true);
-  if(comparisonLanguage&&comparisonLanguage.iso===lang.iso)clearComparisonLanguage();
+  if(comparisonLanguage&&langKey(comparisonLanguage)===langKey(lang))clearComparisonLanguage();
   if(comparisonLanguage)renderComparisonHighlight();else renderSingleLanguageHighlight(lang);
 };
 
@@ -122,7 +122,7 @@ function resolveComparisonLanguage(value,allowPrefix=false){
   let lang=LANGUAGE_LOOKUP.get(query)||null;
   if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>x.name.toLowerCase().startsWith(query)||x.aliases.some(a=>a.toLowerCase().startsWith(query)));if(matches.length===1)lang=matches[0];}
   if(lang){
-    if(selectedLanguage&&lang.iso===selectedLanguage.iso){comparisonSearchInput.setCustomValidity('Choose a different language for comparison.');comparisonSearchInput.reportValidity();return null;}
+    if(selectedLanguage&&langKey(lang)===langKey(selectedLanguage)){comparisonSearchInput.setCustomValidity('Choose a different language for comparison.');comparisonSearchInput.reportValidity();return null;}
     comparisonSearchInput.setCustomValidity('');comparisonLanguage=lang;comparisonSelector.value=lang.iso;comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();
   }else if(comparisonLanguage)clearComparisonLanguage(true);
   return lang;
@@ -156,10 +156,11 @@ renderLanguages=function(q=''){
     return auditFilterMatches(relation)&&(!s||x.name.toLowerCase().includes(s)||(x.iso||'').includes(s)||(x.glottocode||'').includes(s));
   });
   list.innerHTML=rows.map(x=>{
-    const g=graphemeFor(x,currentSymbol);const pop=populationForLanguage(x);const relation=relationForAudit(x);const included=relation.state==='mapped'||relation.state==='variant';
-    const weighting=`<div class="speaker-line"><b>Population weighting:</b> <span class="${included?'population-included':'population-excluded'}">${included?`included in P (${relation.state==='mapped'?'green mapping':'amber realization'})`:'excluded from P (blue unresolved attestation)'}</span></div>`;
+    const g=graphemeFor(x,currentSymbol);const pop=populationForLanguage(x);const relation=relationForAudit(x);const included=relation.state==='mapped'||relation.state==='variant';const demo=isDemographic(x);
+    const speakerLine=demo?`<div class="speaker-line">Estimated speakers: ${formatPeople(pop)}</div>`:`<div class="speaker-line population-excluded">No population estimate — attested only</div>`;
+    const weighting=demo?`<div class="speaker-line"><b>Population weighting:</b> <span class="${included?'population-included':'population-excluded'}">${included?`included in P (${relation.state==='mapped'?'green mapping':'amber realization'})`:'excluded from P (blue unresolved attestation)'}</span></div>`:`<div class="speaker-line"><b>Population weighting:</b> <span class="population-excluded">not in the P universe (no demographic estimate)</span></div>`;
     const clickLine=x.clickSegments&&x.clickSegments.length?`<div class="speaker-line"><b>PHOIBLE click segments:</b> ${x.clickSegments.map(v=>`/${escapeHTML(v)}/`).join(' ')}</div>`:'';
-    return `<div class="lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge ${relation.state}">${evidenceBadgeLabel(relation.state)}</span><div class="speaker-line">Estimated speakers: ${formatPeople(pop)}</div>${weighting}${clickLine}<div class="orthography"><span class="label">Grapheme(s):</span>${g?`<span class="grapheme">${escapeHTML(g)}</span>`:`<span class="missing">not available in the curated orthography profile</span>`}</div></div>`;
+    return `<div class="lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge ${relation.state}">${evidenceBadgeLabel(relation.state)}</span>${speakerLine}${weighting}${clickLine}<div class="orthography"><span class="label">Grapheme(s):</span>${g?`<span class="grapheme">${escapeHTML(g)}</span>`:`<span class="missing">not available in the curated orthography profile</span>`}</div></div>`;
   }).join('')||'<p>No languages match the selected evidence filter and search.</p>';
 };
 

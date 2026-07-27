@@ -123,7 +123,10 @@ def main():
 
     def key(L):
         iso = L.get('iso')
-        return 'i:' + iso if iso not in PLACEHOLDER_ISO else 'g:' + str(L.get('glottocode'))
+        if iso not in PLACEHOLDER_ISO:
+            return 'i:' + iso
+        g = L.get('glottocode')
+        return 'g:' + g if g else 'n:' + str(L.get('name'))
 
     # gather unique languages + all spellings/glottocodes per key, preserving first-seen order
     order = []
