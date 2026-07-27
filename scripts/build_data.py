@@ -182,8 +182,11 @@ def main():
             seen[k] = key_index[k]
         symbol_langs[sym] = sorted(seen.values())
 
-    # ---- write canonical json artifacts (repo source, not deployed) -------------
+    # ---- write canonical json artifacts -----------------------------------------
+    # Deployed + inspectable canonical data -> public/data/ (served at /data/*.json).
+    # Curated inputs and audit records -> data/ (repo source, not deployed).
     os.makedirs(os.path.join(ROOT, 'data'), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, 'public', 'data'), exist_ok=True)
     langs_json = json.dumps(
         {'schema': 'glottodelta/languages@1',
          'note': 'index = language id; d=1 demographic-certain (has speaker estimate), d=0 attested-only (no population)',
@@ -193,8 +196,8 @@ def main():
         {'schema': 'glottodelta/symbols@1',
          'note': 'symbol -> sorted language ids (indices into languages.json)',
          'symbols': symbol_langs}, ensure_ascii=False)
-    open(os.path.join(ROOT, 'data', 'languages.json'), 'w', encoding='utf-8').write(langs_json)
-    open(os.path.join(ROOT, 'data', 'symbols.json'), 'w', encoding='utf-8').write(syms_json)
+    open(os.path.join(ROOT, 'public', 'data', 'languages.json'), 'w', encoding='utf-8').write(langs_json)
+    open(os.path.join(ROOT, 'public', 'data', 'symbols.json'), 'w', encoding='utf-8').write(syms_json)
     open(os.path.join(ROOT, 'data', 'name-fixes.json'), 'w', encoding='utf-8').write(
         json.dumps(name_fixes, ensure_ascii=False, indent=1))
     open(os.path.join(ROOT, 'data', 'name-conflicts.json'), 'w', encoding='utf-8').write(

@@ -1,0 +1,5 @@
+# Cloudflare Pages headers. public/ is the build output directory.
+/assets/*
+  Cache-Control: public, max-age=3600
+/index.html
+  Cache-Control: public, max-age=300
