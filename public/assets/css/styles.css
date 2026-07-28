@@ -609,19 +609,20 @@ body.comparison-mode .sym .phonetic-plus{display:none}
 .priority-controls .language-picker>.clear-language{grid-column:2}
 .priority-controls .language-picker select[hidden]{display:none!important}
 .priority-controls .evidence-controls{
-  grid-template-columns:auto minmax(220px,1fr) auto;
+  grid-template-columns:1fr 1fr;
   align-items:center;
-  align-content:center;
+  align-content:start;
   flex:1 1 390px;
 }
 .priority-controls .evidence-controls>label:first-child{
-  grid-column:auto;
+  grid-column:1/-1;
   white-space:nowrap;
   margin:0;
 }
-.priority-controls .evidence-controls>select{grid-column:auto}
-.priority-controls .evidence-controls>.difference-toggle{grid-column:auto}
+.priority-controls .evidence-controls>select{grid-column:1/-1}
+.priority-controls .evidence-controls>.difference-toggle{grid-column:auto;justify-content:flex-start}
 .priority-controls .evidence-controls>.evidence-help{grid-column:1/-1}
+@media(max-width:760px){.priority-controls .evidence-controls{grid-template-columns:1fr}.priority-controls .evidence-controls>.difference-toggle{grid-column:1}}
 @media(max-width:1180px){
   .priority-controls .evidence-controls{grid-template-columns:auto minmax(200px,1fr)}
   .priority-controls .evidence-controls>.difference-toggle{grid-column:1/-1}
