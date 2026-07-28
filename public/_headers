@@ -1,5 +1,15 @@
 # Cloudflare Pages headers. public/ is the build output directory.
+#
+# Asset URLs are NOT content-fingerprinted (app-core.js keeps its name across
+# deploys), so JS/CSS must revalidate on every load — ETag makes that a cheap
+# 304 — or users keep running stale code for hours after a deploy.
+/assets/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+/assets/css/*
+  Cache-Control: public, max-age=0, must-revalidate
 /assets/*
   Cache-Control: public, max-age=3600
+/data/*
+  Cache-Control: public, max-age=0, must-revalidate
 /index.html
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=0, must-revalidate
