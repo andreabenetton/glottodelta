@@ -195,8 +195,20 @@ renderLanguages=function(q=''){
     const clickLine=x.clickSegments&&x.clickSegments.length?`<div class="speaker-line"><b>PHOIBLE click segments:</b> ${x.clickSegments.map(v=>`/${escapeHTML(v)}/`).join(' ')}</div>`:'';
     return `<div class="lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge ${relation.state}">${evidenceBadgeLabel(relation.state)}</span>${speakerLine}${weighting}${clickLine}<div class="orthography"><span class="label">Grapheme(s):</span>${g?`<span class="grapheme">${escapeHTML(g)}</span>`:`<span class="missing">not available in the curated orthography profile</span>`}</div></div>`;
   }).join('')||'<p>No languages match the selected evidence filter and search.</p>';
-  list.innerHTML+=curatedDrawerHTML(s);
+  list.innerHTML+=allophoneDrawerHTML(s)+curatedDrawerHTML(s);
 };
+
+/* Phonetic-view drawer section: languages where PHOIBLE documents the open
+   symbol as an allophone of a different phoneme. Display-only; the coverage
+   disclosure guards against reading absence as evidence of absence. */
+function allophoneDrawerHTML(query){
+  if(viewMode!=='phonetic'||currentAuditFilter!=='all')return '';
+  const rows=(ALLOPHONE_LANG_LISTS[currentSymbol]||[])
+    .filter(x=>!query||x.name.toLowerCase().includes(query)||(x.iso||'').includes(query)||(x.glottocode||'').includes(query));
+  if(!rows.length)return '';
+  const covered=ALLOPHONE_INFO.documentedLanguages||0,universe=ALLOPHONE_INFO.valuetableLanguages||0;
+  return `<div class="curated-drawer-section allophone-drawer-section"><h4>Documented allophones — phonetic view</h4><p class="curated-drawer-note">Languages where PHOIBLE ${escapeHTML(ALLOPHONE_INFO.release||'')} documents /${escapeHTML(currentSymbol)}/ as an allophone of a different phoneme. Phonetic-level evidence only — never counted in L or P. Allophone documentation exists for only ${covered.toLocaleString('en-US')} of ${universe.toLocaleString('en-US')} PHOIBLE languages, so absence from this list is not evidence of absence.</p>${rows.map(x=>`<div class="lang curated-lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge variant">Documented allophone</span></div>`).join('')}</div>`;
+}
 
 /* Curated historical languages (outside PHOIBLE) whose model covers the open
    symbol. Rendered as a visually separate drawer section; never part of L, P,

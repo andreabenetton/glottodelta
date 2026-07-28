@@ -104,6 +104,14 @@ for(const [iso,entry] of Object.entries(SUPPLEMENTAL_LANGUAGE_TABLE)){if(entry.m
 // Quality metrics must measure against this adjudicable subset, not against all
 // of L, or they only ever report how thin the profile coverage is.
 function isAdjudicable(lang){return !!(lang&&lang.iso&&(ORTHO_BY_ISO[lang.iso]||LANGUAGE_PHONEME_MODELS[lang.iso]));}
+
+/* Phonetic view: documented-allophone additions (PHOIBLE Allophones column via
+   the build pipeline). Display-only lens — never part of L, P or the audit. */
+let viewMode='phonemic';
+const ALLOPHONE_TABLE=(typeof ALLOPHONE_LANGS==='object'&&ALLOPHONE_LANGS)?ALLOPHONE_LANGS:{};
+const ALLOPHONE_INFO=(typeof ALLOPHONE_META==='object'&&ALLOPHONE_META)?ALLOPHONE_META:{};
+const ALLOPHONE_LANG_LISTS={};
+for(const [sym,ids] of Object.entries(ALLOPHONE_TABLE)){ALLOPHONE_LANG_LISTS[sym]=ids.map(i=>{const r=LANG_DICT[i];return {name:r[0],iso:r[1],glottocode:r[2]};});}
 // Amber additionally needs a model that lists alternative realizations/phones.
 const PHONEME_MODEL_COUNT=Object.values(LANGUAGE_PHONEME_MODELS).filter(model=>
   (model.phones&&Object.keys(model.phones).length)||
@@ -490,6 +498,6 @@ document.getElementById('clearLanguage').addEventListener('click',()=>clearLangu
 
 document.getElementById('languageBaseBadge').textContent=ATTESTED_LANGUAGE_COUNT.toLocaleString('en-US')+' languages · '+DEMOGRAPHIC_LANGUAGE_COUNT+' with population data';
 document.getElementById('speakerBaseBadge').textContent='weighted base: '+formatPeople(SPEAKER_BASE);
-document.querySelectorAll('.sym').forEach(b=>{const symbol=b.dataset.symbol;const d=symbolDataset(symbol);const ps=speakerStats(d,symbol);const languageSmall=b.querySelector('small');if(languageSmall){languageSmall.classList.add('language-count');languageSmall.textContent=CLICK_SYMBOLS.has(symbol)?'L …':'L '+ps.languageCount;}const speakerSmall=document.createElement('small');speakerSmall.className='speaker-count';speakerSmall.textContent=CLICK_SYMBOLS.has(symbol)?'P …':'P '+formatPeople(ps.total);b.appendChild(speakerSmall);renderSpeakerMeter(b,ps.total,CLICK_SYMBOLS.has(symbol));b.title=CLICK_SYMBOLS.has(symbol)?'Loading PHOIBLE click-family data…':`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · ${speakerMeterText(ps.total,false)}`;b.addEventListener('click',()=>openSymbol(symbol));}); document.getElementById('close').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')}); lsearch.addEventListener('input',()=>renderLanguages(lsearch.value));
+document.querySelectorAll('.sym').forEach(b=>{const symbol=b.dataset.symbol;const d=symbolDataset(symbol);const ps=speakerStats(d,symbol);const languageSmall=b.querySelector('small');if(languageSmall){languageSmall.classList.add('language-count');languageSmall.textContent=CLICK_SYMBOLS.has(symbol)?'L …':'L '+ps.languageCount;}const speakerSmall=document.createElement('small');speakerSmall.className='speaker-count';speakerSmall.textContent=CLICK_SYMBOLS.has(symbol)?'P …':'P '+formatPeople(ps.total);b.appendChild(speakerSmall);renderSpeakerMeter(b,ps.total,CLICK_SYMBOLS.has(symbol));const allophonePlus=(ALLOPHONE_LANG_LISTS[symbol]||[]).length;if(allophonePlus){const ap=document.createElement('small');ap.className='phonetic-plus';ap.textContent='+'+allophonePlus;ap.title=`${allophonePlus} additional languages where /${symbol}/ is a documented allophone of another phoneme — phonetic view only, never counted in L or P`;b.appendChild(ap);}b.title=CLICK_SYMBOLS.has(symbol)?'Loading PHOIBLE click-family data…':`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · ${speakerMeterText(ps.total,false)}`;b.addEventListener('click',()=>openSymbol(symbol));}); document.getElementById('close').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')}); lsearch.addEventListener('input',()=>renderLanguages(lsearch.value));
 loadClickFamilyData();
 /* Unified search is installed by the technical-features module below. */ document.addEventListener('keydown',e=>{if(e.key==='Escape'){drawer.classList.remove('open');if(document.activeElement!==selector&&document.activeElement!==languageSearchInput)return;clearLanguageHighlight();}});

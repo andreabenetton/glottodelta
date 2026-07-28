@@ -37,10 +37,14 @@ data/                       # build inputs + audit records (NOT deployed)
   orthography-supplement.json #  curated orthography profiles beyond the baseline 40
   languages-supplement.json #   curated historical languages outside PHOIBLE (stats-neutral)
   audio-overrides.json      #   corrections to IPA_AUDIO_FILES filenames (per symbol)
+  allophones.json           #   GENERATED (build_allophones.py) — symbol -> glottocodes
+                            #   where PHOIBLE documents the symbol as an allophone
   name-fixes.json           #   GENERATED — every raw->canonical name change
   name-conflicts.json       #   GENERATED — genuine multi-name languages
 scripts/
   build_data.py             #   the data pipeline (regenerates data.js + json)
+  build_allophones.py       #   refreshes data/allophones.json from the PHOIBLE
+                            #   CLDF ValueTable (network; run only on release bump)
   smoke.mjs                 #   headless-Chromium regression oracle
   functest.mjs              #   functional test across language tiers
 docs/data-report.md         #   GENERATED — data-quality + normalization metrics
@@ -97,6 +101,12 @@ It defines:
   Merged at runtime in `app-core.js` right after the `VERIFIED_ORTHO` merge;
   **baseline data always wins on collision**. Languages listed here become
   adjudicable (can reach green) and therefore enter P where attested + mapped.
+- `ALLOPHONE_LANGS` / `ALLOPHONE_META` — from `data/allophones.json` (generated
+  by `scripts/build_allophones.py` from the PHOIBLE 2.0.1 ValueTable
+  `Allophones` column). `symbol -> language ids` where the symbol is a
+  documented allophone of a *different* phoneme, with languages already
+  phonemically attested for that symbol removed at build time. Powers the
+  **phonetic view** toggle only — never merged into `SYMBOL_LANGS`.
 - `SUPPLEMENTAL_LANGUAGES` — from `data/languages-supplement.json`; curated
   historical languages **outside PHOIBLE** (currently `lat`, Latin of the late
   Roman Republic). They join the picker directory (`curated:true`) and
@@ -143,6 +153,14 @@ identifies a language, use `langKey(l)`, never `l.iso`.
   add them to `SYMBOL_LANGS`. The drawer shows them only in the visually
   separate "Curated beyond PHOIBLE" section (filter `all` only, stats-neutral;
   `statetest.mjs` T11 enforces).
+- The **phonetic view** toggle is a display-only lens: it reveals per-tile
+  `+n` badges (`.phonetic-plus`, hidden in comparison mode) and a
+  "Documented allophones" drawer section from `ALLOPHONE_LANGS`. It never
+  changes L, P, the audit summary or the quality panel. It is orthogonal to
+  S0/S1/S2 — it survives Clear primary — and serializes to the URL as
+  `view=phonetic` iff enabled. Allophone coverage is uneven (835/2,186
+  ValueTable languages); the drawer section must keep disclosing that absence
+  is not evidence of absence. `statetest.mjs` T12 enforces all of this.
 - The runtime SHA-256 (`updateProvenance`) hashes
   `{DATA, SPEAKER_ESTIMATES, LANGUAGE_PHONEME_MODELS, VERIFIED_LANGUAGE_PROFILES}`
   in that literal order. Changing the data changes the checksum — expected.

@@ -582,6 +582,9 @@ body.high-contrast .speaker-meter .led{box-shadow:inset 0 0 0 1px #000}
 .audit-filter[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .stat-action{border:0;text-align:left;font:inherit;cursor:pointer;color:inherit}
 .stat-action:hover,.stat-action:focus{outline:2px solid var(--accent);outline-offset:1px}
+.sym .phonetic-plus{display:none;color:#6a44b0;font-weight:750}
+body.phonetic-view .sym .phonetic-plus{display:block}
+body.comparison-mode .sym .phonetic-plus{display:none}
 .curated-drawer-section{margin-top:16px;padding-top:10px;border-top:2px dashed var(--line)}
 .curated-drawer-section h4{margin:0 0 4px;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .curated-drawer-note{margin:0 0 6px;font-size:.78rem;color:var(--muted)}

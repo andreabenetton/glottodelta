@@ -218,6 +218,54 @@ t11 = await page.evaluate(()=>{
 assert('T11 curated section hidden under evidence filters', t11.hiddenOnFilter, t11);
 assert('T11 curated section respects drawer search', t11.hiddenOnSearch&&t11.foundBySearch, t11);
 
+// T12 — phonetic view: display-only lens, badges + drawer section, URL round-trip
+await goto('');
+let t12 = await page.evaluate(()=>{
+  const badge=[...document.querySelectorAll('.sym[data-symbol]')].find(x=>x.dataset.symbol==='ɱ')?.querySelector('.phonetic-plus');
+  return {defaultView:viewMode, bodyClass:document.body.classList.contains('phonetic-view'),
+          badgeText:badge?badge.textContent:null, badgeHidden:badge?getComputedStyle(badge).display==='none':null,
+          expected:'+'+(ALLOPHONE_LANGS['ɱ']||[]).length};
+});
+assert('T12 default is phonemic, badge hidden', t12.defaultView==='phonemic'&&!t12.bodyClass&&t12.badgeHidden===true, t12);
+assert('T12 ɱ badge text matches data', t12.badgeText===t12.expected&&t12.badgeText!=='+0', t12);
+t12 = await page.evaluate(()=>{
+  const mL=[...document.querySelectorAll('.sym[data-symbol]')].find(x=>x.dataset.symbol==='m')?.querySelector('.language-count')?.textContent;
+  document.getElementById('phoneticView').click();
+  const badge=[...document.querySelectorAll('.sym[data-symbol]')].find(x=>x.dataset.symbol==='ɱ')?.querySelector('.phonetic-plus');
+  document.querySelector('.sym[data-symbol="ɱ"]').click();
+  const drawerHasSection=!!document.querySelector('.allophone-drawer-section');
+  const coverageNote=document.querySelector('.allophone-drawer-section .curated-drawer-note')?.textContent||'';
+  const dcount=document.getElementById('dcount').textContent;
+  const mLAfter=[...document.querySelectorAll('.sym[data-symbol]')].find(x=>x.dataset.symbol==='m')?.querySelector('.language-count')?.textContent;
+  return {view:viewMode, bodyClass:document.body.classList.contains('phonetic-view'),
+          badgeVisible:badge?getComputedStyle(badge).display!=='none':null,
+          drawerHasSection, coverageDisclosed:/835|documentation exists/.test(coverageNote),
+          dcount, sourceCount:new Set(DATA['ɱ'].languages.map(l=>langKey(l))).size,
+          LUnchanged:mL===mLAfter, url:new URL(location.href).searchParams.get('view')};
+});
+assert('T12 toggle enables phonetic view + badges', t12.view==='phonetic'&&t12.bodyClass&&t12.badgeVisible===true, t12);
+assert('T12 drawer allophone section with coverage disclosure', t12.drawerHasSection&&t12.coverageDisclosed, t12);
+assert('T12 L untouched by phonetic view', t12.LUnchanged&&t12.dcount===String(t12.sourceCount), {dcount:t12.dcount,sourceCount:t12.sourceCount,LUnchanged:t12.LUnchanged});
+assert('T12 view serialized to URL', t12.url==='phonetic', t12.url);
+// filter away from "all" hides the phonetic section; phonemic hides badges again
+t12 = await page.evaluate(()=>{
+  setAuditFilter('mapped');const hiddenOnFilter=!document.querySelector('.allophone-drawer-section');setAuditFilter('all');
+  document.getElementById('phoneticView').click();
+  const badge=[...document.querySelectorAll('.sym[data-symbol]')].find(x=>x.dataset.symbol==='ɱ')?.querySelector('.phonetic-plus');
+  return {hiddenOnFilter, view:viewMode, badgeHidden:badge?getComputedStyle(badge).display==='none':null,
+          sectionGone:!document.querySelector('.allophone-drawer-section'), url:new URL(location.href).searchParams.get('view')};
+});
+assert('T12 section hidden under evidence filters', t12.hiddenOnFilter, t12);
+assert('T12 toggle off restores phonemic', t12.view==='phonemic'&&t12.badgeHidden===true&&t12.sectionGone&&t12.url===null, t12);
+// URL restore + persistence across Clear primary
+await goto('?view=phonetic');
+t12 = await page.evaluate(()=>({view:viewMode, checked:document.getElementById('phoneticView').checked}));
+assert('T12 view=phonetic restores from URL', t12.view==='phonetic'&&t12.checked, t12);
+await pickPrimary('kat');
+await page.evaluate(()=>clearLanguageHighlight());
+t12 = await page.evaluate(()=>({view:viewMode, bodyClass:document.body.classList.contains('phonetic-view')}));
+assert('T12 phonetic view survives Clear primary (chart lens, not selection state)', t12.view==='phonetic'&&t12.bodyClass, t12);
+
 // ------------------------------------------------------------------------------
 assert('no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
 console.log(JSON.stringify({ checks, failures: failures.length, failed: failures }, null, 2));

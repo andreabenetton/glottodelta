@@ -98,6 +98,7 @@
     // override of a selection default round-trips). Auto-derived defaults are
     // re-derived from lang/compare on restore instead.
     if(evidenceModeUserSet)params.set('evidence',evidenceMode);
+    if(viewMode==='phonetic')params.set('view','phonetic');
     if(differencesOnlyMode)params.set('differences','1');
     if(currentSymbol&&drawer.classList.contains('open'))params.set('phoneme',currentSymbol);
     if(searchInput.value.trim())params.set('q',searchInput.value.trim());
@@ -155,9 +156,18 @@
     const lang=params.get('lang');if(lang){const item=LANGUAGE_LOOKUP.get(lang.toLowerCase());if(item)applyLanguageHighlight(item);}
     const compare=params.get('compare');if(compare&&selectedLanguage){const item=LANGUAGE_LOOKUP.get(compare.toLowerCase());if(item&&langKey(item)!==langKey(selectedLanguage)){comparisonLanguage=item;comparisonSelector.value=langKey(item);comparisonSearchInput.value=item.name;differencesOnlyControl.disabled=false;if(params.get('differences')==='1'){differencesOnlyControl.checked=true;differencesOnlyMode=true;}syncEvidenceDefault();renderComparisonHighlight();}}
     const q=params.get('q');if(q){searchInput.value=q;renderUnifiedSearch();}
+    if(params.get('view')==='phonetic'){viewMode='phonetic';phoneticViewControl.checked=true;document.body.classList.add('phonetic-view');}
     const phoneme=params.get('phoneme');if(phoneme&&document.querySelector(`.sym[data-symbol="${CSS.escape(phoneme)}"]`))openSymbol(phoneme);
     refreshSymbolAria();
   }
+
+  const phoneticViewControl=document.getElementById('phoneticView');
+  phoneticViewControl.addEventListener('change',()=>{
+    viewMode=phoneticViewControl.checked?'phonetic':'phonemic';
+    document.body.classList.toggle('phonetic-view',viewMode==='phonetic');
+    renderLanguages(lsearch.value);
+    updateURLState();
+  });
 
   searchItems=buildUnifiedDirectory();
   applyURLState();
