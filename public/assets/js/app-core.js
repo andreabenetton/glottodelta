@@ -1,3 +1,15 @@
+/*
+   Glottodelta — demographically weighted distribution of IPA symbols.
+   Copyright (C) 2026 Andrea Benetton
+
+   This program is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option) any
+   later version. This program is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+   the LICENSE file distributed with this program for details.
+*/
 
 
 // Composite language identity: the ISO 639-3 code, except when it is a
@@ -74,6 +86,29 @@ const drawer=document.getElementById('drawer'), list=document.getElementById('la
 
 for(const [iso,map] of Object.entries(VERIFIED_ORTHO)){const key='verified-'+iso;ORTHO[key]=map;ORTHO_BY_ISO[iso]=key;}
 
+// Supplemental curated profiles (data/orthography-supplement.json via the build).
+// Merged after the baseline maps; baseline data always wins on collision.
+const SUPPLEMENTAL_ORTHO_TABLE=(typeof SUPPLEMENTAL_ORTHO==='object'&&SUPPLEMENTAL_ORTHO)?SUPPLEMENTAL_ORTHO:{};
+const SUPPLEMENTAL_PROFILE_TABLE=(typeof SUPPLEMENTAL_LANGUAGE_PROFILES==='object'&&SUPPLEMENTAL_LANGUAGE_PROFILES)?SUPPLEMENTAL_LANGUAGE_PROFILES:{};
+for(const [iso,map] of Object.entries(SUPPLEMENTAL_ORTHO_TABLE)){const key='supplemental-'+iso;ORTHO[key]=map;if(!(iso in ORTHO_BY_ISO))ORTHO_BY_ISO[iso]=key;}
+for(const [iso,profile] of Object.entries(SUPPLEMENTAL_PROFILE_TABLE)){if(!VERIFIED_LANGUAGE_PROFILES[iso])VERIFIED_LANGUAGE_PROFILES[iso]=profile;}
+// Curated historical languages (outside PHOIBLE). Their phoneme models drive
+// green/amber highlighting; because they never enter SYMBOL_LANGS they are
+// invisible to L, P, the drawer lists and the audit — stats-neutral by design.
+const SUPPLEMENTAL_LANGUAGE_TABLE=(typeof SUPPLEMENTAL_LANGUAGES==='object'&&SUPPLEMENTAL_LANGUAGES)?SUPPLEMENTAL_LANGUAGES:{};
+for(const [iso,entry] of Object.entries(SUPPLEMENTAL_LANGUAGE_TABLE)){if(entry.model&&!LANGUAGE_PHONEME_MODELS[iso])LANGUAGE_PHONEME_MODELS[iso]=entry.model;}
+
+// A language can be resolved to green (verified mapping) or amber (alternative
+// realization) only where this build carries a curated orthography profile or a
+// phoneme model for it. Every other attested language stays blue by construction.
+// Quality metrics must measure against this adjudicable subset, not against all
+// of L, or they only ever report how thin the profile coverage is.
+function isAdjudicable(lang){return !!(lang&&lang.iso&&(ORTHO_BY_ISO[lang.iso]||LANGUAGE_PHONEME_MODELS[lang.iso]));}
+// Amber additionally needs a model that lists alternative realizations/phones.
+const PHONEME_MODEL_COUNT=Object.values(LANGUAGE_PHONEME_MODELS).filter(model=>
+  (model.phones&&Object.keys(model.phones).length)||
+  (model.phonemes&&Object.values(model.phonemes).some(info=>(info.realizations||[]).length))).length;
+
 function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function allGraphemesForPhoneme(lang,phoneme){return [...new Set(graphemesForPhoneme(lang,phoneme))];}
 function chartHasStandaloneSymbol(symbol){return !!document.querySelector(`.sym[data-symbol="${CSS.escape(symbol)}"]`);}
@@ -110,7 +145,10 @@ function coverageRowsForLanguage(lang){
   });
 }
 function verificationLabel(status){
-  return ({'verified-complete':'Verified complete alphabet','verified-complete-basic':'Verified basic inventory','verified-contextual':'Verified, context-sensitive','verified-partial':'Verified partial profile','verified-romanization':'Verified romanization profile','verified-complete-modern':'Verified complete modern inventory'})[status]||status;
+  return ({'verified-complete':'Verified complete alphabet','verified-complete-basic':'Verified basic inventory','verified-contextual':'Verified, context-sensitive','verified-partial':'Verified partial profile','verified-romanization':'Verified romanization profile','verified-complete-modern':'Verified complete modern inventory',
+  // curated-* mirrors the verified-* tiers for agent-curated supplement profiles
+  // (data/orthography-supplement.json) that have not had independent review.
+  'curated-complete-basic':'Curated basic inventory','curated-complete-modern':'Curated complete modern inventory','curated-romanization':'Curated romanization profile','curated-contextual':'Curated, context-sensitive','curated-historical':'Curated historical reconstruction'})[status]||status;
 }
 function renderOrthographyCoverage(lang){
   const section=document.getElementById('orthographyCoverage');
@@ -183,7 +221,9 @@ function playAudioSample(button,url,label){stopAudio();currentAudioButton=button
 function configureSymbolAudio(symbol){
   audioSymbol=symbol;stopAudio();ipaAudioSamples.replaceChildren();ipaAudioLabel.textContent=`[${symbol}]`;
   const supplementalFile=IPA_AUDIO_FILES[symbol];
-  ipaAudioSamples.append(audioSampleRow({label:'Reference sound',site:'InternationalPhoneticAlphabet.org',url:supplementalFile?IPA_AUDIO_BASE+encodeURIComponent(supplementalFile):'',sourceUrl:'https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/',available:Boolean(supplementalFile),official:false}));
+  // The supplemental chart-with-sounds recordings are read by Dan Lenard, so the
+  // row is attributed by name like the four official ones.
+  ipaAudioSamples.append(audioSampleRow({label:'Dan Lenard',site:'InternationalPhoneticAlphabet.org',url:supplementalFile?IPA_AUDIO_BASE+encodeURIComponent(supplementalFile):'',sourceUrl:'https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/',available:Boolean(supplementalFile),official:false}));
   const hex=officialAudioHex(symbol);
   for(const voice of IPA_AUDIO_VOICES){
     const url=hex?`${IPA_OFFICIAL_AUDIO_BASE}${voice.code}/${hex}.mp3`:'';
@@ -233,6 +273,40 @@ function buildGlottocodeLookup(){
   return map;
 }
 
+/* ---- speaker-magnitude meter -------------------------------------------------
+   Five LEDs per phoneme tile, lit by order of magnitude of P. Population is
+   encoded on its own mark rather than on the tile background, because the
+   background carries the selected language's evidence state (green/amber/blue/
+   red). The lit *count* is a positional encoding, so the meter is readable
+   without colour; colour only reinforces it. Hidden in comparison mode, where
+   the tiles answer a different question. */
+const SPEAKER_METER_STEPS=[1e6,1e7,1e8,1e9,4e9];
+const SPEAKER_METER_LABELS=['under 1M','1M+','10M+','100M+','1B+','4B+'];
+function speakerMeterLevel(total){
+  let level=0;
+  for(const step of SPEAKER_METER_STEPS){if(total>=step)level++;}
+  return level;
+}
+function speakerMeterText(total,pending){
+  if(pending)return 'speaker magnitude pending';
+  const level=speakerMeterLevel(total);
+  return `speaker magnitude ${level} of 5 (${SPEAKER_METER_LABELS[level]})`;
+}
+function renderSpeakerMeter(button,total,pending){
+  let meter=button.querySelector('.speaker-meter');
+  if(!meter){
+    meter=document.createElement('span');
+    meter.className='speaker-meter';
+    meter.setAttribute('aria-hidden','true');   // the tile's own label carries the value
+    for(let i=0;i<SPEAKER_METER_STEPS.length;i++){const led=document.createElement('i');led.className='led';meter.appendChild(led);}
+    button.appendChild(meter);
+  }
+  const level=pending?0:speakerMeterLevel(total);
+  meter.dataset.level=String(level);
+  meter.classList.toggle('is-pending',!!pending);
+  [...meter.children].forEach((led,index)=>led.classList.toggle('on',index<level));
+}
+
 function setClickButtonState(symbol,status){
   const button=document.querySelector(`.sym[data-symbol="${CSS.escape(symbol)}"]`);
   if(!button)return;
@@ -241,19 +315,22 @@ function setClickButtonState(symbol,status){
   if(status==='loading'){
     if(l){l.classList.add('language-count');l.textContent='L …';}
     if(p)p.textContent='P …';
+    renderSpeakerMeter(button,0,true);
     button.title='Loading PHOIBLE click-family data…';
     return;
   }
   if(status==='error'){
     if(l)l.textContent='L —';
     if(p)p.textContent='P —';
+    renderSpeakerMeter(button,0,true);
     button.title='Click-family data unavailable; the isolated symbol is not treated as zero.';
     return;
   }
   const ps=speakerStats(CLICK_FAMILY_DATA[symbol],symbol);
   if(l)l.textContent='L '+ps.languageCount;
   if(p)p.textContent='P '+formatPeople(ps.total);
-  button.title=`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · aggregated from complete PHOIBLE click segments`;
+  renderSpeakerMeter(button,ps.total,false);
+  button.title=`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · ${speakerMeterText(ps.total,false)} · aggregated from complete PHOIBLE click segments`;
 }
 
 function refreshClickButtons(status=clickFamilyStatus){for(const symbol of CLICK_SYMBOLS)setClickButtonState(symbol,status);}
@@ -324,13 +401,42 @@ function preferredLanguageName(iso,names){
   const candidates=[...names].sort((a,b)=>{const au=a===a.toUpperCase()?1:0,bu=b===b.toUpperCase()?1:0;return au-bu+(a.includes(';')?1:0)-(b.includes(';')?1:0)||a.length-b.length||a.localeCompare(b);});
   return candidates[0]||iso;
 }
-const LANGUAGE_DIRECTORY=[...LANGUAGE_RECORDS.values()].map(rec=>({key:rec.key,iso:rec.iso,glottocode:rec.glottocode,name:preferredLanguageName(rec.iso,rec.names),aliases:[...rec.names],glottocodes:[...rec.glottocodes],speakers:SPEAKER_ESTIMATES[rec.iso]||0,demographic:!!(rec.iso&&SPEAKER_ESTIMATES[rec.iso])})).sort((a,b)=>a.name.localeCompare(b.name,'en'));
+const ENDONYM_TABLE=(typeof ENDONYMS==='object'&&ENDONYMS)?ENDONYMS:{};
+function endonymsForRecord(iso,glottocode){
+  return ENDONYM_TABLE['i:'+iso]||ENDONYM_TABLE['g:'+glottocode]||[];
+}
+const LANGUAGE_DIRECTORY=[...LANGUAGE_RECORDS.values()].map(rec=>({key:rec.key,iso:rec.iso,glottocode:rec.glottocode,name:preferredLanguageName(rec.iso,rec.names),aliases:[...rec.names],endonyms:endonymsForRecord(rec.iso,rec.glottocode),glottocodes:[...rec.glottocodes],speakers:SPEAKER_ESTIMATES[rec.iso]||0,demographic:!!(rec.iso&&SPEAKER_ESTIMATES[rec.iso])})).sort((a,b)=>a.name.localeCompare(b.name,'en'));
+// Append curated historical languages to the pickable directory (skipping any
+// ISO PHOIBLE already covers). curated:true drives the UI labelling and keeps
+// them out of statistic-bearing paths, which are all keyed off SYMBOL_LANGS.
+for(const [iso,entry] of Object.entries(SUPPLEMENTAL_LANGUAGE_TABLE)){
+  if(LANGUAGE_RECORDS.has(iso))continue;
+  LANGUAGE_DIRECTORY.push({key:iso,iso,glottocode:entry.glottocode,name:entry.name,aliases:[...(entry.aliases||[])],endonyms:endonymsForRecord(iso,entry.glottocode),glottocodes:[entry.glottocode],speakers:0,demographic:false,curated:true});
+}
+LANGUAGE_DIRECTORY.sort((a,b)=>a.name.localeCompare(b.name,'en'));
+
+/* Search folding: case-insensitive and diacritic-insensitive, so "francais"
+   finds "français" and "turkce" finds "Türkçe". Non-Latin scripts are left
+   intact by the combining-mark strip, so endonyms match as typed. */
+function foldSearchText(value){
+  return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+}
+/* Every string a language may be found by: English name, identifiers
+   (composite key, ISO 639-3, Glottocodes), source-attested spellings, and
+   curated endonyms in the language's own script. */
+function languageSearchTerms(lang){
+  return [lang.name,lang.key,lang.iso,lang.glottocode,...(lang.glottocodes||[]),...(lang.aliases||[]),...(lang.endonyms||[])].filter(Boolean);
+}
+function languageTermStartsWith(lang,foldedQuery){
+  return languageSearchTerms(lang).some(term=>foldSearchText(term).startsWith(foldedQuery));
+}
 const LANGUAGE_LOOKUP=new Map();
 for(const lang of LANGUAGE_DIRECTORY){
   LANGUAGE_LOOKUP.set(lang.key.toLowerCase(),lang);
   LANGUAGE_LOOKUP.set(lang.name.toLowerCase(),lang);
   if(lang.iso&&lang.iso!=='mis'&&lang.iso!=='und') LANGUAGE_LOOKUP.set(lang.iso.toLowerCase(),lang);
   for(const alias of lang.aliases){const a=alias.toLowerCase();if(!LANGUAGE_LOOKUP.has(a))LANGUAGE_LOOKUP.set(a,lang);}
+  for(const term of languageSearchTerms(lang)){const f=foldSearchText(term);if(!LANGUAGE_LOOKUP.has(f))LANGUAGE_LOOKUP.set(f,lang);}
 }
 const selector=document.getElementById('languageSelector');
 const languageSearchInput=document.getElementById('languageSearchInput');
@@ -338,7 +444,9 @@ const languageOptions=document.getElementById('languageOptions');
 const languageMode=document.getElementById('languageMode');
 const selectedLanguageLabel=document.getElementById('selectedLanguageLabel');
 const selectedLanguageStats=document.getElementById('selectedLanguageStats');
-languageOptions.innerHTML=LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${languageCodeLabel(lang)}</option>`).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${lang.name} (${languageCodeLabel(lang)})</option>`).join('');
+// Datalist label carries the code and the endonym so the browser's own
+// suggestion filter surfaces a language typed in its native script too.
+languageOptions.innerHTML=LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${escapeHTML(languageCodeLabel(lang)+(lang.endonyms.length?' · '+lang.endonyms.join(' · '):''))}</option>`).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${lang.name} (${languageCodeLabel(lang)})</option>`).join('');
 let selectedLanguage=null;
 function clearLanguageHighlight(preserveInput=false){
   selectedLanguage=null;if(!preserveInput){selector.value='';languageSearchInput.value='';}languageMode.hidden=true;hideOrthographyCoverage();
@@ -368,8 +476,9 @@ function applyLanguageHighlight(lang){
 }
 function resolveLanguage(value,allowPrefix=false){
   const query=value.trim().toLowerCase();if(!query){clearLanguageHighlight();return null;}
-  let lang=LANGUAGE_LOOKUP.get(query)||null;
-  if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>x.name.toLowerCase().startsWith(query)||x.aliases.some(a=>a.toLowerCase().startsWith(query)));if(matches.length===1)lang=matches[0];}
+  const folded=foldSearchText(value.trim());
+  let lang=LANGUAGE_LOOKUP.get(query)||LANGUAGE_LOOKUP.get(folded)||null;
+  if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>languageTermStartsWith(x,folded));if(matches.length===1)lang=matches[0];}
   if(lang)applyLanguageHighlight(lang);else if(selectedLanguage)clearLanguageHighlight(true);
   return lang;
 }
@@ -381,6 +490,6 @@ document.getElementById('clearLanguage').addEventListener('click',()=>clearLangu
 
 document.getElementById('languageBaseBadge').textContent=ATTESTED_LANGUAGE_COUNT.toLocaleString('en-US')+' languages · '+DEMOGRAPHIC_LANGUAGE_COUNT+' with population data';
 document.getElementById('speakerBaseBadge').textContent='weighted base: '+formatPeople(SPEAKER_BASE);
-document.querySelectorAll('.sym').forEach(b=>{const symbol=b.dataset.symbol;const d=symbolDataset(symbol);const ps=speakerStats(d,symbol);const languageSmall=b.querySelector('small');if(languageSmall){languageSmall.classList.add('language-count');languageSmall.textContent=CLICK_SYMBOLS.has(symbol)?'L …':'L '+ps.languageCount;}const speakerSmall=document.createElement('small');speakerSmall.className='speaker-count';speakerSmall.textContent=CLICK_SYMBOLS.has(symbol)?'P …':'P '+formatPeople(ps.total);b.appendChild(speakerSmall);b.title=CLICK_SYMBOLS.has(symbol)?'Loading PHOIBLE click-family data…':`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages`;b.addEventListener('click',()=>openSymbol(symbol));}); document.getElementById('close').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')}); lsearch.addEventListener('input',()=>renderLanguages(lsearch.value));
+document.querySelectorAll('.sym').forEach(b=>{const symbol=b.dataset.symbol;const d=symbolDataset(symbol);const ps=speakerStats(d,symbol);const languageSmall=b.querySelector('small');if(languageSmall){languageSmall.classList.add('language-count');languageSmall.textContent=CLICK_SYMBOLS.has(symbol)?'L …':'L '+ps.languageCount;}const speakerSmall=document.createElement('small');speakerSmall.className='speaker-count';speakerSmall.textContent=CLICK_SYMBOLS.has(symbol)?'P …':'P '+formatPeople(ps.total);b.appendChild(speakerSmall);renderSpeakerMeter(b,ps.total,CLICK_SYMBOLS.has(symbol));b.title=CLICK_SYMBOLS.has(symbol)?'Loading PHOIBLE click-family data…':`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · ${speakerMeterText(ps.total,false)}`;b.addEventListener('click',()=>openSymbol(symbol));}); document.getElementById('close').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')}); lsearch.addEventListener('input',()=>renderLanguages(lsearch.value));
 loadClickFamilyData();
 /* Unified search is installed by the technical-features module below. */ document.addEventListener('keydown',e=>{if(e.key==='Escape'){drawer.classList.remove('open');if(document.activeElement!==selector&&document.activeElement!==languageSearchInput)return;clearLanguageHighlight();}});

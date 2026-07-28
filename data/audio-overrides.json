@@ -1,0 +1,4 @@
+{
+  "_comment": "Corrections to IPA_AUDIO_FILES, keyed by IPA symbol. Applied by scripts/build_data.py to the block extracted from baseline/original.html before emitting data.js. 2026-07 audit: the baseline names the schwa file Mid_central_vowel.mp3, but the host (internationalphoneticalphabet.org) follows Wikimedia naming, which hyphenates height modifiers (Close-mid…, Near-open…, Mid-central…) — its own chart calls ipa('Mid-central_vowel'). The underscore variant returns 404; the hyphenated file was verified to exist. ə was the only affected entry.",
+  "ə": "Mid-central_vowel.mp3"
+}

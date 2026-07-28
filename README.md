@@ -63,9 +63,28 @@ data model and methodology invariants.
 Static site for **Cloudflare Pages** — set the output directory to `public/`.
 No build step is required (the generated `data.js` is committed).
 
-## Licences
+## Licence
 
-Component licences are honored per source and documented in the app's
-provenance dialog: IPA chart artwork CC BY‑SA 4.0; official IPA audio
-CC BY‑NC‑ND 4.0 (streamed, not redistributed); PHOIBLE CC BY‑SA 3.0; CLDR under
-the Unicode licence. Attribution and versions are listed in‑app.
+Copyright © 2026 Andrea Benetton.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the **GNU Affero General Public License** as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version. See [`LICENSE`](./LICENSE) for the full text.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+Because the AGPL covers interaction over a network (§13), any deployed instance
+must offer its complete corresponding source to its users; the in‑app licensing
+footer links back to this repository for that purpose.
+
+### Component licences
+
+The AGPL covers the software in this repository. The data and media it builds
+on are honored per source and documented in the app's provenance dialog: IPA
+chart artwork CC BY‑SA 4.0; official IPA audio CC BY‑NC‑ND 4.0 (streamed, not
+redistributed); PHOIBLE CC BY‑SA 3.0; CLDR under the Unicode licence. The
+original editorial annotations remain under CC BY‑SA 4.0. Attribution and
+versions are listed in‑app.

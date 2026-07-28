@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+# Glottodelta — demographically weighted distribution of IPA symbols.
+# Copyright (C) 2026 Andrea Benetton
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version. This program is distributed WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+# the LICENSE file distributed with this program for details.
 """
 build_data.py — Glottodelta data pipeline.
 
@@ -76,6 +86,79 @@ def load_overrides():
     if os.path.exists(path):
         return json.load(open(path, encoding='utf-8'))
     return {}
+
+def load_endonyms():
+    """Curated autonyms per language, in the language's own script.
+
+    Keys follow the name-overrides convention ('i:<iso>' / 'g:<glottocode>');
+    values are lists of search-matchable strings. Used for search only — the
+    displayed canonical name is unaffected.
+    """
+    path = os.path.join(ROOT, 'data', 'endonyms.json')
+    if not os.path.exists(path):
+        return {}
+    raw = json.load(open(path, encoding='utf-8'))
+    out = {}
+    for k, v in raw.items():
+        if k.startswith('_'):
+            continue
+        terms = [t.strip() for t in (v if isinstance(v, list) else [v]) if str(t).strip()]
+        if terms:
+            out[k] = terms
+    return out
+
+def load_orthography_supplement():
+    """Supplemental curated orthography profiles (data/orthography-supplement.json).
+
+    Keys are ISO 639-3 codes; each value carries an ORTHO-format phoneme->grapheme
+    map ('ortho') and a full VERIFIED_LANGUAGE_PROFILES-shaped entry ('profile').
+    Emitted as SUPPLEMENTAL_ORTHO / SUPPLEMENTAL_LANGUAGE_PROFILES and merged at
+    runtime in app-core.js; baseline data always wins on collision.
+    """
+    path = os.path.join(ROOT, 'data', 'orthography-supplement.json')
+    if not os.path.exists(path):
+        return {}, {}
+    raw = json.load(open(path, encoding='utf-8'))
+    ortho, profiles = {}, {}
+    for iso, entry in raw.items():
+        if iso.startswith('_'):
+            continue
+        omap = entry.get('ortho') or {}
+        assert all(isinstance(v, str) and v for v in omap.values()), \
+            'ortho values must be non-empty strings: %s' % iso
+        profile = entry.get('profile') or {}
+        assert profile.get('status') and isinstance(profile.get('rows'), list), \
+            'profile needs status + rows: %s' % iso
+        assert all(r.get('grapheme') and isinstance(r.get('phonemes'), list)
+                   for r in profile['rows']), 'bad row in %s' % iso
+        if omap:
+            ortho[iso] = omap
+        profiles[iso] = profile
+    return ortho, profiles
+
+def load_languages_supplement():
+    """Curated historical languages outside PHOIBLE (data/languages-supplement.json).
+
+    Stats-neutral: emitted as SUPPLEMENTAL_LANGUAGES and merged into the picker
+    directory + LANGUAGE_PHONEME_MODELS at runtime, never into SYMBOL_LANGS,
+    so they cannot affect L, P, drawer lists or the audit.
+    """
+    path = os.path.join(ROOT, 'data', 'languages-supplement.json')
+    if not os.path.exists(path):
+        return {}
+    raw = json.load(open(path, encoding='utf-8'))
+    out = {}
+    for iso, entry in raw.items():
+        if iso.startswith('_'):
+            continue
+        assert entry.get('name') and entry.get('glottocode'), \
+            'supplemental language needs name + glottocode: %s' % iso
+        model = entry.get('model') or {}
+        assert isinstance(model.get('phonemes'), dict) and model['phonemes'], \
+            'supplemental language needs model.phonemes: %s' % iso
+        out[iso] = {'name': entry['name'], 'glottocode': entry['glottocode'],
+                    'aliases': entry.get('aliases') or [], 'model': model}
+    return out
 
 def clean_name(n):
     if n in CURATED_NAMES:
@@ -162,7 +245,7 @@ def main():
             canonical = NAME_OVERRIDES[k]
         else:
             canonical = pick_canonical(names_by_key[k])
-        for raw in set(names_by_key[k]):
+        for raw in sorted(set(names_by_key[k])):  # sorted: keeps name-fixes.json byte-stable
             if raw != canonical:
                 name_fixes[raw] = canonical
         bases = sorted({clean_name(n) for n in names_by_key[k]})
@@ -212,23 +295,53 @@ def main():
     sym_obj = '{' + ','.join(
         json.dumps(s) + ':[' + ','.join(map(str, ids)) + ']'
         for s, ids in symbol_langs.items()) + '}'
+    ENDONYMS = load_endonyms()
+    endonyms_obj = json.dumps(ENDONYMS, ensure_ascii=False, sort_keys=True,
+                              separators=(',', ':'))
+    SUPP_LANGS = load_languages_supplement()
+    supp_langs_obj = json.dumps(SUPP_LANGS, ensure_ascii=False, sort_keys=True,
+                                separators=(',', ':'))
+    SUPP_ORTHO, SUPP_PROFILES = load_orthography_supplement()
+    supp_ortho_obj = json.dumps(SUPP_ORTHO, ensure_ascii=False, sort_keys=True,
+                                separators=(',', ':'))
+    supp_profiles_obj = json.dumps(SUPP_PROFILES, ensure_ascii=False, sort_keys=True,
+                                   separators=(',', ':'))
 
     # verbatim non-DATA data constants, in original declaration order
     VERBATIM = ['SPEAKER_ESTIMATES', 'ORTHO', 'ORTHO_BY_ISO', 'LANGUAGE_PHONEME_MODELS',
                 'GEORGIAN_ALPHABET_ROWS', 'VERIFIED_LANGUAGE_PROFILES', 'VERIFIED_ORTHO',
                 'WRITING_SYSTEM_META', 'IPA_AUDIO_FILES', 'IPA_AUDIO_VOICES']
     verbatim_blocks = []
+    audio_overrides_path = os.path.join(ROOT, 'data', 'audio-overrides.json')
     for name in VERBATIM:
         val, _ = extract_raw(js, name)
+        if name == 'IPA_AUDIO_FILES' and os.path.exists(audio_overrides_path):
+            # Apply curated filename corrections (see data/audio-overrides.json).
+            overrides = {k: v for k, v in
+                         json.load(open(audio_overrides_path, encoding='utf-8')).items()
+                         if not k.startswith('_')}
+            if overrides:
+                files = json.loads(val)
+                unknown = [k for k in overrides if k not in files]
+                assert not unknown, 'audio override for unknown symbol(s): %s' % unknown
+                files.update(overrides)
+                val = json.dumps(files, ensure_ascii=False, separators=(',', ':'))
         verbatim_blocks.append('const %s=%s;' % (name, val))
 
     data_js = (
-        "/* GENERATED by scripts/build_data.py — do not edit by hand.\n"
+        "/* Glottodelta — Copyright (C) 2026 Andrea Benetton.\n"
+        "   Licensed under the GNU Affero General Public License v3 or later;\n"
+        "   see the LICENSE file distributed with this program.\n\n"
+        "   GENERATED by scripts/build_data.py — do not edit by hand.\n"
         "   Normalised language data for the Glottodelta IPA app.\n"
         "   LANG_DICT rows: [name, iso, glottocode, demographicTier(0|1)]\n"
         "   SYMBOL_LANGS: symbol -> language ids (indices into LANG_DICT).\n"
         "   DATA is reconstructed synchronously into the shape the app expects. */\n"
         "const LANG_DICT=" + lang_arr + ";\n"
+        "const ENDONYMS=" + endonyms_obj + ";\n"
+        "const SUPPLEMENTAL_LANGUAGES=" + supp_langs_obj + ";\n"
+        "const SUPPLEMENTAL_ORTHO=" + supp_ortho_obj + ";\n"
+        "const SUPPLEMENTAL_LANGUAGE_PROFILES=" + supp_profiles_obj + ";\n"
         "const SYMBOL_LANGS=" + sym_obj + ";\n"
         "const LANGUAGE_TIER=(()=>{const m=new Map();for(const r of LANG_DICT){if(r[1])m.set(r[1],r[3]);}return m;})();\n"
         "const DATA=(()=>{const o={};for(const s in SYMBOL_LANGS){o[s]={languages:SYMBOL_LANGS[s].map(i=>{const r=LANG_DICT[i];return{name:r[0],iso:r[1],glottocode:r[2]};})};}return o;})();\n"
@@ -243,6 +356,8 @@ def main():
     norm_bytes = len(lang_arr.encode()) + len(sym_obj.encode())
     mis_glot = len({L.get('glottocode') for r in DATA.values() for L in r['languages']
                     if L.get('iso') in PLACEHOLDER_ISO})
+    endonym_matched = sum(1 for l in languages
+                          if ('i:' + l['iso']) in ENDONYMS or ('g:' + l['g']) in ENDONYMS)
     report = f"""# Glottodelta data report
 
 _Generated by `scripts/build_data.py` from `baseline/original.html`._
@@ -254,6 +369,12 @@ _Generated by `scripts/build_data.py` from `baseline/original.html`._
   - demographic-certain (d=1, has speaker estimate): **{demo_count}**
   - attested-only (d=0, no population): **{len(languages) - demo_count:,}**
 - ISO placeholder ('mis'/'und') distinct glottocodes rescued from collapse: **{mis_glot}**
+- Languages with a curated endonym (searchable in their own script): **{endonym_matched}**
+  of {len(ENDONYMS)} entries in `data/endonyms.json`
+- Supplemental orthography profiles (`data/orthography-supplement.json`): **{len(SUPP_PROFILES)}**
+  languages with full phoneme–grapheme maps and per-letter rows, merged at runtime
+- Curated historical languages (`data/languages-supplement.json`, stats-neutral —
+  picker/highlight/compare only, never in L or P): **{len(SUPP_LANGS)}**
 
 ## Normalisation
 - Original inline `DATA` literal: **{orig_data_bytes:,} bytes**

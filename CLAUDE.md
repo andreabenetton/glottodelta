@@ -33,6 +33,10 @@ public/                     # Cloudflare Pages output directory (deploy this)
     symbols.json            #   GENERATED — symbol -> language-id arrays
 data/                       # build inputs + audit records (NOT deployed)
   name-overrides.json       #   curated canonical-name fixes (hand/agent edited)
+  endonyms.json             #   curated native-script autonyms for search (hand/agent edited)
+  orthography-supplement.json #  curated orthography profiles beyond the baseline 40
+  languages-supplement.json #   curated historical languages outside PHOIBLE (stats-neutral)
+  audio-overrides.json      #   corrections to IPA_AUDIO_FILES filenames (per symbol)
   name-fixes.json           #   GENERATED — every raw->canonical name change
   name-conflicts.json       #   GENERATED — genuine multi-name languages
 scripts/
@@ -81,7 +85,25 @@ It defines:
 - The unchanged verbatim consts: `SPEAKER_ESTIMATES`, `ORTHO`, `ORTHO_BY_ISO`,
   `LANGUAGE_PHONEME_MODELS`, `GEORGIAN_ALPHABET_ROWS`,
   `VERIFIED_LANGUAGE_PROFILES`, `VERIFIED_ORTHO`, `WRITING_SYSTEM_META`,
-  `IPA_AUDIO_FILES`, `IPA_AUDIO_VOICES`.
+  `IPA_AUDIO_FILES`, `IPA_AUDIO_VOICES`. Exception: `IPA_AUDIO_FILES` passes
+  through `data/audio-overrides.json` (curated per-symbol filename corrections —
+  currently only ə, whose baseline filename 404s on the host).
+- `ENDONYMS` — from `data/endonyms.json`; native-script autonyms, used only for
+  search matching and search-result details.
+- `SUPPLEMENTAL_ORTHO` / `SUPPLEMENTAL_LANGUAGE_PROFILES` — from
+  `data/orthography-supplement.json`; curated orthography profiles beyond the
+  baseline 40 (currently 36 living languages + Latin; ~90% of the weighted
+  population base is profile-covered).
+  Merged at runtime in `app-core.js` right after the `VERIFIED_ORTHO` merge;
+  **baseline data always wins on collision**. Languages listed here become
+  adjudicable (can reach green) and therefore enter P where attested + mapped.
+- `SUPPLEMENTAL_LANGUAGES` — from `data/languages-supplement.json`; curated
+  historical languages **outside PHOIBLE** (currently `lat`, Latin of the late
+  Roman Republic). They join the picker directory (`curated:true`) and
+  `LANGUAGE_PHONEME_MODELS`, so selection/highlighting/comparison/search work —
+  but they are **never added to `SYMBOL_LANGS`**, so they cannot enter L, P,
+  the per-symbol drawer lists or the evidence audit. Stats-neutral by
+  construction; `statetest.mjs` T10 enforces this.
 
 Normalization removed ~90% of the data blob (2.77 MB → ~320 KB) by storing each
 language once and referencing it by index. The old per-record `count`,
@@ -115,22 +137,57 @@ identifies a language, use `langKey(l)`, never `l.iso`.
   "attested only — no population estimate", never "0 speakers".
 - P still counts only green (verified/curated) + amber (alternative
   realization); blue (unresolved attestation) is excluded.
+- Curated historical languages (`curated:true`, e.g. Latin) are outside the
+  PHOIBLE universe: pickable, highlightable, comparable — but **never** counted
+  in L, never in P, never in the drawer lists or audit. Do not add them to
+  `SYMBOL_LANGS`.
 - The runtime SHA-256 (`updateProvenance`) hashes
   `{DATA, SPEAKER_ESTIMATES, LANGUAGE_PHONEME_MODELS, VERIFIED_LANGUAGE_PROFILES}`
   in that literal order. Changing the data changes the checksum — expected.
+
+## UI state machine
+
+Selection states: **S0** no language · **S1** primary only · **S2** primary +
+comparison. `scripts/statetest.mjs` asserts this table — keep them in sync.
+
+| aspect | S0 | S1 | S2 |
+|---|---|---|---|
+| evidence default (not user-set) | `all` | `population` | `population` |
+| speaker meters + legend | visible | visible | hidden (`body.comparison-mode`) |
+| Only differences | off + disabled | off + disabled | enabled; off by default |
+| tile visuals | base L/P | green/amber/blue/red + graphemes | shared/only-A/only-B/neither |
+
+- `evidenceModeUserSet` becomes true on an explicit dropdown change or an
+  `evidence=` URL param; while true, no auto-default fires. It resets **only**
+  on Clear primary (full reset to pristine S0). Transitions run
+  `syncEvidenceDefault()` after selection state is settled, before rendering.
+- URL: `evidence` is serialized **iff user-set** (including `all`, so an
+  explicit override round-trips). Auto-derived defaults never enter the URL;
+  a `lang=`/`compare=`-only link re-derives them on load.
+- "Only differences" is sticky across a direct comparison-language switch and
+  resets on clear-comparison / clear-primary.
 
 ## Regenerating data
 
 ```
 python3 scripts/build_data.py
 ```
-Reads `baseline/original.html` + `data/name-overrides.json`; writes
+Reads `baseline/original.html` + `data/name-overrides.json` +
+`data/endonyms.json` + `data/orthography-supplement.json`; writes
 `public/assets/js/data.js`, `public/data/{languages,symbols}.json`,
 `data/name-{fixes,conflicts}.json`, `docs/data-report.md`. It is deterministic
 and idempotent. Never hand-edit `data.js` — edit the pipeline or the overrides.
 
 To fix a language's display name, add `"<key>": "<name>"` to
 `data/name-overrides.json` (key is `i:<iso>` or `g:<glottocode>`) and rebuild.
+To make another language adjudicable (green-capable, P-eligible), add an entry
+to `data/orthography-supplement.json` — an ORTHO-format `ortho` map keyed by the
+language's PHOIBLE-attested chart symbols plus a full `profile`. Supplement
+entries use the `curated-*` statuses (mirroring the baseline's `verified-*`
+tiers in `verificationLabel()`) so the UI discloses that they are agent-curated
+and not independently reviewed; promote to `verified-*` only after review. Then
+rebuild. Map only defensible
+symbols; leaving a doculect artifact unmapped (blue) is correct.
 
 ## Testing
 
@@ -140,15 +197,24 @@ Requires the preinstalled Chromium (do not `playwright install`):
 node scripts/smoke.mjs      # renders app, checks symbol/picker counts, L/P, drawer
 node scripts/functest.mjs   # selects demographic / attested-only / mis languages,
                             # comparison mode, tier-aware drawer — asserts no JS errors
+node scripts/statetest.mjs  # walks the UI state machine (see section above):
+                            # evidence defaults, meters, differences, URL round-trips
 ```
 
 Both spin up a local static server over `public/`. `crypto.subtle` (the
 provenance checksum) needs a secure context — `http://127.0.0.1` and
 `https://glottodelta.com` both qualify; `file://` does not.
 
-Regression baseline (all languages included): 111 symbols, picker 2,123 options,
-/m/ L 2058 · P 6.11B, /p/ L 1855, drawer lists all attested languages with
-tier-aware population lines.
+If Playwright cannot resolve a browser, point the tests at one explicitly:
+`PW_CHROMIUM=/path/to/chrome node scripts/smoke.mjs`.
+
+Regression baseline (all languages included, with the 36 supplemental
+orthography profiles and 1 curated historical language): 111 symbols,
+picker 2,124 options (2,122 PHOIBLE + placeholder + Latin), /m/ L 2058 · P 7.85B,
+/p/ L 1855 · P 7.33B, /i/ L 2025 · P 7.16B, /k/ L 1961 · P 7.38B,
+/a/ L 1934 · P 5.67B, drawer lists all attested languages with tier-aware
+population lines. P moves when adjudicable coverage changes (e.g. a new
+orthography-supplement entry) — re-measure and update these numbers when it does.
 
 ## Deploy (Cloudflare Pages)
 

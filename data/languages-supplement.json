@@ -1,0 +1,40 @@
+{
+  "_comment": "Curated historical languages OUTSIDE the PHOIBLE universe (agent-curated, 2026). Keyed by ISO 639-3. These are stats-neutral by design: they appear in the picker, highlighting, comparison, search and the coverage panel, but are NEVER added to SYMBOL_LANGS, so they cannot enter L, P, the per-symbol drawer lists or the evidence audit. Each entry: name (display), glottocode, aliases, and a LANGUAGE_PHONEME_MODELS-shaped 'model' (phonemes -> {graphemes, realizations}) that drives green/amber highlighting without PHOIBLE attestation. Emitted by scripts/build_data.py as SUPPLEMENTAL_LANGUAGES and merged at runtime in app-core.js (baseline data wins). Orthography profile rows for these ISOs live in orthography-supplement.json as usual.",
+  "lat": {
+    "name": "Latin (late Roman Republic)",
+    "glottocode": "lati1261",
+    "aliases": ["Latin", "Classical Latin", "lingua Latina"],
+    "model": {
+      "phonemes": {
+        "p": {"graphemes": ["P"]},
+        "b": {"graphemes": ["B"]},
+        "t": {"graphemes": ["T"]},
+        "d": {"graphemes": ["D"]},
+        "k": {"graphemes": ["C", "K", "Q"]},
+        "ɡ": {"graphemes": ["G"]},
+        "kʷ": {"graphemes": ["QV"]},
+        "ɡʷ": {"graphemes": ["GV"]},
+        "f": {"graphemes": ["F"]},
+        "s": {"graphemes": ["S"]},
+        "z": {"graphemes": ["Z"]},
+        "h": {"graphemes": ["H"]},
+        "m": {"graphemes": ["M"]},
+        "n": {"graphemes": ["N"], "realizations": ["ŋ"]},
+        "l": {"graphemes": ["L"]},
+        "r": {"graphemes": ["R"]},
+        "j": {"graphemes": ["I"]},
+        "w": {"graphemes": ["V"]},
+        "a": {"graphemes": ["A"]},
+        "ɛ": {"graphemes": ["E"]},
+        "e": {"graphemes": ["E"]},
+        "ɪ": {"graphemes": ["I"]},
+        "i": {"graphemes": ["I"]},
+        "ɔ": {"graphemes": ["O"]},
+        "o": {"graphemes": ["O"]},
+        "ʊ": {"graphemes": ["V"]},
+        "u": {"graphemes": ["V"]},
+        "y": {"graphemes": ["Y"]}
+      }
+    }
+  }
+}

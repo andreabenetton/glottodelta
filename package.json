@@ -1,4 +1,12 @@
 {
+  "name": "glottodelta",
+  "description": "Demographically weighted visualization of IPA symbol distribution across the world's languages",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreabenetton/glottodelta.git"
+  },
   "devDependencies": {
     "playwright": "^1.62.0"
   }

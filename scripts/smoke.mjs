@@ -1,3 +1,15 @@
+/*
+   Glottodelta — demographically weighted distribution of IPA symbols.
+   Copyright (C) 2026 Andrea Benetton
+
+   This program is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option) any
+   later version. This program is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+   the LICENSE file distributed with this program for details.
+*/
 // Regression oracle: load the app in headless Chromium, extract key invariants.
 // Usage: node scripts/smoke.mjs [url]   (defaults to http://127.0.0.1:8788/)
 import { chromium } from 'playwright';
@@ -27,7 +39,9 @@ const url = process.argv[2] || null;
 const port = 8788;
 const srv = url ? null : await serve(port);
 const target = url || `http://127.0.0.1:${port}/`;
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+// Chromium comes from PW_CHROMIUM if set, else Playwright's own resolution.
+const launchOptions = process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {};
+const browser = await chromium.launch(launchOptions);
 const page = await browser.newPage();
 const errors = [];
 page.on('console', m=>{ if(m.type()==='error') errors.push(m.text()); });

@@ -1,5 +1,23 @@
+/*
+   Glottodelta — demographically weighted distribution of IPA symbols.
+   Copyright (C) 2026 Andrea Benetton
+
+   This program is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option) any
+   later version. This program is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+   the LICENSE file distributed with this program for details.
+*/
 /* ===== base ===== */
-:root{--bg:#f7f7f8;--panel:#fff;--text:#18181b;--muted:#666;--line:#d7d7dc;--accent:#5b4cc4;--accent2:#eeecff}
+:root{--bg:#f7f7f8;--panel:#fff;--text:#18181b;--muted:#666;--line:#d7d7dc;--accent:#5b4cc4;--accent2:#eeecff;
+/* Speaker-magnitude meter: heat ramp yellow → orange → red → purple. Multi-hue by
+   design, so the order is carried by lightness: the steps are validated monotone
+   light→dark with visible gaps between neighbours. The yellow end cannot clear
+   2:1 against every tile tint, so lit segments carry a thin dark ring that
+   delimits them on any background. */
+--meter-1:#f0c552;--meter-2:#ee9440;--meter-3:#e2645c;--meter-4:#a955bd;--meter-5:#6a44b0;--meter-off:#e8e8ee}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 header{padding:24px clamp(16px,4vw,48px);background:var(--panel);border-bottom:1px solid var(--line)}
 h1{font-size:clamp(1.4rem,3vw,2rem);margin:0 0 8px} p{line-height:1.5} .sub{color:var(--muted);width:100%;max-width:none;margin:0}
@@ -12,6 +30,29 @@ main{padding:22px clamp(12px,3vw,40px) 60px;max-width:1600px;margin:auto}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)} table{border-collapse:collapse;width:100%;min-width:1050px} th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;text-align:center} th{background:#f0f0f3;font-size:.83rem} tbody th{text-align:left;position:sticky;left:0;z-index:2} tr:last-child td,tr:last-child th{border-bottom:0} td:last-child,th:last-child{border-right:0} .na{background:#ededf0}
 .pair{display:flex;justify-content:center;gap:4px;min-height:54px;align-items:center}
 .sym{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:5px 7px;min-width:42px;cursor:pointer;color:var(--text);transition:background .15s,border-color .15s} .sym:hover,.sym:focus{border-color:var(--accent);outline:2px solid var(--accent2)} .sym span{display:block;font:600 1.35rem "Noto Sans",sans-serif} .sym small{display:block;color:var(--muted);font-size:.7rem;white-space:nowrap}.sym .speaker-count{color:var(--accent);font-weight:650}.sym .language-count{color:var(--muted)} .sym.hidden{opacity:.12;pointer-events:none}.sym.lang-present{background:#e5f5e7;border-color:#78b782}.sym.lang-variant{background:#fff3cd;border-color:#d5aa43}.sym.lang-attested{background:#e7f0fb;border-color:#7da5d2}.sym.lang-absent{background:#fbe8e8;border-color:#cf9292}.sym.lang-present:hover,.sym.lang-present:focus{border-color:#3f8750;outline-color:#d6efda}.sym.lang-variant:hover,.sym.lang-variant:focus{border-color:#ad7c12;outline-color:#ffedb0}.sym.lang-attested:hover,.sym.lang-attested:focus{border-color:#4f79a8;outline-color:#d5e5f7}.sym.lang-absent:hover,.sym.lang-absent:focus{border-color:#a95e5e;outline-color:#f5d5d5}.sym .selected-grapheme{margin-top:3px;padding-top:3px;border-top:1px solid #0002;font-weight:750;font-size:.86rem;color:#245e31;max-width:120px;overflow:hidden;text-overflow:ellipsis}.sym .selected-grapheme.no-spelling{font-size:.62rem;font-weight:600;color:#476b4e}.sym .selected-grapheme.variant-spelling{font-size:.68rem;font-weight:700;color:#795b09;white-space:normal;line-height:1.15}.sym .selected-grapheme.attested-spelling{font-size:.62rem;font-weight:650;color:#315f8d;white-space:normal;line-height:1.15}.sym .selected-grapheme.not-present{font-size:.62rem;font-weight:600;color:#8c4646}
+/* ---- speaker-magnitude meter ---- */
+.speaker-meter{display:flex;gap:2px;justify-content:center;margin:3px auto 0;width:max-content}
+/* .sym span sets display:block and a 1.35rem font — outrank both inside a tile. */
+.sym .speaker-meter{display:flex;font-size:0;line-height:0}
+.speaker-meter .led{display:block;width:7px;height:4px;border-radius:1.5px;background:var(--meter-off);box-shadow:inset 0 0 0 1px #00000010}
+/* Each position keeps its own colour as it lights up, so the strip reads like a
+   meter: the count gives the magnitude and the highest lit segment names the tier. */
+.speaker-meter .led:nth-child(1).on{background:var(--meter-1)}
+.speaker-meter .led:nth-child(2).on{background:var(--meter-2)}
+.speaker-meter .led:nth-child(3).on{background:var(--meter-3)}
+.speaker-meter .led:nth-child(4).on{background:var(--meter-4)}
+.speaker-meter .led:nth-child(5).on{background:var(--meter-5)}
+.speaker-meter .led.on{box-shadow:inset 0 0 0 1px #00000045}
+.speaker-meter.is-pending{opacity:.45}
+body.comparison-mode .speaker-meter,body.comparison-mode .meter-legend{display:none}
+body.large-symbols .speaker-meter .led{width:10px;height:5px}
+/* Non-colour cues: lit segments also gain a solid outline, so the meter is
+   readable from shape alone. */
+body.noncolor-cues .speaker-meter .led.on{box-shadow:inset 0 0 0 1px #000000cc}
+body.high-contrast .speaker-meter .led{box-shadow:inset 0 0 0 1px #000}
+.meter-legend{display:inline-flex;align-items:center;gap:7px;margin:0;padding:8px 10px;border-radius:999px;background:var(--accent2);color:var(--accent);font-size:.82rem}
+.meter-legend .speaker-meter{margin:0}
+@media print{.speaker-meter .led{box-shadow:inset 0 0 0 1px #000}}
 .vowels table{min-width:620px} .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px} .group{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px} .symbol-grid{display:flex;flex-wrap:wrap;gap:7px}
 .drawer{position:fixed;inset:0 0 0 auto;width:min(520px,100%);background:var(--panel);border-left:1px solid var(--line);box-shadow:-12px 0 35px #0002;transform:translateX(105%);transition:.2s;z-index:20;display:flex;flex-direction:column} .drawer.open{transform:none} .drawer-head{padding:18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px} .drawer-head h2{font-size:2.2rem;margin:0} .close{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 10px;cursor:pointer} .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;padding:14px} .stat{background:var(--accent2);padding:10px;border-radius:10px} .stat b{display:block;font-size:1.15rem;color:var(--accent)} .stat small{color:var(--muted)} .lang-search{margin:0 14px 10px;width:calc(100% - 28px);min-width:0;flex:none} .list{overflow:auto;padding:0 14px 18px} .lang{padding:10px 2px;border-bottom:1px solid var(--line)} .lang small{color:var(--muted)}.speaker-line{margin-top:4px;font-size:.82rem;color:var(--accent);font-weight:600}
 .orthography{margin-top:5px;display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}.orthography .label{font-size:.76rem;color:var(--muted)}.orthography .grapheme{font-size:1.15rem;font-weight:650;background:var(--accent2);color:var(--accent);padding:2px 7px;border-radius:7px}.orthography .missing{font-size:.82rem;color:var(--muted);font-style:italic}.coverage{margin:0 14px 10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:.82rem;background:#fafafa}
@@ -120,6 +161,14 @@ main{padding:22px clamp(12px,3vw,40px) 60px;max-width:1600px;margin:auto}
 }
 .pulmonic-table .impossible-cell{
   position:relative;
+}
+/* A half-impossible cell (only Plosive/Glottal: ʔ is possible, its voiced
+   counterpart is not) shades the underlying cell, not a floating box — the grey
+   bleeds through the cell padding and half the pair gutter to the cell edges, so
+   it reads exactly like the whole-cell shading elsewhere in the chart. */
+.pulmonic-table td.has-impossible-slot .impossible-slot{
+  margin:-7px -7px -7px -4px;
+  border-radius:0;
 }
 .pulmonic-table .impossible-label{
   position:absolute;
@@ -595,7 +644,7 @@ main{padding:22px clamp(12px,3vw,40px) 60px;max-width:1600px;margin:auto}
 .sym.search-match{outline:4px solid #d17500!important;outline-offset:3px;box-shadow:0 0 0 7px #ffd66b88}
 .technical-toolbar{flex:1 0 100%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--line)}
 .technical-group{display:flex;gap:7px;flex-wrap:wrap}.technical-group button,.provenance-dialog button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:8px 11px;cursor:pointer;font-weight:650}.technical-group button:hover,.technical-group button:focus-visible,.provenance-dialog button:hover,.provenance-dialog button:focus-visible{border-color:var(--accent);outline:2px solid var(--accent2)}
-.accessibility-options{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;padding:7px 10px}.accessibility-options legend{font-size:.72rem;font-weight:800;color:var(--muted);padding:0 4px}.accessibility-options label{display:flex;gap:5px;align-items:center;font-size:.82rem;white-space:nowrap}.technical-status{min-height:1.2em;color:var(--accent);font-size:.82rem;font-weight:650}
+.accessibility-options{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;padding:7px 10px}.accessibility-options legend{font-size:.72rem;font-weight:800;color:var(--muted);padding:0 4px}.accessibility-options label{display:flex;gap:5px;align-items:center;font-size:.82rem;white-space:nowrap}.accessibility-options input[type=checkbox]{min-width:0;flex:none;width:18px;height:18px;margin:0}.technical-status{min-height:1.2em;color:var(--accent);font-size:.82rem;font-weight:650}
 .provenance-dialog{width:min(960px,calc(100% - 28px));max-height:calc(100vh - 28px);border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);padding:0;box-shadow:0 24px 70px #0006}.provenance-dialog::backdrop{background:#0008}.provenance-dialog form{padding:20px}.dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:14px}.dialog-head h2{margin:0 0 5px}.dialog-head p{margin:0;color:var(--muted)}.provenance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.provenance-grid section{border:1px solid var(--line);border-radius:10px;padding:14px}.provenance-grid h3{margin:0 0 10px}.provenance-grid dl{display:grid;grid-template-columns:minmax(120px,.8fr) 1.6fr;gap:7px 12px;margin:0}.provenance-grid dt{font-weight:750}.provenance-grid dd{margin:0;color:var(--muted);overflow-wrap:anywhere}.provenance-grid code{font-size:.72rem;word-break:break-all}.provenance-note{color:var(--muted);font-size:.82rem}
 body.high-contrast{--panel:#fff;--text:#000;--muted:#222;--line:#000;--accent:#000;--accent2:#fff}
 body.high-contrast .sym{border-width:2px}body.high-contrast .sym.lang-present{background:#fff!important;border:4px solid #006400!important}body.high-contrast .sym.lang-variant{background:#fff!important;border:4px dashed #8a5100!important}body.high-contrast .sym.lang-attested{background:#fff!important;border:4px dotted #004d99!important}body.high-contrast .sym.lang-absent{background:#fff!important;border:4px double #8b0000!important}

@@ -1,3 +1,15 @@
+/*
+   Glottodelta — demographically weighted distribution of IPA symbols.
+   Copyright (C) 2026 Andrea Benetton
+
+   This program is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option) any
+   later version. This program is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+   the LICENSE file distributed with this program for details.
+*/
 
 /* This layer extends the existing data/model without changing its embedded sources. */
 const comparisonSelector=document.getElementById('comparisonLanguageSelector');
@@ -12,6 +24,20 @@ const auditSummary=document.getElementById('auditSummary');
 const auditFilters=document.getElementById('auditFilters');
 let comparisonLanguage=null;
 let evidenceMode='all';
+// The evidence filter follows the selection state until the user picks a mode
+// explicitly (dropdown change or an evidence= share-link param) — from then on
+// their choice is left alone until Clear primary, which is a full reset.
+// Defaults: no selection -> all; any selection (single or comparison) ->
+// population. Note: under the population default a blue-only comparison
+// language contributes nothing (0 shared / 0 only-B) — switch the filter to
+// "All evidence" to compare raw attestations.
+let evidenceModeUserSet=false;
+function defaultEvidenceMode(){return selectedLanguage?'population':'all';}
+function syncEvidenceDefault(){
+  if(evidenceModeUserSet)return;
+  const mode=defaultEvidenceMode();
+  if(evidenceMode!==mode){evidenceMode=mode;evidenceFilterControl.value=mode;}
+}
 let differencesOnlyMode=false;
 let currentAuditFilter='all';
 
@@ -34,7 +60,7 @@ function clearSymbolModeClasses(button){
 function enableComparisonControls(enabled){
   comparisonSearchInput.disabled=!enabled;comparisonSelector.disabled=!enabled;clearComparisonButton.disabled=!enabled;
   comparisonPicker.classList.toggle('is-disabled',!enabled);
-  comparisonSearchInput.placeholder=enabled?'Search comparison language by English name':'Select primary language first';
+  comparisonSearchInput.placeholder=enabled?'Search by English name, code or endonym':'Select primary language first';
   differencesOnlyControl.disabled=!(enabled&&comparisonLanguage);
 }
 function resetAllSymbolModes(){document.querySelectorAll('.sym').forEach(clearSymbolModeClasses);}
@@ -60,8 +86,9 @@ function renderSingleLanguageHighlight(lang){
   const total=document.querySelectorAll('.sym').length;
   selectedLanguageLabel.textContent=lang.name;
   const vp=profileForLanguage(lang);
-  selectedLanguageStats.textContent=`${mappedCount} mapped · ${variantCount} alternative · ${attestedCount} unresolved · ${total-mappedCount-variantCount-attestedCount} absent · filter: ${evidenceModeLabel()} · ${isDemographic(lang)?formatPeople(populationForLanguage(lang))+' estimated speakers (demographic-certain, in P)':'attested only — no population estimate, excluded from P'} · ${vp?verificationLabel(vp.status):'no independently verified orthography profile'}`;
+  selectedLanguageStats.textContent=`${mappedCount} mapped · ${variantCount} alternative · ${attestedCount} unresolved · ${total-mappedCount-variantCount-attestedCount} absent · filter: ${evidenceModeLabel()} · ${lang.curated?'curated historical reconstruction — outside the PHOIBLE dataset, excluded from L and P':isDemographic(lang)?formatPeople(populationForLanguage(lang))+' estimated speakers (demographic-certain, in P)':'attested only — no population estimate, excluded from P'} · ${vp?verificationLabel(vp.status):'no independently verified orthography profile'}`;
   singleLanguageLegend.hidden=false;comparisonLanguageLegend.hidden=true;languageMode.hidden=false;renderOrthographyCoverage(lang);
+  document.body.classList.remove('comparison-mode');
 }
 
 function renderComparisonHighlight(){
@@ -95,44 +122,50 @@ function renderComparisonHighlight(){
   document.getElementById('comparisonLegendPrimary').textContent=`${primaryCode} only`;
   document.getElementById('comparisonLegendSecondary').textContent=`${comparisonCode} only`;
   singleLanguageLegend.hidden=true;comparisonLanguageLegend.hidden=false;languageMode.hidden=false;hideOrthographyCoverage();differencesOnlyControl.disabled=false;
+  document.body.classList.add('comparison-mode');   // speaker meter steps aside for the A/B answer
 }
 
 applyLanguageHighlight=function(lang){
   selectedLanguage=lang;selector.value=langKey(lang);languageSearchInput.value=lang.name;enableComparisonControls(true);
   if(comparisonLanguage&&langKey(comparisonLanguage)===langKey(lang))clearComparisonLanguage();
+  syncEvidenceDefault();   // after the comparison question is settled (S1 vs S2)
   if(comparisonLanguage)renderComparisonHighlight();else renderSingleLanguageHighlight(lang);
 };
 
 clearComparisonLanguage=function(preserveInput=false){
   comparisonLanguage=null;
   if(!preserveInput){comparisonSelector.value='';comparisonSearchInput.value='';}
-  differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;
+  differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;document.body.classList.remove('comparison-mode');
+  syncEvidenceDefault();
   if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);else{resetAllSymbolModes();languageMode.hidden=true;}
 };
 
 clearLanguageHighlight=function(preserveInput=false){
   selectedLanguage=null;comparisonLanguage=null;
+  evidenceModeUserSet=false;   // Clear primary is a full reset — auto-defaults re-arm
+  syncEvidenceDefault();
   if(!preserveInput){selector.value='';languageSearchInput.value='';comparisonSelector.value='';comparisonSearchInput.value='';}
-  differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;enableComparisonControls(false);
+  differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;document.body.classList.remove('comparison-mode');enableComparisonControls(false);
   languageMode.hidden=true;singleLanguageLegend.hidden=false;comparisonLanguageLegend.hidden=true;hideOrthographyCoverage();resetAllSymbolModes();
 };
 
 function resolveComparisonLanguage(value,allowPrefix=false){
   const query=value.trim().toLowerCase();if(!query){clearComparisonLanguage();return null;}
-  let lang=LANGUAGE_LOOKUP.get(query)||null;
-  if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>x.name.toLowerCase().startsWith(query)||x.aliases.some(a=>a.toLowerCase().startsWith(query)));if(matches.length===1)lang=matches[0];}
+  const folded=foldSearchText(value.trim());
+  let lang=LANGUAGE_LOOKUP.get(query)||LANGUAGE_LOOKUP.get(folded)||null;
+  if(!lang&&allowPrefix){const matches=LANGUAGE_DIRECTORY.filter(x=>languageTermStartsWith(x,folded));if(matches.length===1)lang=matches[0];}
   if(lang){
     if(selectedLanguage&&langKey(lang)===langKey(selectedLanguage)){comparisonSearchInput.setCustomValidity('Choose a different language for comparison.');comparisonSearchInput.reportValidity();return null;}
-    comparisonSearchInput.setCustomValidity('');comparisonLanguage=lang;comparisonSelector.value=langKey(lang);comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();
+    comparisonSearchInput.setCustomValidity('');comparisonLanguage=lang;comparisonSelector.value=langKey(lang);comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;syncEvidenceDefault();renderComparisonHighlight();
   }else if(comparisonLanguage)clearComparisonLanguage(true);
   return lang;
 }
 comparisonSearchInput.addEventListener('input',()=>resolveComparisonLanguage(comparisonSearchInput.value,false));
 comparisonSearchInput.addEventListener('change',()=>resolveComparisonLanguage(comparisonSearchInput.value,true));
 comparisonSearchInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();resolveComparisonLanguage(comparisonSearchInput.value,true);}});
-comparisonSelector.addEventListener('change',()=>{const lang=LANGUAGE_LOOKUP.get(comparisonSelector.value.toLowerCase());if(lang){comparisonLanguage=lang;comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();}else clearComparisonLanguage();});
+comparisonSelector.addEventListener('change',()=>{const lang=LANGUAGE_LOOKUP.get(comparisonSelector.value.toLowerCase());if(lang){comparisonLanguage=lang;comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;syncEvidenceDefault();renderComparisonHighlight();}else clearComparisonLanguage();});
 clearComparisonButton.addEventListener('click',()=>clearComparisonLanguage());
-evidenceFilterControl.addEventListener('change',()=>{evidenceMode=evidenceFilterControl.value;if(comparisonLanguage)renderComparisonHighlight();else if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);});
+evidenceFilterControl.addEventListener('change',()=>{evidenceModeUserSet=true;evidenceMode=evidenceFilterControl.value;if(comparisonLanguage)renderComparisonHighlight();else if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);});
 differencesOnlyControl.addEventListener('change',()=>{differencesOnlyMode=differencesOnlyControl.checked;if(comparisonLanguage)renderComparisonHighlight();});
 
 function relationForAudit(lang){return mappingStateForPopulation(lang,currentSymbol);}
@@ -198,23 +231,30 @@ function updateQualityIndicators(ps,pending=false){
     attestedPopulation+=populationForLanguage(lang);
   }
   const verifiedCount=counts.mapped+counts.variant;
-  const verifiedShare=ps.languageCount?verifiedCount/ps.languageCount:0;
+  // Green/amber can only be reached for a language that has a curated orthography
+  // profile or phoneme model — 40-odd of the 2,122 attested languages. Scoring
+  // green+amber against the whole of L therefore measured profile coverage, not
+  // data quality, and pinned every widely-attested symbol below the grade
+  // boundaries. The share is taken over the adjudicable subset instead: of the
+  // languages this build can actually rule on, how many were resolved.
+  const adjudicableCount=ps.languages.filter(isAdjudicable).length;
+  const resolvedShare=adjudicableCount?verifiedCount/adjudicableCount:0;
   const populationCoverage=attestedPopulation?ps.total/attestedPopulation:0;
   const divergenceCount=counts.variant+counts.attested;
   const dataset=symbolDataset(currentSymbol)||{};
   const inventoryAttestations=Number.isFinite(dataset.inventories)?dataset.inventories:ps.doculectCount;
   const sourceDepth=Math.min(1,Math.log10(Math.max(1,inventoryAttestations)+1)/2.5);
-  const score=.55*verifiedShare+.30*populationCoverage+.15*sourceDepth;
+  const score=.40*resolvedShare+.40*populationCoverage+.20*sourceDepth;
   const label=score>=.75?'High':score>=.45?'Medium':'Limited';
   confidence.textContent=label;
   confidence.classList.add(label.toLowerCase());
   sourceNode.textContent=inventoryAttestations.toLocaleString('en-US');
-  verifiedNode.textContent=`${verifiedCount}/${ps.languageCount} · ${(verifiedShare*100).toLocaleString('en-US',{maximumFractionDigits:1})}%`;
+  verifiedNode.textContent=`${verifiedCount}/${adjudicableCount} · ${(resolvedShare*100).toLocaleString('en-US',{maximumFractionDigits:1})}%`;
   populationNode.textContent=`${(populationCoverage*100).toLocaleString('en-US',{maximumFractionDigits:1})}%`;
   divergenceNode.textContent=`${divergenceCount} (${counts.variant} amber · ${counts.attested} blue)`;
   versionNode.textContent=CLICK_SYMBOLS.has(currentSymbol)?'PHOIBLE 2.0.1':'PHOIBLE 2.0';
-  demographicNode.textContent=`${ps.languageCount}/${ps.languageCount} · ${ps.languageCount?'100':'0'}%`;
-  detailsNode.textContent=`${counts.mapped} green, ${counts.variant} amber and ${counts.attested} blue languages. “Amber + blue” is a proxy for alternative or unresolved analyses, not a count of independent publications. Confidence combines verified-language share (55%), population coverage within L (30%) and attestation depth (15%).`;
+  demographicNode.textContent=`${ps.demographicCount}/${ps.languageCount} · ${(ps.languageCount?ps.demographicCount/ps.languageCount*100:0).toLocaleString('en-US',{maximumFractionDigits:1})}%`;
+  detailsNode.textContent=`${counts.mapped} green, ${counts.variant} amber and ${counts.attested} blue languages. ${adjudicableCount} of the ${ps.languageCount} attested languages carry a curated orthography profile or phoneme model, so only those can be resolved to green or amber; the remaining ${ps.languageCount-adjudicableCount} stay blue and are excluded from P. Amber is narrower still — it needs a phoneme model that lists an alternative realization, which ${PHONEME_MODEL_COUNT} languages have — so 0 amber is the normal reading for most symbols, not a missing value. “Amber + blue” is a proxy for alternative or unresolved analyses, not a count of independent publications. Confidence combines resolved share of the adjudicable subset (40%), population coverage within L (40%) and attestation depth (20%).`;
 }
 
 openSymbol=function(s){

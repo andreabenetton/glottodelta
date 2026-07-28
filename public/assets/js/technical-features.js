@@ -1,3 +1,15 @@
+/*
+   Glottodelta — demographically weighted distribution of IPA symbols.
+   Copyright (C) 2026 Andrea Benetton
+
+   This program is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option) any
+   later version. This program is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License <https://www.gnu.org/licenses/> and
+   the LICENSE file distributed with this program for details.
+*/
 
 (()=>{
   'use strict';
@@ -22,7 +34,7 @@
   function buildUnifiedDirectory(){
     const bySymbol=new Map();
     document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;if(!bySymbol.has(symbol))bySymbol.set(symbol,{kind:'phoneme',key:`phoneme:${symbol}`,symbol,label:`/${symbol}/`,detail:audioDescription(symbol)||'IPA chart symbol',terms:[symbol,audioDescription(symbol)]});});
-    const languages=LANGUAGE_DIRECTORY.map(lang=>({kind:'language',key:`language:${lang.key}`,iso:lang.iso,lkey:lang.key,label:lang.name,detail:`${languageCodeLabel(lang)} · ${lang.demographic?formatPeople(lang.speakers)+' estimated speakers':'attested · no population estimate'}`,terms:[lang.name,lang.iso,lang.glottocode,...lang.aliases].filter(Boolean)}));
+    const languages=LANGUAGE_DIRECTORY.map(lang=>({kind:'language',key:`language:${lang.key}`,iso:lang.iso,lkey:lang.key,label:lang.name,detail:`${languageCodeLabel(lang)}${lang.endonyms.length?' · '+lang.endonyms[0]:''} · ${lang.curated?'historical · curated reconstruction':lang.demographic?formatPeople(lang.speakers)+' estimated speakers':'attested · no population estimate'}`,terms:languageSearchTerms(lang)}));
     const graphemes=[];const seen=new Set();
     for(const [iso,profile] of Object.entries(VERIFIED_LANGUAGE_PROFILES)){
       const lang=LANGUAGE_DIRECTORY.find(item=>item.iso===iso);if(!lang)continue;
@@ -35,9 +47,23 @@
     return [...bySymbol.values(),...languages,...graphemes];
   }
 
+  function rankTerm(term,q,best){
+    if(!term)return best;
+    if(term===q)return Math.min(best,0);
+    if(term.startsWith(q))return Math.min(best,1);
+    if(term.includes(q))return Math.min(best,2);
+    return best;
+  }
   function searchScore(item,query){
     const q=query.toLocaleLowerCase();let best=99;
-    for(const term of item.terms||[]){const t=String(term).toLocaleLowerCase();if(!t)continue;if(t===q)best=Math.min(best,0);else if(t.startsWith(q))best=Math.min(best,1);else if(t.includes(q))best=Math.min(best,2);}
+    // Languages also match diacritic-folded ("francais" -> "français"); phonemes
+    // and graphemes do not, because their combining marks are contrastive.
+    const fq=item.kind==='language'?foldSearchText(query):'';
+    for(const term of item.terms||[]){
+      const t=String(term).toLocaleLowerCase();if(!t)continue;
+      best=rankTerm(t,q,best);
+      if(fq)best=rankTerm(foldSearchText(term),fq,best);
+    }
     return best;
   }
   function clearSearchMatches(){document.querySelectorAll('.sym.search-match').forEach(node=>node.classList.remove('search-match'));}
@@ -68,13 +94,16 @@
     const params=new URLSearchParams();
     if(selectedLanguage)params.set('lang',langKey(selectedLanguage));
     if(comparisonLanguage)params.set('compare',langKey(comparisonLanguage));
-    if(evidenceMode&&evidenceMode!=='all')params.set('evidence',evidenceMode);
+    // Only an explicit user choice is serialized (including 'all', so an
+    // override of a selection default round-trips). Auto-derived defaults are
+    // re-derived from lang/compare on restore instead.
+    if(evidenceModeUserSet)params.set('evidence',evidenceMode);
     if(differencesOnlyMode)params.set('differences','1');
     if(currentSymbol&&drawer.classList.contains('open'))params.set('phoneme',currentSymbol);
     if(searchInput.value.trim())params.set('q',searchInput.value.trim());
     if(highContrastToggle.checked)params.set('contrast','1');
     if(largeSymbolsToggle.checked)params.set('large','1');
-    if(!nonColorCuesToggle.checked)params.set('cues','0');
+    if(nonColorCuesToggle.checked)params.set('cues','1');
     return params;
   }
   function updateURLState(){if(applyingURLState)return;const params=currentParams();const query=params.toString();history.replaceState(null,'',`${location.pathname}${query?'?'+query:''}${location.hash}`);}
@@ -105,30 +134,32 @@
   async function updateProvenance(){document.getElementById('provLanguageCount').textContent=LANGUAGE_DIRECTORY.length.toLocaleString('en-US');const demoEl=document.getElementById('provDemographicCount');if(demoEl)demoEl.textContent=DEMOGRAPHIC_LANGUAGE_COUNT.toLocaleString('en-US');document.getElementById('provSymbolCount').textContent=new Set([...document.querySelectorAll('.sym[data-symbol]')].map(node=>node.dataset.symbol)).size.toLocaleString('en-US');document.getElementById('provProfileCount').textContent=Object.keys(VERIFIED_LANGUAGE_PROFILES).length.toLocaleString('en-US');const clickEl=document.getElementById('provClickStatus');const noteEl=document.getElementById('provDegradedNote');if(clickEl){const st=(typeof clickFamilyStatus!=='undefined')?clickFamilyStatus:'idle';const map={ready:'Loaded and aggregated',loading:'Loading…',error:'Unavailable — using isolated-symbol data only',idle:'Not yet requested'};clickEl.textContent=map[st]||st;if(noteEl){if(st==='error'){noteEl.hidden=false;noteEl.textContent='Degraded: the external PHOIBLE ValueTable could not be fetched'+((typeof clickFamilyError!=='undefined'&&clickFamilyError)?' ('+clickFamilyError+')':'')+'. Click symbols show exact-symbol attestation and are not treated as zero.';}else{noteEl.hidden=true;noteEl.textContent='';}}}try{const payload=JSON.stringify({DATA,SPEAKER_ESTIMATES,LANGUAGE_PHONEME_MODELS,VERIFIED_LANGUAGE_PROFILES});const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(payload));document.getElementById('provChecksum').textContent=[...new Uint8Array(hash)].map(byte=>byte.toString(16).padStart(2,'0')).join('');}catch{document.getElementById('provChecksum').textContent='Unavailable in this browser context';}}
   document.getElementById('openProvenance').addEventListener('click',()=>{updateProvenance();if(typeof provenanceDialog.showModal==='function')provenanceDialog.showModal();else provenanceDialog.setAttribute('open','');});
 
-  function refreshSymbolAria(){document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;const stats=speakerStats(symbolDataset(symbol),symbol);let description=`IPA ${symbol}. L ${stats.languageCount} source-attested languages. P ${formatPeople(stats.total)} verified or variant speakers.`;if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());description+=` ${selectedLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set());description+=` ${comparisonLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}button.setAttribute('aria-label',description);});}
+  function refreshSymbolAria(){document.querySelectorAll('.sym[data-symbol]').forEach(button=>{const symbol=button.dataset.symbol;const stats=speakerStats(symbolDataset(symbol),symbol);let description=`IPA ${symbol}. L ${stats.languageCount} source-attested languages. P ${formatPeople(stats.total)} verified or variant speakers.`;if(!comparisonLanguage)description+=` ${speakerMeterText(stats.total,false)}.`;if(selectedLanguage){const rel=languageSymbolState(selectedLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());description+=` ${selectedLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}if(comparisonLanguage){const rel=languageSymbolState(comparisonLanguage,symbol,LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set());description+=` ${comparisonLanguage.iso.toUpperCase()}: ${relationName(rel.state)}.`;}button.setAttribute('aria-label',description);});}
 
   const coreApplyLanguageHighlight=applyLanguageHighlight;applyLanguageHighlight=function(lang){const result=coreApplyLanguageHighlight(lang);refreshSymbolAria();updateURLState();return result;};
   const coreClearLanguageHighlight=clearLanguageHighlight;clearLanguageHighlight=function(preserveInput=false){const result=coreClearLanguageHighlight(preserveInput);refreshSymbolAria();updateURLState();return result;};
   const coreClearComparisonLanguage=clearComparisonLanguage;clearComparisonLanguage=function(preserveInput=false){const result=coreClearComparisonLanguage(preserveInput);refreshSymbolAria();updateURLState();return result;};
   const coreOpenSymbol=openSymbol;openSymbol=function(symbol){const result=coreOpenSymbol(symbol);refreshSymbolAria();updateURLState();return result;};
+  // Selecting a comparison language runs through renderComparisonHighlight from
+  // both the search input and the <select>; wrapping it here is what puts
+  // compare= into the share link (applyURLState is guarded, so no feedback loop).
+  const coreRenderComparisonHighlight=renderComparisonHighlight;renderComparisonHighlight=function(){const result=coreRenderComparisonHighlight();refreshSymbolAria();updateURLState();return result;};
   document.getElementById('close').addEventListener('click',()=>{currentSymbol='';updateURLState();});
   evidenceFilterControl.addEventListener('change',()=>{refreshSymbolAria();updateURLState();});
   differencesOnlyControl.addEventListener('change',updateURLState);
 
   function applyURLState(){
     const params=new URLSearchParams(location.search);
-    highContrastToggle.checked=params.get('contrast')==='1';largeSymbolsToggle.checked=params.get('large')==='1';nonColorCuesToggle.checked=params.get('cues')!=='0';applyAccessibility();
-    const evidence=params.get('evidence');if(evidence&&[...evidenceFilterControl.options].some(option=>option.value===evidence)){evidenceFilterControl.value=evidence;evidenceMode=evidence;}
+    highContrastToggle.checked=params.get('contrast')==='1';largeSymbolsToggle.checked=params.get('large')==='1';nonColorCuesToggle.checked=params.get('cues')==='1';applyAccessibility();
+    const evidence=params.get('evidence');if(evidence&&[...evidenceFilterControl.options].some(option=>option.value===evidence)){evidenceFilterControl.value=evidence;evidenceMode=evidence;evidenceModeUserSet=true;}
     const lang=params.get('lang');if(lang){const item=LANGUAGE_LOOKUP.get(lang.toLowerCase());if(item)applyLanguageHighlight(item);}
-    const compare=params.get('compare');if(compare&&selectedLanguage){const item=LANGUAGE_LOOKUP.get(compare.toLowerCase());if(item&&langKey(item)!==langKey(selectedLanguage)){comparisonLanguage=item;comparisonSelector.value=item.iso;comparisonSearchInput.value=item.name;differencesOnlyControl.disabled=false;renderComparisonHighlight();}}
-    if(params.get('differences')==='1'&&comparisonLanguage){differencesOnlyControl.checked=true;differencesOnlyMode=true;renderComparisonHighlight();}
+    const compare=params.get('compare');if(compare&&selectedLanguage){const item=LANGUAGE_LOOKUP.get(compare.toLowerCase());if(item&&langKey(item)!==langKey(selectedLanguage)){comparisonLanguage=item;comparisonSelector.value=langKey(item);comparisonSearchInput.value=item.name;differencesOnlyControl.disabled=false;if(params.get('differences')==='1'){differencesOnlyControl.checked=true;differencesOnlyMode=true;}syncEvidenceDefault();renderComparisonHighlight();}}
     const q=params.get('q');if(q){searchInput.value=q;renderUnifiedSearch();}
     const phoneme=params.get('phoneme');if(phoneme&&document.querySelector(`.sym[data-symbol="${CSS.escape(phoneme)}"]`))openSymbol(phoneme);
     refreshSymbolAria();
   }
 
   searchItems=buildUnifiedDirectory();
-  document.body.classList.add('noncolor-cues');
   applyURLState();
   applyingURLState=false;
   updateURLState();
