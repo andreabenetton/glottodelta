@@ -662,21 +662,26 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
 @media print{.technical-toolbar,.unified-search-results,.provenance-dialog{display:none!important}}
 
 /* ===== drawer-scroll-quality-styles ===== */
-/* The whole inspector scrolls; the header stays available while long audit lists remain reachable. */
+/* The header (title + Close) stays fixed; everything below it scrolls in
+   .drawer-body, so the scrollbar starts under the header, not beside it. */
 .drawer{
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  overscroll-behavior:contain;
-  scrollbar-gutter:stable;
+  overflow:hidden !important;
 }
 .drawer-head{
-  position:sticky;
-  top:0;
-  z-index:8;
   flex:none;
   background:var(--panel);
 }
-.drawer>.list{
+.drawer-body{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  display:flex;
+  flex-direction:column;
+}
+.drawer-body>.list{
   overflow:visible !important;
   flex:none !important;
   min-height:auto !important;
