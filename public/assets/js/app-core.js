@@ -202,7 +202,9 @@ function renderLanguages(q=''){const s=q.trim().toLowerCase(); const rows=curren
 
 const IPA_AUDIO_BASE='https://www.internationalphoneticalphabet.org/ipa-chart-audio/mp3/';
 
-const IPA_OFFICIAL_AUDIO_BASE='https://www.internationalphoneticassociation.org/IPAcharts/inter_chart_2018/sounds/';
+/* Path verified against the official chart's own player (symbols_details.js
+   PlayClick): recordings live under IPAcharts/common_files/sounds/<voice>/. */
+const IPA_OFFICIAL_AUDIO_BASE='https://www.internationalphoneticassociation.org/IPAcharts/common_files/sounds/';
 const IPA_OFFICIAL_CHART='https://www.internationalphoneticassociation.org/IPAcharts/IPA_charts_EI/IPA_charts_EI.html';
 const IPA_OFFICIAL_ACK='https://www.internationalphoneticassociation.org/IPAcharts/common_files/IPA_charts_about.html';
 
