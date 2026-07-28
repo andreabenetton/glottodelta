@@ -227,7 +227,8 @@ function audioSampleRow({label,site,url,sourceUrl,available=true,official=false}
   return row;
 }
 function stopAudio(){ipaAudio.pause();ipaAudio.removeAttribute('src');ipaAudio.load();if(currentAudioButton){currentAudioButton.textContent='▶';currentAudioButton.removeAttribute('aria-pressed');currentAudioButton=null;}}
-function playAudioSample(button,url,label){stopAudio();currentAudioButton=button;button.textContent='■';button.setAttribute('aria-pressed','true');ipaAudio.src=url;ipaAudio.load();ipaAudio.autoplay=false;ipaAudio.currentTime=0;ipaAudioStatus.textContent=`Loading ${label} for [${audioSymbol}]…`;const p=ipaAudio.play();if(p&&typeof p.catch==='function')p.catch(()=>{ipaAudioStatus.textContent=`The ${label} recording is unavailable or playback was blocked.`;stopAudio();});}
+function setAudioStatus(text,isError=false){ipaAudioStatus.textContent=text;ipaAudioStatus.classList.toggle('error',isError);}
+function playAudioSample(button,url,label){stopAudio();currentAudioButton=button;button.textContent='■';button.setAttribute('aria-pressed','true');ipaAudio.src=url;ipaAudio.load();ipaAudio.autoplay=false;ipaAudio.currentTime=0;setAudioStatus(`Loading ${label} for [${audioSymbol}]…`);const p=ipaAudio.play();if(p&&typeof p.catch==='function')p.catch(()=>{setAudioStatus(`The ${label} recording is unavailable or playback was blocked.`,true);stopAudio();});}
 function configureSymbolAudio(symbol){
   audioSymbol=symbol;stopAudio();ipaAudioSamples.replaceChildren();ipaAudioLabel.textContent=`[${symbol}]`;
   const supplementalFile=IPA_AUDIO_FILES[symbol];
@@ -239,11 +240,11 @@ function configureSymbolAudio(symbol){
     const url=hex?`${IPA_OFFICIAL_AUDIO_BASE}${voice.code}/${hex}.mp3`:'';
     ipaAudioSamples.append(audioSampleRow({label:voice.name,site:'International Phonetic Association',url,sourceUrl:IPA_OFFICIAL_CHART,available:Boolean(hex),official:true}));
   }
-  ipaAudioStatus.textContent=hex?'Five entries are ready when the remote sources provide the selected recording. Press a Play button.':'The supplemental entry may be available, but the official chart does not expose a single-code-point audio path for this compound symbol.';
+  setAudioStatus(hex?'Five entries are ready when the remote sources provide the selected recording. Press a Play button.':'The supplemental entry may be available, but the official chart does not expose a single-code-point audio path for this compound symbol.');
 }
-ipaAudio.addEventListener('play',()=>{ipaAudioStatus.textContent=`Playing [${audioSymbol}]…`;});
-ipaAudio.addEventListener('ended',()=>{ipaAudioStatus.textContent=`Playback of [${audioSymbol}] completed.`;stopAudio();});
-ipaAudio.addEventListener('error',()=>{ipaAudioStatus.textContent='This recording is not available from its remote source.';stopAudio();});
+ipaAudio.addEventListener('play',()=>{setAudioStatus(`Playing [${audioSymbol}]…`);});
+ipaAudio.addEventListener('ended',()=>{setAudioStatus(`Playback of [${audioSymbol}] completed.`);stopAudio();});
+ipaAudio.addEventListener('error',()=>{setAudioStatus('This recording is not available from its remote source.',true);stopAudio();});
 
 
 const CLICK_SYMBOLS=new Set(['ʘ','ǀ','ǃ','ǂ','ǁ']);
