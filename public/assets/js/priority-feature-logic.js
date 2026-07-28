@@ -182,11 +182,22 @@ function setAuditFilter(filter,focusList=false){
   if(focusList)lsearch.focus();
 }
 
+/* Drawer search matches the same term surface as the pickers: canonical name,
+   ISO, glottocode, source-name aliases and native-script endonyms (folded). */
+function drawerLanguageMatches(x,s){
+  if(!s)return true;
+  if(x.name.toLowerCase().includes(s)||(x.iso||'').includes(s)||(x.glottocode||'').includes(s))return true;
+  const dir=LANGUAGE_LOOKUP.get(langKey(x).toLowerCase());
+  if(!dir)return false;
+  const folded=foldSearchText(s);
+  return languageSearchTerms(dir).some(t=>foldSearchText(t).includes(folded));
+}
+
 renderLanguages=function(q=''){
   const s=q.trim().toLowerCase();
   const rows=current.filter(x=>{
     const relation=relationForAudit(x);
-    return auditFilterMatches(relation)&&(!s||x.name.toLowerCase().includes(s)||(x.iso||'').includes(s)||(x.glottocode||'').includes(s));
+    return auditFilterMatches(relation)&&drawerLanguageMatches(x,s);
   });
   list.innerHTML=rows.map(x=>{
     const g=graphemeFor(x,currentSymbol);const pop=populationForLanguage(x);const relation=relationForAudit(x);const included=relation.state==='mapped'||relation.state==='variant';const demo=isDemographic(x);
@@ -204,7 +215,7 @@ renderLanguages=function(q=''){
 function allophoneDrawerHTML(query){
   if(viewMode!=='phonetic'||currentAuditFilter!=='all')return '';
   const rows=(ALLOPHONE_LANG_LISTS[currentSymbol]||[])
-    .filter(x=>!query||x.name.toLowerCase().includes(query)||(x.iso||'').includes(query)||(x.glottocode||'').includes(query));
+    .filter(x=>drawerLanguageMatches(x,query));
   if(!rows.length)return '';
   const covered=ALLOPHONE_INFO.documentedLanguages||0,universe=ALLOPHONE_INFO.valuetableLanguages||0;
   return `<div class="curated-drawer-section allophone-drawer-section"><h4>Documented allophones — phonetic view</h4><p class="curated-drawer-note">Languages where PHOIBLE ${escapeHTML(ALLOPHONE_INFO.release||'')} documents /${escapeHTML(currentSymbol)}/ as an allophone of a different phoneme. Phonetic-level evidence only — never counted in L or P. Allophone documentation exists for only ${covered.toLocaleString('en-US')} of ${universe.toLocaleString('en-US')} PHOIBLE languages, so absence from this list is not evidence of absence.</p>${rows.map(x=>`<div class="lang curated-lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge variant">Documented allophone</span></div>`).join('')}</div>`;
@@ -216,7 +227,7 @@ function allophoneDrawerHTML(query){
 function curatedDrawerHTML(query){
   if(currentAuditFilter!=='all')return '';
   const rows=LANGUAGE_DIRECTORY.filter(x=>x.curated)
-    .filter(x=>!query||x.name.toLowerCase().includes(query)||(x.iso||'').includes(query)||(x.glottocode||'').includes(query))
+    .filter(x=>drawerLanguageMatches(x,query))
     .map(x=>({x,relation:explicitLanguageRelation(x,currentSymbol)}))
     .filter(r=>r.relation&&(r.relation.state==='mapped'||r.relation.state==='variant'));
   if(!rows.length)return '';

@@ -452,9 +452,16 @@ const languageOptions=document.getElementById('languageOptions');
 const languageMode=document.getElementById('languageMode');
 const selectedLanguageLabel=document.getElementById('selectedLanguageLabel');
 const selectedLanguageStats=document.getElementById('selectedLanguageStats');
-// Datalist label carries the code and the endonym so the browser's own
-// suggestion filter surfaces a language typed in its native script too.
-languageOptions.innerHTML=LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${escapeHTML(languageCodeLabel(lang)+(lang.endonyms.length?' · '+lang.endonyms.join(' · '):''))}</option>`).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${lang.name} (${languageCodeLabel(lang)})</option>`).join('');
+// One datalist option per searchable term (canonical name, source-name aliases,
+// native-script endonyms). Browsers filter datalist suggestions by option VALUE
+// only — a term the user types reaches the dropdown only if it IS a value, so
+// "Mandarin Chinese" or "ქართული" must each be their own option. Picking any
+// term fires the input handler, which resolves it through the exact-match
+// lookup and normalises the box to the canonical name.
+languageOptions.innerHTML=LANGUAGE_DIRECTORY.flatMap(lang=>{
+  const label=escapeHTML(`${lang.name} (${languageCodeLabel(lang)})`);
+  return [...new Set([lang.name,...lang.aliases,...lang.endonyms])].map(term=>`<option value="${term.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${label}</option>`);
+}).join('');selector.innerHTML='<option value="">Select language...</option>'+LANGUAGE_DIRECTORY.map(lang=>`<option value="${lang.key}">${lang.name} (${languageCodeLabel(lang)})</option>`).join('');
 let selectedLanguage=null;
 function clearLanguageHighlight(preserveInput=false){
   selectedLanguage=null;if(!preserveInput){selector.value='';languageSearchInput.value='';}languageMode.hidden=true;hideOrthographyCoverage();
