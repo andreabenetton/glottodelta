@@ -1,9 +1,22 @@
 node_modules/
 .DS_Store
 *.log
+
+# python (scripts/build_data.py)
+__pycache__/
+*.pyc
+.venv/
+
+# local env / secrets
+.env
+.dev.vars
+
+# editors
+.vscode/
+.idea/
+*.swp
 .wrangler/
 dist/
-.dev.vars
 scratch/
 
 # delivery artifacts (generated, sent to user)
