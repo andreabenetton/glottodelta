@@ -216,6 +216,41 @@ picker 2,124 options (2,122 PHOIBLE + placeholder + Latin), /m/ L 2058 · P 7.85
 population lines. P moves when adjudicable coverage changes (e.g. a new
 orthography-supplement entry) — re-measure and update these numbers when it does.
 
+## Git discipline
+
+After each logical unit of work:
+- create a git commit
+- push to the current branch
+
+If push cannot be completed because of credentials, remote access, branch
+protection, or environment limits:
+- say so explicitly
+- do not claim the push succeeded
+
+Commit messages must be short, specific, and scoped to the actual change.
+Do not leave completed logical units of work uncommitted.
+Do not add a "Co-Authored-By" trailer, a "Generated with" line, a session
+link, or any other tool-attribution reference to any commit message.
+
+Commits and tags are GPG-signed and OpenTimestamps-stamped: the local git
+config sets `commit.gpgsign` / `tag.gpgsign` and routes `gpg.program`
+through the OTS wrapper. Do not bypass this with `--no-gpg-sign`.
+
+### Multi-fix prompts
+
+When a single prompt asks for **more than one unrelated fix** (different
+files, different bugs, different concerns — not the natural sub-tasks of one
+feature), do not bundle them into a single commit. Instead, for each fix in
+turn:
+
+1. implement only that one fix
+2. if it touches the data pipeline or its inputs, rerun
+   `python3 scripts/build_data.py` and include the regenerated artifacts
+3. run the impacted suites (`smoke.mjs` / `functest.mjs` / `statetest.mjs`);
+   verify they pass
+4. create one commit scoped to that fix (message describing only it)
+5. push, then move to the next fix
+
 ## Deploy (Cloudflare Pages)
 
 Output directory: `public/`. No build step is required for deploy — `data.js`
