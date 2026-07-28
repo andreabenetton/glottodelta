@@ -231,15 +231,15 @@ function setAudioStatus(text,isError=false){ipaAudioStatus.textContent=text;ipaA
 function playAudioSample(button,url,label){stopAudio();currentAudioButton=button;button.textContent='■';button.setAttribute('aria-pressed','true');ipaAudio.src=url;ipaAudio.load();ipaAudio.autoplay=false;ipaAudio.currentTime=0;setAudioStatus(`Loading ${label} for [${audioSymbol}]…`);const p=ipaAudio.play();if(p&&typeof p.catch==='function')p.catch(()=>{setAudioStatus(`The ${label} recording is unavailable or playback was blocked.`,true);stopAudio();});}
 function configureSymbolAudio(symbol){
   audioSymbol=symbol;stopAudio();ipaAudioSamples.replaceChildren();ipaAudioLabel.textContent=`[${symbol}]`;
-  const supplementalFile=IPA_AUDIO_FILES[symbol];
-  // The supplemental chart-with-sounds recordings are read by Dan Lenard, so the
-  // row is attributed by name like the four official ones.
-  ipaAudioSamples.append(audioSampleRow({label:'Dan Lenard',site:'InternationalPhoneticAlphabet.org',url:supplementalFile?IPA_AUDIO_BASE+encodeURIComponent(supplementalFile):'',sourceUrl:'https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/',available:Boolean(supplementalFile),official:false}));
   const hex=officialAudioHex(symbol);
   for(const voice of IPA_AUDIO_VOICES){
     const url=hex?`${IPA_OFFICIAL_AUDIO_BASE}${voice.code}/${hex}.mp3`:'';
     ipaAudioSamples.append(audioSampleRow({label:voice.name,site:'International Phonetic Association',url,sourceUrl:IPA_OFFICIAL_CHART,available:Boolean(hex),official:true}));
   }
+  // The supplemental chart-with-sounds recording (read by Dan Lenard) is listed
+  // after the four official ones.
+  const supplementalFile=IPA_AUDIO_FILES[symbol];
+  ipaAudioSamples.append(audioSampleRow({label:'Dan Lenard',site:'InternationalPhoneticAlphabet.org',url:supplementalFile?IPA_AUDIO_BASE+encodeURIComponent(supplementalFile):'',sourceUrl:'https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/',available:Boolean(supplementalFile),official:false}));
   setAudioStatus(hex?'Five entries are ready when the remote sources provide the selected recording. Press a Play button.':'The supplemental entry may be available, but the official chart does not expose a single-code-point audio path for this compound symbol.');
 }
 ipaAudio.addEventListener('play',()=>{setAudioStatus(`Playing [${audioSymbol}]…`);});
