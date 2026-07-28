@@ -482,7 +482,7 @@ function resolveLanguage(value,allowPrefix=false){
   if(lang)applyLanguageHighlight(lang);else if(selectedLanguage)clearLanguageHighlight(true);
   return lang;
 }
-languageSearchInput.addEventListener('input',()=>{resolveLanguage(languageSearchInput.value,false);});
+languageSearchInput.addEventListener('input',event=>{const typed=languageSearchInput.value;resolveLanguage(typed,false);if(event.inputType&&event.inputType.startsWith('delete')&&languageSearchInput.value!==typed)languageSearchInput.value=typed;});
 languageSearchInput.addEventListener('change',()=>{resolveLanguage(languageSearchInput.value,true);});
 languageSearchInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();resolveLanguage(languageSearchInput.value,true);}});
 selector.addEventListener('change',()=>{const lang=LANGUAGE_LOOKUP.get(selector.value.toLowerCase());if(lang)applyLanguageHighlight(lang);else clearLanguageHighlight();});
