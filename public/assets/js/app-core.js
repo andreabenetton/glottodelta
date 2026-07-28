@@ -500,7 +500,11 @@ function resolveLanguage(value,allowPrefix=false){
   if(lang)applyLanguageHighlight(lang);else if(selectedLanguage)clearLanguageHighlight(true);
   return lang;
 }
-languageSearchInput.addEventListener('input',event=>{const typed=languageSearchInput.value;resolveLanguage(typed,false);if(event.inputType&&event.inputType.startsWith('delete')&&languageSearchInput.value!==typed)languageSearchInput.value=typed;});
+// Live-resolve while typing, but never let the resolver rewrite the box mid-type:
+// "mal" exact-matches ISO mal (Malayalam) and would hijack typing "maltese".
+// Only a datalist pick (insertReplacementText, or no inputType in some browsers)
+// may normalise the value to the canonical name.
+languageSearchInput.addEventListener('input',event=>{const typed=languageSearchInput.value;resolveLanguage(typed,false);if(event.inputType&&event.inputType!=='insertReplacementText'&&languageSearchInput.value!==typed)languageSearchInput.value=typed;});
 languageSearchInput.addEventListener('change',()=>{resolveLanguage(languageSearchInput.value,true);});
 languageSearchInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();resolveLanguage(languageSearchInput.value,true);}});
 selector.addEventListener('change',()=>{const lang=LANGUAGE_LOOKUP.get(selector.value.toLowerCase());if(lang)applyLanguageHighlight(lang);else clearLanguageHighlight();});

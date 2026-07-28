@@ -160,7 +160,9 @@ function resolveComparisonLanguage(value,allowPrefix=false){
   }else if(comparisonLanguage)clearComparisonLanguage(true);
   return lang;
 }
-comparisonSearchInput.addEventListener('input',event=>{const typed=comparisonSearchInput.value;resolveComparisonLanguage(typed,false);if(event.inputType&&event.inputType.startsWith('delete')&&comparisonSearchInput.value!==typed)comparisonSearchInput.value=typed;});
+// Same guard as the primary picker: typed text is never rewritten mid-type;
+// only a datalist pick may normalise to the canonical name.
+comparisonSearchInput.addEventListener('input',event=>{const typed=comparisonSearchInput.value;resolveComparisonLanguage(typed,false);if(event.inputType&&event.inputType!=='insertReplacementText'&&comparisonSearchInput.value!==typed)comparisonSearchInput.value=typed;});
 comparisonSearchInput.addEventListener('change',()=>resolveComparisonLanguage(comparisonSearchInput.value,true));
 comparisonSearchInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();resolveComparisonLanguage(comparisonSearchInput.value,true);}});
 comparisonSelector.addEventListener('change',()=>{const lang=LANGUAGE_LOOKUP.get(comparisonSelector.value.toLowerCase());if(lang){comparisonLanguage=lang;comparisonSearchInput.value=lang.name;differencesOnlyControl.disabled=false;syncEvidenceDefault();renderComparisonHighlight();}else clearComparisonLanguage();});
