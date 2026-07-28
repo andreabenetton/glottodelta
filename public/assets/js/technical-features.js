@@ -164,3 +164,14 @@
   applyingURLState=false;
   updateURLState();
 })();
+
+/* Harvester-protected author contact: the address never appears in the static
+   HTML or in any DOM attribute at load time — it is decoded from hex and put
+   into the mailto: URL only at activation. */
+(function(){
+  const link=document.getElementById('contactAuthor');if(!link)return;
+  const hex=['616e647265612e62656e6574746f6e','626c75657465616d2e6565'];
+  const decode=h=>h.replace(/../g,pair=>String.fromCharCode(parseInt(pair,16)));
+  link.title='Click to open your mail client (address hidden from harvesters)';
+  link.addEventListener('click',event=>{event.preventDefault();window.location.href='mailto:'+decode(hex[0])+'@'+decode(hex[1]);});
+})();
