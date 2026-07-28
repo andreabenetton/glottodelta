@@ -195,7 +195,25 @@ renderLanguages=function(q=''){
     const clickLine=x.clickSegments&&x.clickSegments.length?`<div class="speaker-line"><b>PHOIBLE click segments:</b> ${x.clickSegments.map(v=>`/${escapeHTML(v)}/`).join(' ')}</div>`:'';
     return `<div class="lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge ${relation.state}">${evidenceBadgeLabel(relation.state)}</span>${speakerLine}${weighting}${clickLine}<div class="orthography"><span class="label">Grapheme(s):</span>${g?`<span class="grapheme">${escapeHTML(g)}</span>`:`<span class="missing">not available in the curated orthography profile</span>`}</div></div>`;
   }).join('')||'<p>No languages match the selected evidence filter and search.</p>';
+  list.innerHTML+=curatedDrawerHTML(s);
 };
+
+/* Curated historical languages (outside PHOIBLE) whose model covers the open
+   symbol. Rendered as a visually separate drawer section; never part of L, P,
+   the audit summary or the evidence filters (hence: only under filter "all"). */
+function curatedDrawerHTML(query){
+  if(currentAuditFilter!=='all')return '';
+  const rows=LANGUAGE_DIRECTORY.filter(x=>x.curated)
+    .filter(x=>!query||x.name.toLowerCase().includes(query)||(x.iso||'').includes(query)||(x.glottocode||'').includes(query))
+    .map(x=>({x,relation:explicitLanguageRelation(x,currentSymbol)}))
+    .filter(r=>r.relation&&(r.relation.state==='mapped'||r.relation.state==='variant'));
+  if(!rows.length)return '';
+  return `<div class="curated-drawer-section"><h4>Curated beyond PHOIBLE</h4><p class="curated-drawer-note">Historical reconstructions outside the PHOIBLE corpus — shown for reference, never counted in L, P or the audit above.</p>${rows.map(({x,relation})=>{
+    const vp=VERIFIED_LANGUAGE_PROFILES[x.iso];const g=(relation.graphemes||[]).join(' · ');
+    const badge=relation.state==='mapped'?'Mapped in curated model':'Realization in curated model';
+    return `<div class="lang curated-lang"><b>${escapeHTML(x.name)}</b><br><small>${x.iso?`ISO: ${escapeHTML(x.iso)} · `:''}${x.glottocode?`Representative Glottocode: ${escapeHTML(x.glottocode)}`:''}</small><br><span class="evidence-badge ${relation.state}">${badge}</span><div class="speaker-line population-excluded">Historical — no living speaker population · excluded from L and P</div><div class="speaker-line"><b>Provenance:</b> ${vp?escapeHTML(verificationLabel(vp.status)):'agent-curated'}${relation.state==='variant'&&relation.note?` · ${escapeHTML(relation.note)}`:''}</div><div class="orthography"><span class="label">Grapheme(s):</span>${g?`<span class="grapheme">${escapeHTML(g)}</span>`:`<span class="missing">not recorded in the curated profile</span>`}</div></div>`;
+  }).join('')}</div>`;
+}
 
 function updateAuditSummary(ps,pending=false){
   if(pending){auditSummary.innerHTML='<div class="audit-summary-item attested"><b>Loading</b>Click-family evidence is being retrieved from PHOIBLE.</div>';return;}

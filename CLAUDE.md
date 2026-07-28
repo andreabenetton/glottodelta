@@ -139,8 +139,10 @@ identifies a language, use `langKey(l)`, never `l.iso`.
   realization); blue (unresolved attestation) is excluded.
 - Curated historical languages (`curated:true`, e.g. Latin) are outside the
   PHOIBLE universe: pickable, highlightable, comparable — but **never** counted
-  in L, never in P, never in the drawer lists or audit. Do not add them to
-  `SYMBOL_LANGS`.
+  in L, never in P, never in the audited drawer list or audit summary. Do not
+  add them to `SYMBOL_LANGS`. The drawer shows them only in the visually
+  separate "Curated beyond PHOIBLE" section (filter `all` only, stats-neutral;
+  `statetest.mjs` T11 enforces).
 - The runtime SHA-256 (`updateProvenance`) hashes
   `{DATA, SPEAKER_ESTIMATES, LANGUAGE_PHONEME_MODELS, VERIFIED_LANGUAGE_PROFILES}`
   in that literal order. Changing the data changes the checksum — expected.

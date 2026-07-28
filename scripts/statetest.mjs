@@ -189,6 +189,35 @@ await goto('?lang=lat');
 lat = await page.evaluate(()=>({sel:document.getElementById('languageSelector').value, green:document.querySelectorAll('.sym.lang-present').length}));
 assert('T10 lang=lat link restores', lat.sel==='lat' && lat.green>=20, lat);
 
+// T11 — curated drawer section: visible under "all", stats-neutral, filter/search aware
+await goto('');
+let t11 = await page.evaluate(()=>{
+  document.querySelector('.sym[data-symbol="s"]').click();
+  const dcount=document.getElementById('dcount').textContent;
+  const sec=document.querySelector('.curated-drawer-section');
+  return {dcount, sourceCount:new Set(DATA['s'].languages.map(l=>langKey(l))).size,
+          hasSection:!!sec, latinListed:!!sec&&/Latin \(late Roman Republic\)/.test(sec.textContent),
+          excludedNote:!!sec&&/excluded from L and P/.test(sec.textContent),
+          inMainList:[...document.querySelectorAll('#list .lang:not(.curated-lang) b')].some(b=>/Latin \(late Roman Republic\)/.test(b.textContent))};
+});
+assert('T11 curated section present on /s/', t11.hasSection&&t11.latinListed, t11);
+assert('T11 curated section discloses exclusion', t11.excludedNote, t11);
+assert('T11 Latin not in the audited language list', !t11.inMainList, t11);
+assert('T11 L count for /s/ unchanged by curated section', t11.dcount===String(t11.sourceCount), t11);
+t11 = await page.evaluate(()=>{
+  setAuditFilter('mapped');
+  const hiddenOnFilter=!document.querySelector('.curated-drawer-section');
+  setAuditFilter('all');
+  lsearch.value='zzzz';renderLanguages(lsearch.value);
+  const hiddenOnSearch=!document.querySelector('.curated-drawer-section');
+  lsearch.value='latin';renderLanguages(lsearch.value);
+  const foundBySearch=!!document.querySelector('.curated-drawer-section');
+  lsearch.value='';renderLanguages('');
+  return {hiddenOnFilter,hiddenOnSearch,foundBySearch};
+});
+assert('T11 curated section hidden under evidence filters', t11.hiddenOnFilter, t11);
+assert('T11 curated section respects drawer search', t11.hiddenOnSearch&&t11.foundBySearch, t11);
+
 // ------------------------------------------------------------------------------
 assert('no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
 console.log(JSON.stringify({ checks, failures: failures.length, failed: failures }, null, 2));
