@@ -238,6 +238,40 @@ let phoneKatGreen = -1; // classification parity: phone list layout vs desktop g
   await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
 
+  // M18 — platform back closes the drawer instead of leaving the site
+  await page.evaluate(()=>{const s=document.getElementById('languageSelector');s.value='kat';s.dispatchEvent(new Event('change',{bubbles:true}));});
+  await page.waitForTimeout(200);
+  await page.tap('.sym[data-symbol="m"]');
+  await page.waitForTimeout(300);
+  await page.goBack();
+  await page.waitForTimeout(400);
+  const back = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    onApp: location.pathname==='/',
+    lang: new URLSearchParams(location.search).get('lang'),
+    phoneme: new URLSearchParams(location.search).get('phoneme'),
+  }));
+  assert('M18 phone: back closes drawer, stays on app, keeps lang',
+    !back.open && back.onApp && back.lang==='kat' && back.phoneme===null, back);
+  await page.goForward();
+  await page.waitForTimeout(400);
+  const fwd = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    dsym: document.getElementById('dsym').textContent,
+  }));
+  assert('M18 phone: forward reopens the drawer on /m/', fwd.open && fwd.dsym==='m', fwd);
+  await page.goBack();
+  await page.waitForTimeout(300);
+
+  // M14 — a phoneme deep link still opens the drawer on cold load
+  await page.goto(base + '?phoneme=m', { waitUntil:'networkidle', timeout:60000 });
+  await page.waitForTimeout(600);
+  const deep = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    dcount: document.getElementById('dcount').textContent,
+  }));
+  assert('M14 phone: ?phoneme=m cold load opens drawer', deep.open && deep.dcount==='2058', deep);
+
   assert('phone: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
 }

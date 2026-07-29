@@ -107,7 +107,7 @@
     if(nonColorCuesToggle.checked)params.set('cues','1');
     return params;
   }
-  function updateURLState(){if(applyingURLState)return;const params=currentParams();const query=params.toString();history.replaceState(null,'',`${location.pathname}${query?'?'+query:''}${location.hash}`);}
+  function updateURLState(push=false){if(applyingURLState)return;const params=currentParams();const query=params.toString();history[push?'pushState':'replaceState'](null,'',`${location.pathname}${query?'?'+query:''}${location.hash}`);}
   async function copyShareLink(){updateURLState();const url=location.href;try{await navigator.clipboard.writeText(url);setStatus('Share link copied.');}catch{const textarea=document.createElement('textarea');textarea.value=url;document.body.appendChild(textarea);textarea.select();document.execCommand('copy');textarea.remove();setStatus('Share link copied.');}}
   document.getElementById('copyShareLink').addEventListener('click',copyShareLink);
 
@@ -147,7 +147,10 @@
   const coreApplyLanguageHighlight=applyLanguageHighlight;applyLanguageHighlight=function(lang){const result=coreApplyLanguageHighlight(lang);refreshSymbolAria();updateURLState();return result;};
   const coreClearLanguageHighlight=clearLanguageHighlight;clearLanguageHighlight=function(preserveInput=false){const result=coreClearLanguageHighlight(preserveInput);refreshSymbolAria();updateURLState();return result;};
   const coreClearComparisonLanguage=clearComparisonLanguage;clearComparisonLanguage=function(preserveInput=false){const result=coreClearComparisonLanguage(preserveInput);refreshSymbolAria();updateURLState();return result;};
-  const coreOpenSymbol=openSymbol;openSymbol=function(symbol){const wasOpen=drawer.classList.contains('open');const result=coreOpenSymbol(symbol);refreshSymbolAria();updateURLState();if(!wasOpen)document.getElementById('close').focus({preventScroll:true});return result;};
+  /* Opening the drawer (not switching symbols inside it) pushes one history
+     entry, so the platform back gesture closes the drawer instead of leaving
+     the site; the popstate listener below is the matching close path. */
+  const coreOpenSymbol=openSymbol;openSymbol=function(symbol){const wasOpen=drawer.classList.contains('open');const result=coreOpenSymbol(symbol);refreshSymbolAria();updateURLState(!wasOpen);if(!wasOpen)document.getElementById('close').focus({preventScroll:true});return result;};
   const coreCloseDrawer=closeDrawer;closeDrawer=function(){const result=coreCloseDrawer();updateURLState();return result;};
   // Selecting a comparison language runs through renderComparisonHighlight from
   // both the search input and the <select>; wrapping it here is what puts
@@ -182,6 +185,12 @@
      starts collapsed so the pickers and charts stay above the fold. Desktop and
      the 1280px test oracles keep the markup's open state. */
   if(matchMedia('(max-width:900px)').matches)document.getElementById('secondaryTools')?.removeAttribute('open');
+  window.addEventListener('popstate',()=>{
+    const params=new URLSearchParams(location.search);
+    const phoneme=params.get('phoneme');
+    if(drawer.classList.contains('open')&&!phoneme){applyingURLState=true;try{closeDrawer();}finally{applyingURLState=false;}}
+    else if(phoneme&&!drawer.classList.contains('open')&&document.querySelector(`.sym[data-symbol="${CSS.escape(phoneme)}"]`)){applyingURLState=true;try{openSymbol(phoneme);}finally{applyingURLState=false;}}
+  });
   applyURLState();
   applyingURLState=false;
   updateURLState();
