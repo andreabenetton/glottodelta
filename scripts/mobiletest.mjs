@@ -205,6 +205,39 @@ let phoneKatGreen = -1; // classification parity: phone list layout vs desktop g
   assert('M12c phone: Escape closes with full cleanup',
     !escClosed.open && escClosed.ariaHidden==='true' && escClosed.phonemeParam===null, escClosed);
 
+  // M15 — secondary tools start collapsed on phones; summary is a 44px target
+  const tools = await page.evaluate(()=>{
+    const d=document.getElementById('secondaryTools');
+    const s=d.querySelector('summary');
+    const sr=s.getBoundingClientRect();
+    const closed=!d.hasAttribute('open') && Math.round(d.getBoundingClientRect().height)<80;
+    d.setAttribute('open','');
+    const share=document.getElementById('copyShareLink').getBoundingClientRect();
+    const checkbox=document.getElementById('highContrastToggle').getBoundingClientRect();
+    d.removeAttribute('open');
+    return {closed, summaryH:Math.round(sr.height),
+            shareH:Math.round(share.height), checkboxW:Math.round(checkbox.width),
+            evidenceFont:parseFloat(getComputedStyle(document.getElementById('evidenceFilter')).fontSize)};
+  });
+  assert('M15 phone: secondary tools collapsed at load', tools.closed, tools);
+  assert('M15 phone: summary ≥44px tall', tools.summaryH>=44, tools);
+  assert('M15 phone: export buttons ≥44px', tools.shareH>=44, tools);
+  assert('M15 phone: accessibility checkboxes ≥22px', tools.checkboxW>=22, tools);
+  assert('M15 phone: evidence select ≥16px font (no iOS focus zoom)', tools.evidenceFont>=16, tools);
+
+  // M16 — drawer tap targets: audit filter chips and audio play buttons
+  await page.tap('.sym[data-symbol="m"]');
+  await page.waitForTimeout(300);
+  const drawerTargets = await page.evaluate(()=>{
+    const chip=document.querySelector('.audit-filter').getBoundingClientRect();
+    const play=document.querySelector('.audio-play')?.getBoundingClientRect();
+    return {chipH:Math.round(chip.height), playW:play?Math.round(play.width):null, playH:play?Math.round(play.height):null};
+  });
+  assert('M16 phone: audit filter chips ≥44px', drawerTargets.chipH>=44, drawerTargets);
+  assert('M16 phone: audio play buttons ≥44×44', drawerTargets.playW>=44 && drawerTargets.playH>=44, drawerTargets);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+
   assert('phone: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
 }

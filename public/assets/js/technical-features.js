@@ -176,6 +176,10 @@
   });
 
   searchItems=buildUnifiedDirectory();
+  /* On small screens the secondary block (badges, meter legend, export toolbar)
+     starts collapsed so the pickers and charts stay above the fold. Desktop and
+     the 1280px test oracles keep the markup's open state. */
+  if(matchMedia('(max-width:900px)').matches)document.getElementById('secondaryTools')?.removeAttribute('open');
   applyURLState();
   applyingURLState=false;
   updateURLState();

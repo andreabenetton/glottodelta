@@ -548,7 +548,7 @@ body.high-contrast .speaker-meter .led{box-shadow:inset 0 0 0 1px #000}
 .comparison-language-picker.is-disabled{opacity:.62}
 .evidence-controls{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:8px;align-content:start;flex:1 1 420px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .evidence-controls>label:first-child{grid-column:1/-1;font-weight:750;font-size:.95rem}
-.evidence-controls select{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:.95rem;color:var(--text)}
+.evidence-controls select{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:1rem;color:var(--text)}
 .difference-toggle{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fafafa;font-size:.9rem;white-space:nowrap}
 .difference-toggle input{min-width:0;flex:none;width:18px;height:18px;margin:0}
 .evidence-help{grid-column:1/-1;margin:0;font-size:.78rem;color:var(--muted)}
@@ -815,3 +815,25 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
 .symbol-glance .speaker-meter{margin:5px 0 0;justify-content:flex-start}
 .symbol-glance .evidence-badge{margin:0 4px 0 0}
 .symbol-glance .glance-allophone{color:var(--muted)}
+
+/* ===== secondary-tools-collapse + coarse-pointer targets ===== */
+/* The badges, meter legend and technical toolbar live in a <details> that is
+   open in the markup (desktop unchanged) and collapsed by a load-time
+   matchMedia check on small screens. */
+.secondary-tools{display:contents}
+.secondary-tools summary{display:none}
+@media (max-width:900px){
+  .secondary-tools{display:block;flex:1 0 100%;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  .secondary-tools summary{display:flex;align-items:center;min-height:44px;padding:10px 14px;font-weight:650;cursor:pointer;border-radius:12px}
+  .secondary-tools summary:hover,.secondary-tools summary:focus{outline:2px solid var(--accent2)}
+  .secondary-tools .badge{display:inline-block;margin:6px 0 0 12px}
+  .secondary-tools .meter-legend,.secondary-tools .technical-toolbar{margin:10px 12px 12px}
+}
+@media (max-width:900px),(pointer:coarse){
+  .audit-filter{min-height:44px;padding:10px 14px}
+  .technical-group button{min-height:44px}
+  .audio-play{width:44px;height:44px}
+  .audio-sample{grid-template-columns:44px minmax(0,1fr)}
+  .accessibility-options input[type=checkbox],.difference-toggle input{width:22px;height:22px}
+  .accessibility-options label,.difference-toggle{min-height:44px;display:inline-flex;align-items:center;gap:8px}
+}
