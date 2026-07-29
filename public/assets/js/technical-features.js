@@ -77,7 +77,7 @@
     searchResults.hidden=false;searchInput.setAttribute('aria-expanded','true');if(activeSearchIndex>=0)searchInput.setAttribute('aria-activedescendant',`searchResult${activeSearchIndex}`);updateURLState();
   }
   function setActiveSearchIndex(index){if(!searchItems.length)return;activeSearchIndex=(index+searchItems.length)%searchItems.length;searchResults.querySelectorAll('.search-result').forEach((button,i)=>button.setAttribute('aria-selected',String(i===activeSearchIndex)));const active=document.getElementById(`searchResult${activeSearchIndex}`);if(active){searchInput.setAttribute('aria-activedescendant',active.id);active.scrollIntoView({block:'nearest'});}}
-  function highlightSymbols(symbols){clearSearchMatches();let first=null;for(const symbol of symbols){document.querySelectorAll(`.sym[data-symbol="${CSS.escape(symbol)}"]`).forEach(button=>{button.classList.add('search-match');if(!first)first=button;});}if(first)first.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});return first;}
+  function highlightSymbols(symbols){clearSearchMatches();let first=null;for(const symbol of symbols){document.querySelectorAll(`.sym[data-symbol="${CSS.escape(symbol)}"]`).forEach(button=>{button.classList.add('search-match');if(!first)first=button;});}if(first)first.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'center',inline:'center'});return first;}
   function activateSearchResult(item){
     searchResults.hidden=true;searchInput.setAttribute('aria-expanded','false');
     if(item.kind==='phoneme'){searchInput.value=item.symbol;const first=highlightSymbols([item.symbol]);openSymbol(item.symbol);if(first)first.focus({preventScroll:true});setStatus(`Opened audit for /${item.symbol}/.`);}
