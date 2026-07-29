@@ -3,11 +3,16 @@
 # Asset URLs are NOT content-fingerprinted (app-core.js keeps its name across
 # deploys), so JS/CSS must revalidate on every load — ETag makes that a cheap
 # 304 — or users keep running stale code for hours after a deploy.
+#
+# NOTE: Pages applies EVERY matching rule and concatenates same-name headers.
+# A generic /assets/* rule would combine with the js/css rules into an invalid
+# Cache-Control (two max-age directives), which the edge then discards in
+# favour of its 4-hour default. Keep the patterns non-overlapping.
 /assets/js/*
   Cache-Control: public, max-age=0, must-revalidate
 /assets/css/*
   Cache-Control: public, max-age=0, must-revalidate
-/assets/*
+/assets/favicon.svg
   Cache-Control: public, max-age=3600
 /data/*
   Cache-Control: public, max-age=0, must-revalidate
