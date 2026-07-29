@@ -732,11 +732,12 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
     --phoneme-box-width:62px;
     --phoneme-box-min-height:88px;
     --pulmonic-column-width:148px;
-    --pulmonic-manner-width:84px;
-    --vowel-height-width:84px;
+    --pulmonic-manner-width:92px;
+    --vowel-height-width:92px;
   }
   .sym .speaker-meter,.sym .speaker-count{display:none}
   .sym span{font-size:1.15rem}
+  .pulmonic-table .manner-heading{font-size:.78rem}
   /* The two chart wraps become two-axis scrollers with sticky headers on both
      axes (the row-header stickiness already exists globally). */
   .table-wrap:has(.pulmonic-table),.vowels .table-wrap{
@@ -801,6 +802,12 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
   body:not(.chart-grid-view) .sym.evidence-filtered,
   body:not(.chart-grid-view) .sym.compare-suppressed,
   body:not(.chart-grid-view) .sym.hidden{display:none}
+  /* A cell whose every tile is filtered away drops its place label too, and a
+     card with nothing visible left disappears entirely. */
+  body:not(.chart-grid-view) .pulmonic-table tbody td:not(:has(.sym:not(.evidence-filtered):not(.compare-suppressed):not(.hidden))),
+  body:not(.chart-grid-view) .vowels .ipa-vowel-grid tbody td:not(:has(.sym:not(.evidence-filtered):not(.compare-suppressed):not(.hidden))){display:none}
+  body:not(.chart-grid-view) .pulmonic-table tbody tr:not(:has(.sym:not(.evidence-filtered):not(.compare-suppressed):not(.hidden))),
+  body:not(.chart-grid-view) .vowels .ipa-vowel-grid tbody tr:not(:has(.sym:not(.evidence-filtered):not(.compare-suppressed):not(.hidden))){display:none}
 }
 
 /* ===== symbol-glance ===== */
