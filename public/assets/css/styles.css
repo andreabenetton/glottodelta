@@ -701,3 +701,20 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
 .quality-details{margin:10px 0 0;color:var(--muted);font-size:.76rem;line-height:1.45}
 @media (max-width:430px){.quality-grid{grid-template-columns:1fr}}
 
+
+/* ===== mobile-drawer-overrides ===== */
+/* Backdrop behind the drawer. Inert on desktop (the drawer is a side panel and
+   the page stays interactive); on small screens it dims the page, catches
+   tap-outside-to-close, and the body scroll-locks while the drawer is open. */
+.drawer-backdrop{position:fixed;inset:0;background:#0006;z-index:19;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer{height:100dvh}
+@media (max-width:900px){
+  body:has(.drawer.open){overflow:hidden}
+  body:has(.drawer.open) .drawer-backdrop{opacity:1;pointer-events:auto}
+  .close{min-width:44px;min-height:44px}
+  .drawer-head{padding-top:calc(18px + env(safe-area-inset-top))}
+  .drawer-body{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+}
+@media (prefers-reduced-motion:reduce){
+  .drawer,.drawer-backdrop{transition:none}
+}

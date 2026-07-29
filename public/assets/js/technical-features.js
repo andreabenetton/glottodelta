@@ -140,12 +140,12 @@
   const coreApplyLanguageHighlight=applyLanguageHighlight;applyLanguageHighlight=function(lang){const result=coreApplyLanguageHighlight(lang);refreshSymbolAria();updateURLState();return result;};
   const coreClearLanguageHighlight=clearLanguageHighlight;clearLanguageHighlight=function(preserveInput=false){const result=coreClearLanguageHighlight(preserveInput);refreshSymbolAria();updateURLState();return result;};
   const coreClearComparisonLanguage=clearComparisonLanguage;clearComparisonLanguage=function(preserveInput=false){const result=coreClearComparisonLanguage(preserveInput);refreshSymbolAria();updateURLState();return result;};
-  const coreOpenSymbol=openSymbol;openSymbol=function(symbol){const result=coreOpenSymbol(symbol);refreshSymbolAria();updateURLState();return result;};
+  const coreOpenSymbol=openSymbol;openSymbol=function(symbol){const wasOpen=drawer.classList.contains('open');const result=coreOpenSymbol(symbol);refreshSymbolAria();updateURLState();if(!wasOpen)document.getElementById('close').focus({preventScroll:true});return result;};
+  const coreCloseDrawer=closeDrawer;closeDrawer=function(){const result=coreCloseDrawer();updateURLState();return result;};
   // Selecting a comparison language runs through renderComparisonHighlight from
   // both the search input and the <select>; wrapping it here is what puts
   // compare= into the share link (applyURLState is guarded, so no feedback loop).
   const coreRenderComparisonHighlight=renderComparisonHighlight;renderComparisonHighlight=function(){const result=coreRenderComparisonHighlight();refreshSymbolAria();updateURLState();return result;};
-  document.getElementById('close').addEventListener('click',()=>{currentSymbol='';updateURLState();});
   evidenceFilterControl.addEventListener('change',()=>{refreshSymbolAria();updateURLState();});
   differencesOnlyControl.addEventListener('change',updateURLState);
 

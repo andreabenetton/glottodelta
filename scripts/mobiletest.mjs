@@ -95,6 +95,46 @@ async function open(ctxOpts, query){
   assert('M7 phone: tap /m/ opens drawer', drawer.open, drawer);
   assert('M7 phone: /m/ L count 2058', drawer.dcount==='2058', drawer.dcount);
 
+  // M13 — the close button is a ≥44px touch target
+  const closeBox = await page.evaluate(()=>{
+    const r=document.getElementById('close').getBoundingClientRect();
+    return {w:Math.round(r.width), h:Math.round(r.height)};
+  });
+  assert('M13 phone: close button ≥44×44', closeBox.w>=44 && closeBox.h>=44, closeBox);
+
+  // M12a — body scroll is locked while the drawer is open, released on close
+  const lock = await page.evaluate(()=>getComputedStyle(document.body).overflow);
+  assert('M12a phone: body scroll locked while drawer open', lock==='hidden', lock);
+
+  // M12b — Close button closes the drawer and cleans up state
+  // (On a phone the drawer is 100% width, so the backdrop is fully covered —
+  //  the backdrop-tap path is exercised in the tablet context below.)
+  await page.tap('#close');
+  await page.waitForTimeout(300);
+  const closed = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    ariaHidden: document.getElementById('drawer').getAttribute('aria-hidden'),
+    phonemeParam: new URLSearchParams(location.search).get('phoneme'),
+    bodyOverflow: getComputedStyle(document.body).overflow,
+  }));
+  assert('M12b phone: Close button closes drawer', !closed.open, closed);
+  assert('M12b phone: aria-hidden restored', closed.ariaHidden==='true', closed);
+  assert('M12b phone: phoneme= removed from URL', closed.phonemeParam===null, closed);
+  assert('M12b phone: body scroll released', closed.bodyOverflow!=='hidden', closed);
+
+  // M12c — Escape closes with identical cleanup (same closeDrawer path)
+  await page.tap('.sym[data-symbol="m"]');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  const escClosed = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    ariaHidden: document.getElementById('drawer').getAttribute('aria-hidden'),
+    phonemeParam: new URLSearchParams(location.search).get('phoneme'),
+  }));
+  assert('M12c phone: Escape closes with full cleanup',
+    !escClosed.open && escClosed.ariaHidden==='true' && escClosed.phonemeParam===null, escClosed);
+
   assert('phone: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
 }
@@ -118,6 +158,18 @@ async function open(ctxOpts, query){
   }));
   assert('M7 tablet: tap /m/ opens drawer', drawer.open, drawer);
   assert('M7 tablet: /m/ L count 2058', drawer.dcount==='2058', drawer.dcount);
+
+  // M12d — the drawer (520px) leaves the backdrop visible beside it at 768px;
+  // tapping it closes the drawer with full cleanup
+  await page.tap('#drawerBackdrop', { position: { x: 40, y: 400 } });
+  await page.waitForTimeout(300);
+  const closed = await page.evaluate(()=>({
+    open: document.getElementById('drawer').classList.contains('open'),
+    ariaHidden: document.getElementById('drawer').getAttribute('aria-hidden'),
+    phonemeParam: new URLSearchParams(location.search).get('phoneme'),
+  }));
+  assert('M12d tablet: backdrop tap closes drawer with cleanup',
+    !closed.open && closed.ariaHidden==='true' && closed.phonemeParam===null, closed);
 
   assert('tablet: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
