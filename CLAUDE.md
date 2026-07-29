@@ -188,6 +188,35 @@ comparison. `scripts/statetest.mjs` asserts this table — keep them in sync.
 - "Only differences" is sticky across a direct comparison-language switch and
   resets on clear-comparison / clear-primary.
 
+## Responsive tiers — keep `mobiletest.mjs` green
+
+Three chart tiers, one DOM (never duplicate the 111 `button.sym` nodes — counts,
+wrappers and exports all query `.sym` globally):
+
+- **Desktop >1180px**: pixel-identical baseline. The pulmonic table width is
+  `calc(manner + 11*column)` = exactly 2415px at the default vars
+  (`mobiletest.mjs` guards this identity).
+- **Tablet ≤1180px**: same matrix, compressed via the CSS vars (~1720px),
+  two-axis sticky headers, per-tile P/meter hidden (relocated to the drawer
+  glance). 1180 not 1280 — statetest runs at 1280×720 and asserts meters
+  visible.
+- **Phone ≤700px**: CSS-only linearized list (`tr` = manner/height card,
+  occupied `td` = place-labelled chip via `content:attr(data-place)`;
+  `empty-place` class set once in app-core.js). `body.chart-grid-view`
+  (toggle button, display-only, never URL-serialized) restores the matrix.
+
+Drawer: one close path — global `closeDrawer()` in app-core.js, wrapped by
+technical-features.js for URL sync; backdrop + body scroll-lock ≤900px; opening
+pushes one history entry so back/popstate closes it (guarded by
+`applyingURLState`). Internals (`.stats`, `.audit-summary`, `.quality-grid`)
+use `@container drawer` queries, not viewport queries. The `#symbolGlance`
+strip renders the tile-tooltip data (L/P/magnitude, `mappingTitle()` verbatim,
+S2 states) — touch users have no tooltips; mobiletest asserts strict equality
+with `mappingTitle()`, so change both together or neither. Secondary controls
+(badges, legend, toolbar) live in `<details id="secondaryTools" open>`,
+auto-collapsed ≤900px at load. Tap targets ≥44px under
+`(max-width:900px),(pointer:coarse)`.
+
 ## Regenerating data
 
 ```
