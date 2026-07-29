@@ -47,6 +47,7 @@ scripts/
                             #   CLDF ValueTable (network; run only on release bump)
   smoke.mjs                 #   headless-Chromium regression oracle
   functest.mjs              #   functional test across language tiers
+  mobiletest.mjs            #   phone/tablet-emulation responsive oracle
 docs/data-report.md         #   GENERATED — data-quality + normalization metrics
 baseline/original.html      #   FROZEN original single-file app (build source)
 ```
@@ -219,6 +220,9 @@ node scripts/functest.mjs   # selects demographic / attested-only / mis language
                             # comparison mode, tier-aware drawer — asserts no JS errors
 node scripts/statetest.mjs  # walks the UI state machine (see section above):
                             # evidence defaults, meters, differences, URL round-trips
+node scripts/mobiletest.mjs # phone (390×844, touch) + tablet (768×1024) emulation:
+                            # no page-level horizontal overflow, drawer opens on tap,
+                            # responsive-layout invariants
 ```
 
 Both spin up a local static server over `public/`. `crypto.subtle` (the
