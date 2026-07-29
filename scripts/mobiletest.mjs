@@ -274,6 +274,25 @@ let phoneKatGreen = -1; // classification parity: phone list layout vs desktop g
   assert('M12d tablet: backdrop tap closes drawer with cleanup',
     !closed.open && closed.ariaHidden==='true' && closed.phonemeParam===null, closed);
 
+  // M17 — container queries: the 520px drawer keeps multi-column grids on a
+  // 768px tablet, and the drawer body never scrolls horizontally
+  await page.tap('.sym[data-symbol="m"]');
+  await page.waitForTimeout(300);
+  const cq = await page.evaluate(()=>{
+    const body=document.getElementById('drawerBody');
+    const cols=sel=>getComputedStyle(document.querySelector(sel)).gridTemplateColumns.split(' ').length;
+    return {noHScroll: body.scrollWidth<=body.clientWidth+1,
+            drawerW: Math.round(document.getElementById('drawer').getBoundingClientRect().width),
+            auditCols: cols('.audit-summary'), qualityCols: cols('.quality-grid'),
+            statsCols: cols('.stats')};
+  });
+  assert('M17 tablet: drawer body has no horizontal scroll', cq.noHScroll, cq);
+  assert('M17 tablet: 520px drawer keeps 3-col audit summary', cq.drawerW===520 && cq.auditCols===3, cq);
+  assert('M17 tablet: 520px drawer keeps 2-col quality grid', cq.qualityCols===2, cq);
+  assert('M17 tablet: stats grid multi-column at 520px', cq.statsCols>=2, cq);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+
   // M5 — the compressed tablet tier is live and the width follows the vars
   const geom = await page.evaluate(()=>{
     const t=document.querySelector('.pulmonic-table');
