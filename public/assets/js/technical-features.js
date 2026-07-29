@@ -171,6 +171,7 @@
     viewMode=phoneticViewControl.checked?'phonetic':'phonemic';
     document.body.classList.toggle('phonetic-view',viewMode==='phonetic');
     renderLanguages(lsearch.value);
+    refreshSymbolGlance();
     updateURLState();
   });
 

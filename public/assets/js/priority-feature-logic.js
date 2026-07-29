@@ -89,6 +89,7 @@ function renderSingleLanguageHighlight(lang){
   selectedLanguageStats.textContent=`${mappedCount} mapped · ${variantCount} alternative · ${attestedCount} unresolved · ${total-mappedCount-variantCount-attestedCount} absent · filter: ${evidenceModeLabel()} · ${lang.curated?'curated historical reconstruction — outside the PHOIBLE dataset, excluded from L and P':isDemographic(lang)?formatPeople(populationForLanguage(lang))+' estimated speakers (demographic-certain, in P)':'attested only — no population estimate, excluded from P'} · ${vp?verificationLabel(vp.status):'no independently verified orthography profile'}`;
   singleLanguageLegend.hidden=false;comparisonLanguageLegend.hidden=true;languageMode.hidden=false;renderOrthographyCoverage(lang);
   document.body.classList.remove('comparison-mode');
+  refreshSymbolGlance();
 }
 
 function renderComparisonHighlight(){
@@ -123,6 +124,7 @@ function renderComparisonHighlight(){
   document.getElementById('comparisonLegendSecondary').textContent=`${comparisonCode} only`;
   singleLanguageLegend.hidden=true;comparisonLanguageLegend.hidden=false;languageMode.hidden=false;hideOrthographyCoverage();differencesOnlyControl.disabled=false;
   document.body.classList.add('comparison-mode');   // speaker meter steps aside for the A/B answer
+  refreshSymbolGlance();
 }
 
 applyLanguageHighlight=function(lang){
@@ -137,7 +139,7 @@ clearComparisonLanguage=function(preserveInput=false){
   if(!preserveInput){comparisonSelector.value='';comparisonSearchInput.value='';}
   differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;document.body.classList.remove('comparison-mode');
   syncEvidenceDefault();
-  if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);else{resetAllSymbolModes();languageMode.hidden=true;}
+  if(selectedLanguage)renderSingleLanguageHighlight(selectedLanguage);else{resetAllSymbolModes();languageMode.hidden=true;refreshSymbolGlance();}
 };
 
 clearLanguageHighlight=function(preserveInput=false){
@@ -147,6 +149,7 @@ clearLanguageHighlight=function(preserveInput=false){
   if(!preserveInput){selector.value='';languageSearchInput.value='';comparisonSelector.value='';comparisonSearchInput.value='';}
   differencesOnlyMode=false;differencesOnlyControl.checked=false;differencesOnlyControl.disabled=true;document.body.classList.remove('comparison-mode');enableComparisonControls(false);
   languageMode.hidden=true;singleLanguageLegend.hidden=false;comparisonLanguageLegend.hidden=true;hideOrthographyCoverage();resetAllSymbolModes();
+  refreshSymbolGlance();
 };
 
 function resolveComparisonLanguage(value,allowPrefix=false){
@@ -300,6 +303,44 @@ function updateQualityIndicators(ps,pending=false){
   detailsNode.textContent=`${counts.mapped} green, ${counts.variant} amber and ${counts.attested} blue languages. ${adjudicableCount} of the ${ps.languageCount} attested languages carry a curated orthography profile or phoneme model, so only those can be resolved to green or amber; the remaining ${ps.languageCount-adjudicableCount} stay blue and are excluded from P. Amber is narrower still — it needs a phoneme model that lists an alternative realization, which ${PHONEME_MODEL_COUNT} languages have — so 0 amber is the normal reading for most symbols, not a missing value. “Amber + blue” is a proxy for alternative or unresolved analyses, not a count of independent publications. Confidence combines resolved share of the adjudicable subset (40%), population coverage within L (40%) and attestation depth (20%).`;
 }
 
+/* "At a glance" strip at the top of the drawer: the symbol-level and
+   selected-language-level summary that sighted mouse users get from the tile
+   title tooltips, rendered for everyone (touch has no tooltips). Reuses the
+   exact same source functions — the strip and the tooltips cannot drift.
+   Display-only: never touches L, P, the audit list or the quality panel. */
+function renderSymbolGlance(){
+  const node=document.getElementById('symbolGlance');
+  if(!node)return;
+  if(!currentSymbol){node.hidden=true;node.textContent='';return;}
+  const s=currentSymbol;
+  const ps=speakerStats(symbolDataset(s),s);
+  const pending=CLICK_SYMBOLS.has(s)&&clickFamilyStatus!=='ready';
+  node.textContent='';node.hidden=false;
+  const summary=document.createElement('p');summary.className='glance-line glance-summary';
+  summary.textContent=pending?'Click-family aggregation still loading — L and P are pending, not zero.':`L ${ps.languageCount} source-attested languages · P ${formatPeople(ps.total)} from ${ps.populationLanguageCount} green/amber languages · ${speakerMeterText(ps.total,pending)}`;
+  node.appendChild(summary);
+  if(!pending)renderSpeakerMeter(summary,ps.total,false);   // hidden in comparison mode by the shared body.comparison-mode rule
+  if(selectedLanguage&&comparisonLanguage){
+    const pc=languageCodeLabel(selectedLanguage),cc=languageCodeLabel(comparisonLanguage);
+    const rA=languageSymbolState(selectedLanguage,s,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());
+    const rB=languageSymbolState(comparisonLanguage,s,LANGUAGE_SYMBOLS.get(langKey(comparisonLanguage))||new Set());
+    const line=document.createElement('p');line.className='glance-line glance-language';
+    line.textContent=`${pc} (${selectedLanguage.name}): ${stateShortLabel(rA.state)}. ${cc} (${comparisonLanguage.name}): ${stateShortLabel(rB.state)}. Evidence filter: ${evidenceModeLabel()}.`;
+    node.appendChild(line);
+  }else if(selectedLanguage){
+    const r=languageSymbolState(selectedLanguage,s,LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());
+    const line=document.createElement('p');line.className='glance-line glance-language';
+    const badge=document.createElement('span');badge.className=`evidence-badge ${r.state}`;badge.textContent=evidenceBadgeLabel(r.state);
+    line.appendChild(badge);line.appendChild(document.createTextNode(' '+mappingTitle(selectedLanguage,r,s)));
+    node.appendChild(line);
+  }
+  if(typeof viewMode!=='undefined'&&viewMode==='phonetic'){
+    const extra=(ALLOPHONE_LANG_LISTS[s]||[]).length;
+    if(extra){const line=document.createElement('p');line.className='glance-line glance-allophone';line.textContent=`+${extra} languages where /${s}/ is a documented allophone of another phoneme — see the “Documented allophones” section below; never counted in L or P.`;node.appendChild(line);}
+  }
+}
+function refreshSymbolGlance(){if(drawer.classList.contains('open')&&currentSymbol)renderSymbolGlance();}
+
 openSymbol=function(s){
   currentSymbol=s;const d=symbolDataset(s);const ps=speakerStats(d,s);
   document.getElementById('dsym').textContent=s;
@@ -312,7 +353,7 @@ openSymbol=function(s){
   document.getElementById('dweight').textContent=pending?'—':ps.pct.toLocaleString('en-US',{maximumFractionDigits:1})+'%';
   document.getElementById('ddoculects').textContent=pending?'—':ps.doculectCount;
   updateQualityIndicators(ps,pending);
-  current=pending?[]:ps.languages;currentAuditFilter='all';lsearch.value='';document.getElementById('auditExplanation').textContent=CLICK_SYMBOLS.has(s)?'L aggregates complete PHOIBLE click segments by anterior click component. P includes only green verified mappings and amber verified realizations; blue source attestations remain excluded.':'L includes every source-attested language. P includes only green verified mappings and amber verified realizations; blue unresolved source attestations remain excluded.';updateAuditSummary(ps,pending);setAuditFilter('all');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');const drawerBody=document.getElementById('drawerBody');if(drawerBody)drawerBody.scrollTop=0;
+  current=pending?[]:ps.languages;currentAuditFilter='all';lsearch.value='';document.getElementById('auditExplanation').textContent=CLICK_SYMBOLS.has(s)?'L aggregates complete PHOIBLE click segments by anterior click component. P includes only green verified mappings and amber verified realizations; blue source attestations remain excluded.':'L includes every source-attested language. P includes only green verified mappings and amber verified realizations; blue unresolved source attestations remain excluded.';updateAuditSummary(ps,pending);setAuditFilter('all');renderSymbolGlance();drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');const drawerBody=document.getElementById('drawerBody');if(drawerBody)drawerBody.scrollTop=0;
 };
 
 auditFilters.addEventListener('click',event=>{const button=event.target.closest('[data-audit-filter]');if(button)setAuditFilter(button.dataset.auditFilter,true);});

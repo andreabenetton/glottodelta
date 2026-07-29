@@ -162,9 +162,39 @@ let phoneKatGreen = -1; // classification parity: phone list layout vs desktop g
   assert('M12b phone: phoneme= removed from URL', closed.phonemeParam===null, closed);
   assert('M12b phone: body scroll released', closed.bodyOverflow!=='hidden', closed);
 
-  // M12c — Escape closes with identical cleanup (same closeDrawer path)
+  // M9/M10/M11 — the "at a glance" strip carries what the tooltips carry
   await page.tap('.sym[data-symbol="m"]');
   await page.waitForTimeout(300);
+  const glance = await page.evaluate(()=>document.getElementById('symbolGlance').textContent);
+  assert('M9 phone: glance shows L 2058 for /m/', /L 2058 source-attested languages/.test(glance), glance);
+  assert('M9 phone: glance shows P 7.85B', /P 7\.85B from \d+ green\/amber/.test(glance), glance);
+  assert('M9 phone: glance shows speaker magnitude', /magnitude/i.test(glance), glance);
+  const s1 = await page.evaluate(()=>{
+    const s=document.getElementById('languageSelector');s.value='kat';s.dispatchEvent(new Event('change',{bubbles:true}));
+    const shown=document.querySelector('#symbolGlance .glance-language').textContent;
+    const r=languageSymbolState(selectedLanguage,'m',LANGUAGE_SYMBOLS.get(langKey(selectedLanguage))||new Set());
+    return {shown, expectBadge:evidenceBadgeLabel(r.state), expectTitle:mappingTitle(selectedLanguage,r,'m')};
+  });
+  assert('M10 phone: S1 glance equals badge + mappingTitle verbatim',
+    s1.shown===`${s1.expectBadge} ${s1.expectTitle}`, s1);
+  const s2 = await page.evaluate(()=>{
+    const c=document.getElementById('comparisonLanguageSelector');c.value='ita';c.dispatchEvent(new Event('change',{bubbles:true}));
+    return {shown:document.querySelector('#symbolGlance .glance-language').textContent,
+            meterHidden:!document.querySelector('#symbolGlance .speaker-meter')?.offsetParent};
+  });
+  assert('M11 phone: S2 glance names both languages and the filter',
+    /KAT \(Georgian\):/.test(s2.shown) && /ITA \(Italian\):/.test(s2.shown) && /Evidence filter:/.test(s2.shown), s2);
+  assert('M11 phone: glance meter hidden in comparison mode', s2.meterHidden, s2);
+  await page.evaluate(()=>{document.getElementById('clearLanguage').click();});
+  await page.waitForTimeout(200);
+  const s0 = await page.evaluate(()=>({
+    glance:document.getElementById('symbolGlance').textContent,
+    hasLangLine:!!document.querySelector('#symbolGlance .glance-language'),
+  }));
+  assert('M9 phone: clear primary returns glance to symbol-only', /L 2058/.test(s0.glance) && !s0.hasLangLine, s0);
+
+  // M12c — Escape closes with identical cleanup (same closeDrawer path);
+  // the drawer is still open on /m/ from the glance checks above
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   const escClosed = await page.evaluate(()=>({

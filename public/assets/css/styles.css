@@ -803,3 +803,15 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
   body:not(.chart-grid-view) .sym.compare-suppressed,
   body:not(.chart-grid-view) .sym.hidden{display:none}
 }
+
+/* ===== symbol-glance ===== */
+/* Drawer "at a glance" strip: the tooltip-only tile summary rendered for
+   everyone (touch users have no tooltips). */
+.symbol-glance{margin:14px 14px 0;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--accent2)}
+.symbol-glance[hidden]{display:none}
+.symbol-glance .glance-line{margin:0;font-size:.86rem;line-height:1.45}
+.symbol-glance .glance-line+.glance-line{margin-top:7px;padding-top:7px;border-top:1px solid #0001}
+.symbol-glance .glance-summary{font-weight:600;color:var(--accent)}
+.symbol-glance .speaker-meter{margin:5px 0 0;justify-content:flex-start}
+.symbol-glance .evidence-badge{margin:0 4px 0 0}
+.symbol-glance .glance-allophone{color:var(--muted)}

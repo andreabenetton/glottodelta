@@ -190,19 +190,20 @@
 <aside aria-hidden="true" class="drawer" id="drawer">
   <div class="drawer-head"><div><h2 id="dsym">p</h2><div id="dtitle">Phoneme</div></div><button class="close" id="close">Close</button></div>
   <div class="drawer-body" id="drawerBody">
-  <div aria-label="IPA sound examples" class="audio-panel">
-    <h3>Audio examples for <span id="ipaAudioLabel">the selected symbol</span></h3>
-    <div class="audio-samples" id="ipaAudioSamples"></div>
-    <audio hidden id="ipaAudio" preload="none"></audio>
-    <div aria-live="polite" class="audio-status" id="ipaAudioStatus">Select a phoneme.</div>
-    <div class="audio-source">Five playback entries are shown when available: up to four unmodified recordings hosted by the International Phonetic Association, plus one supplemental reference recording, read by Dan Lenard and hosted by InternationalPhoneticAlphabet.org. The official recordings are attributed individually and are offered for non-commercial, unadapted use under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noreferrer" target="_blank">CC BY-NC-ND 4.0</a>. <a href="https://www.internationalphoneticassociation.org/IPAcharts/common_files/IPA_charts_about.html" rel="noreferrer" target="_blank">Official audio acknowledgments</a>.</div>
-  </div>
+  <div class="symbol-glance" id="symbolGlance" hidden></div>
   <div class="stats">
     <button class="stat stat-action" data-audit-filter="all" id="statLanguages" title="Show every language counted in L" type="button"><b id="dcount">0</b><small>source-attested languages (L)</small></button>
     <div class="stat"><b id="dpct">0%</b><small>of demographic set</small></div>
     <button class="stat stat-action" data-audit-filter="included" id="statPopulation" title="Show only green and amber languages included in P" type="button"><b id="dpeople">0</b><small>verified/variant speakers (P)</small></button>
     <div class="stat"><b id="dweight">0%</b><small>of weighted base</small></div>
     <div class="stat"><b id="ddoculects">0</b><small>covered PHOIBLE doculects</small></div>
+  </div>
+  <div aria-label="IPA sound examples" class="audio-panel">
+    <h3>Audio examples for <span id="ipaAudioLabel">the selected symbol</span></h3>
+    <div class="audio-samples" id="ipaAudioSamples"></div>
+    <audio hidden id="ipaAudio" preload="none"></audio>
+    <div aria-live="polite" class="audio-status" id="ipaAudioStatus">Select a phoneme.</div>
+    <div class="audio-source">Five playback entries are shown when available: up to four unmodified recordings hosted by the International Phonetic Association, plus one supplemental reference recording, read by Dan Lenard and hosted by InternationalPhoneticAlphabet.org. The official recordings are attributed individually and are offered for non-commercial, unadapted use under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noreferrer" target="_blank">CC BY-NC-ND 4.0</a>. <a href="https://www.internationalphoneticassociation.org/IPAcharts/common_files/IPA_charts_about.html" rel="noreferrer" target="_blank">Official audio acknowledgments</a>.</div>
   </div>
   <section aria-label="Data quality indicators" class="quality-panel" id="qualityPanel">
     <div class="quality-head"><h3>Data quality</h3><span class="quality-grade" id="qualityConfidence">—</span></div>
