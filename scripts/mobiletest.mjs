@@ -171,7 +171,59 @@ async function open(ctxOpts, query){
   assert('M12d tablet: backdrop tap closes drawer with cleanup',
     !closed.open && closed.ariaHidden==='true' && closed.phonemeParam===null, closed);
 
+  // M5 — the compressed tablet tier is live and the width follows the vars
+  const geom = await page.evaluate(()=>{
+    const t=document.querySelector('.pulmonic-table');
+    const cs=getComputedStyle(document.documentElement);
+    const manner=parseFloat(cs.getPropertyValue('--pulmonic-manner-width'));
+    const col=parseFloat(cs.getPropertyValue('--pulmonic-column-width'));
+    return {w:Math.round(t.getBoundingClientRect().width), expected:Math.round(manner+11*col),
+            vowelW:Math.round(document.querySelector('.ipa-vowel-grid').getBoundingClientRect().width)};
+  });
+  assert('M5 tablet: pulmonic width follows the vars', Math.abs(geom.w-geom.expected)<=2, geom);
+  assert('M5 tablet: pulmonic compressed below 1750px', geom.w<1750, geom);
+  assert('M5 tablet: vowel grid compressed below 900px', geom.vowelW<900, geom);
+
+  // M6 — two-axis sticky: after scrolling the wrap, the header row and the
+  // manner column still hug the wrap's top/left edges
+  const sticky = await page.evaluate(()=>{
+    const wrap=document.querySelector('.table-wrap');
+    wrap.scrollLeft=600;
+    const wrapR=wrap.getBoundingClientRect();
+    const headTh=document.querySelector('.pulmonic-table thead th:nth-child(2)');
+    const headCs=getComputedStyle(headTh);
+    const rowR=document.querySelector('.pulmonic-table tbody th').getBoundingClientRect();
+    return {scrolledL:wrap.scrollLeft,
+            headPosition:headCs.position, headTop:headCs.top,
+            verticalScroller:/(auto|scroll)/.test(getComputedStyle(wrap).overflowY) && getComputedStyle(wrap).maxHeight!=='none',
+            rowLeftDelta:Math.round(rowR.left-wrapR.left)};
+  });
+  // (At 768×1024 the compressed table fits the wrap's max-height, so vertical
+  //  scrolling may not engage — assert the sticky machinery instead.)
+  assert('M6 tablet: header row is top-sticky inside a capped scroller',
+    sticky.headPosition==='sticky' && sticky.headTop==='0px' && sticky.verticalScroller, sticky);
+  assert('M6 tablet: manner column sticks to wrap left', sticky.scrolledL>0 && sticky.rowLeftDelta>=0 && sticky.rowLeftDelta<12, sticky);
+
+  // scroll hint visible on tablet
+  const hint = await page.evaluate(()=>getComputedStyle(document.querySelector('.table-scroll-hint')).display);
+  assert('M5 tablet: scroll hint visible', hint==='block', hint);
+
   assert('tablet: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
+  await context.close();
+}
+
+// ================================================== desktop identity (1280) ==
+{
+  const { context, page, jsErrors } = await open({ viewport:{width:1280,height:720} });
+  const geom = await page.evaluate(()=>({
+    pulmonicW: Math.round(document.querySelector('.pulmonic-table').getBoundingClientRect().width),
+    meterVisible: !!document.querySelector('.sym .speaker-meter')?.offsetParent,
+    hint: getComputedStyle(document.querySelector('.table-scroll-hint')).display,
+  }));
+  assert('D1 desktop: pulmonic width identity 2415', geom.pulmonicW===2415, geom);
+  assert('D1 desktop: speaker meters visible', geom.meterVisible, geom);
+  assert('D1 desktop: scroll hint hidden', geom.hint==='none', geom);
+  assert('desktop: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
 }
 

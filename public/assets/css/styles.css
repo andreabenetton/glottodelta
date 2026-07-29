@@ -98,8 +98,11 @@ body.high-contrast .speaker-meter .led{box-shadow:inset 0 0 0 1px #000}
 }
 .pulmonic-table{
   table-layout:fixed;
-  width:2415px;
-  min-width:2415px;
+  /* 11 place columns + the manner column; 2415px at the default var values.
+     Derived (not literal) so the responsive tiers can compress the chart by
+     re-declaring the two vars. */
+  width:calc(var(--pulmonic-manner-width) + 11*var(--pulmonic-column-width));
+  min-width:calc(var(--pulmonic-manner-width) + 11*var(--pulmonic-column-width));
 }
 .pulmonic-table col:first-child,
 .pulmonic-table thead th:first-child,
@@ -717,4 +720,31 @@ body.noncolor-cues .sym{position:relative}body.noncolor-cues .sym.lang-present::
 }
 @media (prefers-reduced-motion:reduce){
   .drawer,.drawer-backdrop{transition:none}
+}
+
+/* ===== responsive-chart-tiers ===== */
+.table-scroll-hint{display:none;margin:8px 0 0;color:var(--muted);font-size:.82rem}
+/* Tablet tier (<=1180px, the existing tablet-landscape breakpoint): the same
+   manner x place matrix, compressed. Tiles keep glyph + L count + state colour;
+   P and the speaker meter are relocated to the drawer, which tap already opens.
+   The vowel grid tracks automatically via --vowel-position-width. */
+@media (max-width:1180px){
+  :root{
+    --phoneme-box-width:62px;
+    --phoneme-box-min-height:88px;
+    --pulmonic-column-width:148px;
+    --pulmonic-manner-width:84px;
+    --vowel-height-width:84px;
+  }
+  .sym .speaker-meter,.sym .speaker-count{display:none}
+  .sym span{font-size:1.15rem}
+  /* The two chart wraps become two-axis scrollers with sticky headers on both
+     axes (the row-header stickiness already exists globally). */
+  .table-wrap:has(.pulmonic-table),.vowels .table-wrap{
+    max-height:calc(100dvh - 140px);
+    overscroll-behavior-x:contain;
+  }
+  .pulmonic-table thead th,.vowels .ipa-vowel-grid thead th{position:sticky;top:0;z-index:3}
+  .pulmonic-table thead th:first-child,.vowels .ipa-vowel-grid thead th:first-child{left:0;z-index:4}
+  .table-scroll-hint{display:block}
 }
