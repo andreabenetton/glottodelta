@@ -63,6 +63,8 @@ async function open(ctxOpts, query){
   return { context, page, jsErrors };
 }
 
+let phoneKatGreen = -1; // classification parity: phone list layout vs desktop grid
+
 // =========================================================== phone (390×844) ==
 {
   const { context, page, jsErrors } = await open(PHONE);
@@ -84,6 +86,44 @@ async function open(ctxOpts, query){
     return { count: syms.length, unique: new Set(syms).size };
   });
   assert('M2 phone: 111 unique symbol tiles', tiles.count===111 && tiles.unique===111, tiles);
+
+  // M3/M4 — linearized list: charts fit the viewport, every tile visible and
+  // ≥44px, empty cells collapse, occupied pulmonic cells show their place label
+  const list = await page.evaluate(()=>{
+    const visSyms=[...document.querySelectorAll('.sym[data-symbol]')].filter(b=>b.offsetParent!==null);
+    const small=visSyms.filter(b=>{const r=b.getBoundingClientRect();return r.width<44||r.height<44;});
+    const tds=[...document.querySelectorAll('.pulmonic-table td[data-place]:not(.empty-place)')];
+    const badBefore=tds.filter(td=>!getComputedStyle(td,'::before').content.includes(td.dataset.place));
+    return {pulW:Math.round(document.querySelector('.pulmonic-table').getBoundingClientRect().width),
+            vowW:Math.round(document.querySelector('.ipa-vowel-grid').getBoundingClientRect().width),
+            visCount:visSyms.length, smallCount:small.length,
+            emptyHidden:getComputedStyle(document.querySelector('.pulmonic-table td.empty-place')).display,
+            badBeforeCount:badBefore.length,
+            toggleVisible:!!document.getElementById('chartLayoutToggle').offsetParent};
+  });
+  assert('M3 phone: linearized charts fit viewport', list.pulW<=390 && list.vowW<=390, list);
+  assert('M3 phone: all 111 tiles visible in list mode', list.visCount===111, list);
+  assert('M3 phone: every tile ≥44×44', list.smallCount===0, list);
+  assert('M4 phone: empty cells collapsed', list.emptyHidden==='none', list);
+  assert('M4 phone: occupied cells labelled with their place', list.badBeforeCount===0, list);
+  assert('M4 phone: layout toggle visible', list.toggleVisible, list);
+
+  // M8 — grid toggle restores the scrollable matrix; classification parity vs desktop
+  const grid = await page.evaluate(()=>{
+    document.getElementById('chartLayoutToggle').click();
+    const w=Math.round(document.querySelector('.pulmonic-table').getBoundingClientRect().width);
+    const pageW=document.documentElement.scrollWidth;
+    document.getElementById('chartLayoutToggle').click();
+    return {w, pageW, backToList:!document.body.classList.contains('chart-grid-view')};
+  });
+  assert('M8 phone: toggle restores compressed grid inside scroller',
+    grid.w>1000 && grid.pageW<=391 && grid.backToList, grid);
+  phoneKatGreen = await page.evaluate(()=>{
+    const s=document.getElementById('languageSelector');s.value='kat';s.dispatchEvent(new Event('change',{bubbles:true}));
+    return document.querySelectorAll('.sym.lang-present').length;
+  });
+  await page.evaluate(()=>document.getElementById('clearLanguage').click());
+  await page.waitForTimeout(200);
 
   // M7 — tapping /m/ opens the drawer with the L oracle count
   await page.tap('.sym[data-symbol="m"]');
@@ -223,6 +263,13 @@ async function open(ctxOpts, query){
   assert('D1 desktop: pulmonic width identity 2415', geom.pulmonicW===2415, geom);
   assert('D1 desktop: speaker meters visible', geom.meterVisible, geom);
   assert('D1 desktop: scroll hint hidden', geom.hint==='none', geom);
+  const layout = await page.evaluate(()=>({
+    toggleHidden: !document.getElementById('chartLayoutToggle').offsetParent,
+    katGreen: (()=>{const s=document.getElementById('languageSelector');s.value='kat';s.dispatchEvent(new Event('change',{bubbles:true}));return document.querySelectorAll('.sym.lang-present').length;})(),
+  }));
+  assert('D1 desktop: layout toggle hidden', layout.toggleHidden, layout);
+  assert('M8 desktop: kat classification parity with phone list layout',
+    phoneKatGreen>0 && layout.katGreen===phoneKatGreen, {desktop:layout.katGreen, phone:phoneKatGreen});
   assert('desktop: no JS errors', jsErrors.length===0, jsErrors.slice(0,5));
   await context.close();
 }
